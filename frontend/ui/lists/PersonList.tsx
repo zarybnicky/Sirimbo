@@ -87,9 +87,9 @@ export function PersonList() {
             title={item.name}
             subtitle={[
               item.yearOfBirth,
-              item.isAdmin ? 'Správce' : '',
-              item.isTrainer ? 'Trenér' : '',
-              item.isMember ? 'Člen' : '',
+              item.roles.includes('ADMINISTRATOR') ? 'Správce' : '',
+              item.roles.includes('TRAINER') ? 'Trenér' : '',
+              item.roles.includes('MEMBER') ? 'Člen' : '',
               ...(item.couplesList ?? []).flatMap((x) =>
                 [x.man, x.woman]
                   .filter((x) => x?.id !== item.id)

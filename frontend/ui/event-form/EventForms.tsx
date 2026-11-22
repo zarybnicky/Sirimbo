@@ -69,7 +69,7 @@ export function EventForm(input: EventFormProps) {
     const enabledTrainers = trainerOptions.filter((x) => !x.hidden && !x.disabled);
     const trainer =
       (enabledTrainers.length === 1 ? enabledTrainers[0] : undefined) ??
-        auth.persons.find((p) => p.isTrainer && enabledTrainers.some((x) => x.id === p.id));
+        auth.persons.find((p) => p.roles.includes('TRAINER') && enabledTrainers.some((x) => x.id === p.id));
 
     return createEventDefaults(
       { ...input, date: input.date ?? now },

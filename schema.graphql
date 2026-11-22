@@ -831,7 +831,7 @@ type AnnouncementAudience {
   """
   announcement: Announcement
   announcementId: BigInt!
-  audienceRole: AnnouncementAudienceRole
+  audienceRole: TenantRole
 
   """
   Reads a single `Cohort` that is related to this `AnnouncementAudience`.
@@ -851,7 +851,7 @@ input AnnouncementAudienceCondition {
   announcementId: BigInt
 
   """Checks for equality with the object’s `audienceRole` field."""
-  audienceRole: AnnouncementAudienceRole
+  audienceRole: TenantRole
 
   """Checks for equality with the object’s `cohortId` field."""
   cohortId: BigInt
@@ -891,15 +891,9 @@ type AnnouncementAudienceEdge {
   node: AnnouncementAudience!
 }
 
-enum AnnouncementAudienceRole {
-  ADMINISTRATOR
-  MEMBER
-  TRAINER
-}
-
 """An input for mutations affecting `AnnouncementAudienceTypeInputRecord`"""
 input AnnouncementAudienceTypeInputRecordInput {
-  audienceRole: AnnouncementAudienceRole
+  audienceRole: TenantRole
   cohortId: BigInt
   id: BigInt
 }
@@ -11557,10 +11551,10 @@ type Person {
   image: File
   imageId: BigInt
   instagramUsername: String
-  isAdmin: Boolean
-  isExternal: Boolean!
-  isMember: Boolean
-  isTrainer: Boolean
+  isAdmin: Boolean @deprecated(reason: "Use roles containing ADMINISTRATOR.")
+  isExternal: Boolean! @deprecated(reason: "Use an empty roles array.")
+  isMember: Boolean @deprecated(reason: "Use roles containing MEMBER.")
+  isTrainer: Boolean @deprecated(reason: "Use roles containing TRAINER.")
 
   """Reads a single `PersonLastActivity` that is related to this `Person`."""
   lastActivity: PersonLastActivity
@@ -11605,6 +11599,9 @@ type Person {
   ): [PersonInvitation!]!
   phone: String
   prefixTitle: String!
+
+  """Current roles in the active tenant. Empty for external people."""
+  roles: [TenantRole!]!
 
   """
   Reads and enables pagination through a set of `ScoreboardManualAdjustment`.
@@ -15677,6 +15674,12 @@ input TenantPatch {
   id: BigInt
   name: String
   origins: [String]
+}
+
+enum TenantRole {
+  ADMINISTRATOR
+  MEMBER
+  TRAINER
 }
 
 type TenantSetting {

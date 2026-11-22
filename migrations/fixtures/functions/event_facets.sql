@@ -1,6 +1,4 @@
-drop function if exists event_instances_for_range;
 drop function if exists event_facets;
-drop type if exists event_instance_range_scope;
 
 create or replace function event_facets(
   start_range timestamptz,
@@ -16,7 +14,8 @@ language sql stable as $$
     select event_id from event_trainer
     where person_id = any((select current_person_ids())::bigint[])
   ), cohort_people as (
-    select cohort_id, person_id from current_cohort_membership
+    select person_id, current_cohort_ids from app_private.tenant_relation
+    where tenant_id = (select current_tenant_id()) and current_cohort_ids <> '{}'
   ), candidates as materialized (
     select i.id, i.type, i.location_id
     from event i
@@ -33,12 +32,12 @@ language sql stable as $$
       and (not coalesce((condition).relevant_only, false) or i.parent_id is null
         or i.id in (select event_id from mine)
         or i.parent_id in (select event_id from mine))
-  ), trainers as (
+  ), trainers as materialized (
     select event_id, array_agg(person_id) as ids
     from event_trainer
     where event_id = any(array(select id from candidates))
     group by event_id
-  ), participants as (
+  ), participants as materialized (
     select r.event_id, array_agg(r.person_id) as ids
     from event_registration r
     left join event_registration parent on parent.id = r.parent_registration_id
@@ -61,10 +60,10 @@ language sql stable as $$
         then selected_people && (condition).participant_ids
         else selected_people && array(
           select person_id from cohort_people c
-          where c.cohort_id = (condition).cohort_id and person_id = any((condition).participant_ids)
+          where (condition).cohort_id = any(c.current_cohort_ids) and person_id = any((condition).participant_ids)
         ) end as participant_matches,
       (condition).cohort_id is null or selected_people && array(
-        select person_id from cohort_people c where c.cohort_id = (condition).cohort_id
+        select person_id from cohort_people c where (condition).cohort_id = any(c.current_cohort_ids)
       ) as cohort_matches,
       (condition).location_ids is null or location_id = any((condition).location_ids) as location_matches
     from event_people
@@ -82,7 +81,7 @@ language sql stable as $$
     cross join lateral unnest(m.selected_people) person(person_id)
     where m.type_matches and m.trainer_matches and m.location_matches and m.cohort_matches
       and ((condition).cohort_id is null or person_id in (
-        select person_id from cohort_people c where c.cohort_id = (condition).cohort_id
+        select person_id from cohort_people c where (condition).cohort_id = any(c.current_cohort_ids)
       ))
     union all
     select m.id, 'location', m.location_id::text
@@ -90,7 +89,7 @@ language sql stable as $$
     where m.type_matches and m.trainer_matches and m.participant_matches and m.cohort_matches
       and m.location_id is not null
     union all
-    select m.id, 'cohort', c.cohort_id::text
+    select m.id, 'cohort', unnest(c.current_cohort_ids)::text
     from matches m
     cross join lateral unnest(m.selected_people) person(person_id)
     join cohort_people c using (person_id)

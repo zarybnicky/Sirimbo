@@ -1,9 +1,9 @@
-import { AnnouncementAudienceRole } from '@/graphql';
+import { TenantRole } from '@/graphql';
 import { cn } from '@/lib/cn';
 import { AnnouncementAudienceFragment } from '@/graphql/Announcement';
 import { badgeCls } from '@/ui/style';
 
-const ROLE_LABEL: Record<AnnouncementAudienceRole, string> = {
+const ROLE_LABEL: Record<TenantRole, string> = {
   MEMBER: 'Člen',
   TRAINER: 'Trenér',
   ADMINISTRATOR: 'Administrátor',

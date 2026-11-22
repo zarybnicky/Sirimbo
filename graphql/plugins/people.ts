@@ -3,57 +3,56 @@ import type { GrafastFieldConfig } from 'postgraphile/grafast';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 import personMembershipPlugins, { membershipCandidateIds, type MembershipCondition } from './person-membership-condition.ts';
 
-const PersonFieldsPlugin = extendSchema((build) => ({
+const PersonFieldsPlugin = extendSchema(() => ({
   typeDefs: `
     extend type Person {
       cohortIds: [BigInt]
       tenantIds: [BigInt]
-      isMember: Boolean
-      isTrainer: Boolean
-      isAdmin: Boolean
-      isExternal: Boolean!
+      """Current roles in the active tenant. Empty for external people."""
+      roles: [TenantRole!]!
+      isMember: Boolean @deprecated(reason: "Use roles containing MEMBER.")
+      isTrainer: Boolean @deprecated(reason: "Use roles containing TRAINER.")
+      isAdmin: Boolean @deprecated(reason: "Use roles containing ADMINISTRATOR.")
+      isExternal: Boolean! @deprecated(reason: "Use an empty roles array.")
     }
   `,
   objects: {
     Person: {
       plans: {
         cohortIds($person: PgSelectSingleStep) {
-          const $cohorts = build.input.pgRegistry.pgResources.cohort_membership!.find({
-            person_id: $person.get('id'),
-          }).clone('aggregate');
-          $cohorts.where(sql`now() <@ ${$cohorts.alias}.active_range`);
-          $cohorts.setInliningForbidden();
-          return pgClassExpression($cohorts.single(), LIST_TYPES.bigint)`array_agg(${$cohorts.alias}.cohort_id)`;
+          return pgClassExpression($person, LIST_TYPES.bigint)`(
+            select nullif(current_cohort_ids, '{}'::bigint[]) from app_private.tenant_relation
+            where tenant_id = (select public.current_tenant_id()) and person_id = ${$person.get('id')}
+          )`;
         },
         tenantIds($person: PgSelectSingleStep) {
           return pgClassExpression($person, LIST_TYPES.bigint)`array(
-            select tenant_id from public.tenant_membership where person_id = ${$person.get('id')}
-            union
-            select tenant_id from public.tenant_trainer where person_id = ${$person.get('id')}
-            union
-            select tenant_id from public.tenant_administrator where person_id = ${$person.get('id')}
+            select tenant_id from app_private.tenant_relation
+            where person_id = ${$person.get('id')} and has_roles
           )`;
+        },
+        roles($person: PgSelectSingleStep) {
+          return pgClassExpression($person, LIST_TYPES.text)`coalesce((
+            select current_roles::text[] from app_private.current_tenant_relation
+            where person_id = ${$person.get('id')}
+          ), '{}'::text[])`;
         },
         isMember($person: PgSelectSingleStep) {
           return pgClassExpression($person, TYPES.boolean)`
-            ${$person.get('id')} in (select person_id from public.current_tenant_membership)`;
+            ${$person.get('id')} in (select person_id from app_private.current_tenant_relation where 'member' = any(current_roles))`;
         },
         isTrainer($person: PgSelectSingleStep) {
           return pgClassExpression($person, TYPES.boolean)`
-            ${$person.get('id')} in (select person_id from public.current_tenant_trainer)`;
+            ${$person.get('id')} in (select person_id from app_private.current_tenant_relation where 'trainer' = any(current_roles))`;
         },
         isAdmin($person: PgSelectSingleStep) {
           return pgClassExpression($person, TYPES.boolean)`
-            ${$person.get('id')} in (select person_id from public.current_tenant_administrator)`;
+            ${$person.get('id')} in (select person_id from app_private.current_tenant_relation where 'administrator' = any(current_roles))`;
         },
         isExternal($person: PgSelectSingleStep) {
           return pgClassExpression($person, TYPES.boolean)`
             ${$person.get('id')} not in (
-              select person_id from public.current_tenant_membership
-              union all
-              select person_id from public.current_tenant_trainer
-              union all
-              select person_id from public.current_tenant_administrator
+              select person_id from app_private.current_tenant_relation
             )`;
         },
       },
@@ -174,18 +173,21 @@ const plugins: GraphileConfig.Plugin[] = [
         GraphQLObjectType_fields: {
           after: ['PgRelationsPlugin'],
           callback(fields, build, { Self }) {
-            if (Self.name === 'CohortMembership') {
-              const cohort = fields.cohort!;
-              const plan = cohort.plan!;
-              return {
+            const batchedRelations = Self.name === 'CohortMembership' ? ['cohort']
+              : Self.name === 'Couple' ? ['man', 'woman', 'image']
+              : Self.name === 'Person' ? ['image'] : [];
+            for (const name of batchedRelations) {
+              const field = fields[name]!;
+              const plan = field.plan!;
+              fields = {
                 ...fields,
-                cohort: {
-                  ...cohort,
-                  plan($membership, args, info) {
-                    const $cohort = plan($membership, args, info) as PgSelectSingleStep;
-                    // Batch shared cohorts so their visibility checks run once per cohort.
-                    $cohort.getClassStep().setInliningForbidden();
-                    return $cohort;
+                [name]: {
+                  ...field,
+                  plan($record, args, info) {
+                    const $related = plan($record, args, info) as PgSelectSingleStep;
+                    // Evaluate shared records and their RLS once per batch, outside nested rows.
+                    $related.getClassStep().setInliningForbidden();
+                    return $related;
                   },
                 },
               };

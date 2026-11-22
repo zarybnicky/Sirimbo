@@ -11,9 +11,7 @@ from access_credential c
 join person p on p.id = c.person_id
 where c.tenant_id = :tenantId! and c.valid_range @> now()
   and c.person_id in (
-    select person_id from current_tenant_membership
-    union all select person_id from current_tenant_trainer
-    union all select person_id from current_tenant_administrator
+    select person_id from app_private.current_tenant_relation
   )
 order by c.id;
 

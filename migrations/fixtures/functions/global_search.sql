@@ -1,3 +1,5 @@
+drop function if exists global_search;
+
 create or replace function global_search(search text, "limit" integer default 20, scope text[] default null)
   returns setof global_search_result
   language sql stable
@@ -23,8 +25,9 @@ as $$
     ) relationships
     group by person_id
   ), peers as materialized (
-    select person_id from current_cohort_membership
-    where cohort_id = any((select current_cohort_ids())::bigint[])
+    select person_id from app_private.tenant_relation
+    where tenant_id = (select current_tenant_id())
+      and current_cohort_ids && (select public.current_cohort_ids())::bigint[]
   ), event_matches as materialized (
     select e.*
     from event e

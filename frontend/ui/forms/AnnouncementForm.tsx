@@ -1,4 +1,4 @@
-import type { AnnouncementAudienceRole, UpsertAnnouncementInput } from '@/graphql';
+import type { TenantRole, UpsertAnnouncementInput } from '@/graphql';
 import {
   AnnouncementAudienceFragment,
   type AnnouncementFragment,
@@ -26,7 +26,7 @@ import { CohortListDocument } from '@/graphql/Cohorts';
 import { FilePicker } from '@/ui/forms/FilePicker';
 
 const ROLE_OPTIONS: {
-  id: AnnouncementAudienceRole;
+  id: TenantRole;
   label: string;
 }[] = [
   {

@@ -59,11 +59,10 @@ where (
     (select pg_has_role(current_user, 'trainer', 'member'))
     or p.id = any ((select current_person_ids())::bigint[])
   )
-  and (
-    exists (select from current_tenant_membership m where m.person_id = p.id)
-    or exists (select from current_tenant_trainer t where t.person_id = p.id)
-    or exists (select from current_tenant_administrator a where a.person_id = p.id)
-    or exists (select from current_cohort_membership cm where cm.person_id = p.id)
+  and exists (
+    select from app_private.tenant_relation r
+    where r.tenant_id = (select current_tenant_id()) and r.person_id = p.id
+      and (r.is_current or r.current_cohort_ids <> '{}')
   );
 
 comment on view person_last_activity is '@primaryKey person_id

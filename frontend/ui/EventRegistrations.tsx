@@ -80,7 +80,7 @@ export const EventRegistrations = memo(function EventRegistrations({
                 <EntityLink type="participant" entity={x}>
                   {x.person?.name || x.couple?.name}
                 </EntityLink>
-                {x.person?.isExternal && (
+                {x.person?.roles.length === 0 && (
                   <span className="ml-2 rounded bg-neutral-3 px-1.5 py-0.5 text-xs text-neutral-11">
                     Externí
                   </span>

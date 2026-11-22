@@ -1,7 +1,5 @@
 # Sirimbo repository map and contributor notes
 
-This document is for fellow ChatGPT/Codex-style agents working in this repository. Use it as a quick reference before you make changes.
-
 ## Workflow expectations
 - Do not create Git commits or change the Git index. Leave staging and commits to the maintainer.
 - Preserve existing work, including unrelated changes in files you edit.
@@ -10,7 +8,6 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - After code changes, run the affected package's lint and typecheck commands, plus relevant tests. Report failures without changing unrelated code to fix them.
 - Prefer incremental SQL migrations. For changes under `migrations/current/` or `migrations/fixtures/`, follow `migrations/current/AGENTS.md`.
 - For direct checks against the local development database, use `psql olymp` as the prefix; `.envrc` supplies the connection settings. Use a transaction and `ROLLBACK` for temporary test writes.
-- `schema/` is generated from the canonical `schema.sql` dump via `python schema/split.py < schema.sql`. Do not hand-edit files under `schema/`—regenerate from the dump instead.
 
 ## Running development services
 - The maintainer often runs `overmind` with the root `Procfile`. It starts the web server, migration watcher, and code generators among other services.
@@ -23,12 +20,11 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 ## Design preferences
 
 - Trace the affected data flow and callers, inspect existing implementations, and briefly state what you will extend before editing. Fix the cause at the appropriate shared boundary.
-- Simplicity means compact code that is easy to read end to end. Evaluate total code, branching, indirection, and concepts. Elementary syntax, tiny functions, or verbose explicit steps do not make a longer, harder-to-follow implementation simpler.
+- Prefer compact code that is easy to read end to end. Evaluate total code, branching, indirection, and concepts. More elementary steps do not necessarily make code simpler.
 - Extend existing queries, components, and modules at their current boundaries. Follow repository patterns and use native platform features before adding custom machinery or dependencies.
-- Abstractions must remove meaningful duplication or clarify a real concept. Extra wrappers and helper files are not reuse or separation of concerns by themselves. Keep related logic together, preserve real differences, and leave speculative flexibility for a concrete need.
+- Extract functions to remove meaningful duplication, isolate complex behavior, or name a real concept. Keep related logic together. Avoid speculative flexibility and trivial single-use wrappers.
 - Preserve correctness, security, data integrity, and required behavior. Keep accessibility work, defensive handling, and verification proportional to concrete task needs. Extra fallbacks and hypothetical edge-case handling are not automatically improvements.
 - Apply corrections to the underlying design across the whole change. Review the complete diff against these rules; passing checks alone does not establish that the design is appropriate.
-- Prefer compact, elegant code that keeps the local control flow easy to read. Extract functions only when they name a real concept, isolate complex behavior, or remove meaningful duplication.
 - Avoid one-line or single-use functions; they usually make this codebase harder to read than an inline expression.
 
 ## Direct SQL queries
@@ -44,8 +40,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - `frontend/graphql/`: GraphQL operation documents, generated TypeScript bindings, and the cache-key lint helper.
 - `e2e/`: Playwright smoke tests and auth fixtures.
 - `migrations/`: Graphile Migrate directory layout. `committed/` holds historical migrations, `current/` is the scratchpad for new idempotent changes, `fixtures/` contains repeatable helper SQL/PLpgSQL objects, and `initial_schema.sql` mirrors the baseline dump.
-- `schema.sql`: pg_dump of the live database, including extensions and RLS policies. Use it together with `schema/split.py` to keep the `schema/` tree synchronized.
-- `schema/`: Auto-split DDL organized by domain/type/table/function/view for review purposes only.
+- `schema.sql` and `schema/`: generated database DDL for review. `python schema/split.py < schema.sql` produces the split tree. Do not hand-edit either output or run the dump workflow.
 
 ## Frontend tenancy model
 - Tenant host mapping lives in `frontend/tenant/catalog.ts`. `frontend/proxy.ts` preserves a valid `tenant_id` cookie; otherwise it selects the host's tenant or the default tenant.
@@ -58,7 +53,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - The Next GraphQL route uses `frontend/lib/server/tenant.ts`: API requests accept bearer tokens and `x-tenant-id`, then fall back to session/tenant cookies and the hostname catalog. SSR uses cookies and the hostname catalog only. Neither path queries the database to build request context.
 - `graphql/graphile.config.ts` configures the shared schema. Next serves `/graphql` through the WHATWG adapter; `frontend/lib/server/graphql.ts` executes server-side operations locally with Grafast. Calendar export supplies owner claim settings directly.
 - `current_tenant_id()` (defined in `migrations/committed/000026.sql`) returns the active tenant ID from the current PostgreSQL session (defaulting to `1`). Nearly every table includes a `tenant_id` column defaulting to this function.
-- `app_private.create_jwt_token(users)`, maintained in `migrations/fixtures/functions/create_jwt_token.sql`, builds claims directly from `user_proxy`, active tenant/cohort memberships, active couples, and system-admin status. The old `auth_details` views and refresh jobs have been removed.
+- `app_private.create_jwt_token(users)` builds tenant and cohort claims from `app_private.tenant_relation`, with `user_proxy` links and system-admin status. Couple claims still read their source table. The fixture is `migrations/fixtures/functions/create_jwt_token.sql`. The old `auth_details` views and refresh jobs are removed.
 - `getRequestContext` accepts a bearer token or the `rozpisovnik` cookie. It chooses the database role from the token's system-admin flag and tenant-specific role arrays, then copies claims into `jwt.claims.*` settings. The request tenant overrides the token's `tenant_id`; memberships are not reloaded on each request. The web frontend uses session cookies; bearer authentication remains available for external consumers.
 - `frontend/lib/server/tenant.ts` currently uses `ignoreExpiration: true`. JWTs contain a seven-day expiry, but verification does not enforce it - intentionally postponed, will be relevant soon.
 - Request auth passes the event-share token in `jwt.claims.shared.event_token` without a database lookup. SQL policies resolve it through `app_private.current_shared_event_ids()` and `app_private.event_share_claims`, scoped to the request tenant. Frontend `getRequestContext(eventShare?)` accepts an explicit token and stays database-free.
@@ -66,19 +61,29 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 
 ## Session refresh and RLS patterns
 - Web login and refresh actions in `frontend/lib/auth-actions.ts` set an HttpOnly session cookie. `current_claims()` and `refresh_jwt()` rebuild claims from the database; `SessionRefresher` checks for changes every 30 seconds while the page is visible.
-- For example, `current_person_ids()` and related helpers read session claims. `app_private.visible_person_ids()` instead derives a set of visible people from current-tenant membership views; person and couple policies use uncorrelated `IN (SELECT ...)` lookups against that set. Its fixture is `migrations/fixtures/functions/visible_person_ids.sql`.
+- `current_person_ids()` and related helpers read session claims. `app_private.visible_person_ids()` combines tenant relations, own people, event relationships, and couple visibility. Person and couple policies use uncorrelated `IN (SELECT ...)` lookups against that set. Its fixture is `migrations/fixtures/functions/visible_person_ids.sql`.
 
 ## Database entities worth knowing
 - `tenant`: master tenant records with allowed `origins` for host matching.
 - `users` + `user_proxy`: authentication identities linked to `person` records; JWT creation relies on `app_private.create_jwt_token`.
 - `person`, `couple`, `cohort`, `event_*`, `payment_*`: core CRM/scheduling/accounting tables, each row-secured by tenant.
 - `tenant_settings`: key/value settings scoped by tenant.
-- Supporting functions (examples under `schema/functions/public.*.sql`) expose helper queries like `filtered_people`, `create_missing_cohort_subscription_payments`, and `get_current_tenant()`; many assume `current_tenant_id()` is set.
+- `app_private.tenant_relation`: maintained role and cohort summaries per `(tenant_id, person_id)`. Read summaries here; use source tables for writes, history, dates, and pricing. Its maintenance fixture is `migrations/fixtures/functions/tenant_relation.sql`.
+- `app_private.current_tenant_relation`: current-tenant rows with current roles, replacing the three `current_tenant_*` role views. Role flags exclude cohort-only relations. Empty rows can exist, so row existence alone does not establish membership.
+- Membership `status` is authoritative; date triggers and scheduled maintenance keep it current.
+- Supporting functions under `schema/functions/public.*.sql` expose helpers such as `filtered_people`, `create_missing_cohort_subscription_payments`, and `get_current_tenant()`. Many assume `current_tenant_id()` is set.
 
 ## GraphQL stack
-- PostGraphile auto-exposes the PostgreSQL schema with additional fields and filters from custom plugins (e.g. custom filters, performance tuned fields that were slow as direct SQL functions, the event search/saved search machinery, and various ways of representing person relationships).
+- PostGraphile exposes the database schema. Custom plugins add fields, filters, and Grafast plans.
 - The frontend consumes the API via URQL. Operation documents reside in `frontend/graphql/*.graphql`, and the generated typed documents next to them. Avoid hand-editing generated files!
 - `graphql.config.yml` and `graphql-starlet.config.yml` configure code generation for different tenant bundles.
+- `Person.roles` exposes current-tenant roles as `[TenantRole!]!` from `public.tenant_role`. An empty array means external. Prefer this field over the deprecated `isMember`, `isTrainer`, `isAdmin`, and `isExternal` fields. Those fields remain for external consumers. Authentication flags and similarly named fields on other types have separate meanings.
+
+## Database performance investigations
+
+- Compare actual GraphQL operations under member and administrator roles with representative claims. Keep data, parameters, and JIT settings consistent. Owner-only helper timings omit RLS costs.
+- Inspect emitted SQL with `EXPLAIN (ANALYZE, BUFFERS)`. Report before/after timings and the plan changes that explain them, including regressions. Compare returned results. Prioritize per-call responsiveness over total execution time, and distinguish SQL timings from request latency.
+- Check Grafast inlining and batching against the resulting plan. Either can cause repeated scans or RLS work. Fewer SQL statements do not necessarily mean a faster request.
 
 ## Worker and crawler model
 - Graphile Worker loads TypeScript tasks through `worker/graphile.config.ts`. `worker/crontab` schedules membership refreshes, accounting/event discovery, and `frontier_schedule`; the scheduler seeds root frontiers and enqueues `frontier_fetch`/`frontier_process` jobs as needed.

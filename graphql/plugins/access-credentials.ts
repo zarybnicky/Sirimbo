@@ -10,9 +10,7 @@ export const AccessCredentialFieldsPlugin = extendSchema({
           return pgClassExpression($credential, TYPES.boolean)`
             ${$credential.get('valid_range')} @> now()
             and ${$credential.get('person_id')} in (
-              select person_id from public.current_tenant_membership
-              union all select person_id from public.current_tenant_trainer
-              union all select person_id from public.current_tenant_administrator
+              select person_id from app_private.current_tenant_relation
             )`;
         },
       },

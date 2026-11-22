@@ -5,26 +5,24 @@ with
   person_ids as (
     select distinct up.person_id from user_proxy up where up.user_id = u.id and up.status = 'active'
   ),
-  tenant_memberships as (
-    select distinct tm.tenant_id from tenant_membership tm join person_ids p on p.person_id = tm.person_id where tm.status = 'active'
-  ),
-  tenant_trainers as (
-    select distinct tt.tenant_id from tenant_trainer tt join person_ids p on p.person_id = tt.person_id where tt.status = 'active'
-  ),
-  tenant_admins as (
-    select distinct ta.tenant_id from tenant_administrator ta join person_ids p on p.person_id = ta.person_id where ta.status = 'active'
-    union
-    select id from tenant where app_private.is_system_admin(u.id)
-  ),
-  tenant_ids as (
-    select tenant_id from tenant_memberships
-    union
-    select tenant_id from tenant_trainers
-    union
-    select tenant_id from tenant_admins
+  tenant_claims as (
+    select
+      coalesce(array_agg(distinct tenant_id), '{}'::bigint[]) as tenant_ids,
+      coalesce(array_agg(distinct tenant_id) filter (where 'member' = any(roles)), '{}'::bigint[]) as member_ids,
+      coalesce(array_agg(distinct tenant_id) filter (where 'trainer' = any(roles)), '{}'::bigint[]) as trainer_ids,
+      coalesce(array_agg(distinct tenant_id) filter (where 'administrator' = any(roles)), '{}'::bigint[]) as admin_ids
+    from (
+      select r.tenant_id, r.current_roles as roles
+      from person_ids p join app_private.tenant_relation r on r.person_id = p.person_id
+      where r.is_current
+      union all
+      select id, array['administrator']::public.tenant_role[]
+      from tenant where app_private.is_system_admin(u.id)
+    ) roles
   ),
   cohort_ids as (
-    select distinct cm.cohort_id from cohort_membership cm join person_ids p on p.person_id = cm.person_id where cm.status = 'active'
+    select distinct unnest(r.current_cohort_ids) as cohort_id
+    from app_private.tenant_relation r join person_ids p on p.person_id = r.person_id
   ),
   couple_ids as (
     select distinct c.id from couple c join person_ids p on p.person_id = c.man_id where c.status = 'active'
@@ -38,14 +36,15 @@ with
     u.u_email as email,
 
     coalesce((select array_agg(p.person_id) from person_ids p), '{}'::bigint[]) as my_person_ids,
-    coalesce((select array_agg(p.tenant_id) from tenant_ids p), '{}'::bigint[]) as my_tenant_ids,
+    tc.tenant_ids as my_tenant_ids,
     coalesce((select array_agg(p.cohort_id) from cohort_ids p), '{}'::bigint[]) as my_cohort_ids,
     coalesce((select array_agg(p.id)        from couple_ids p), '{}'::bigint[]) as my_couple_ids,
 
     app_private.is_system_admin(u.id) as is_system_admin,
 
     '{}'::bigint[] as guest_tenant_ids,
-    coalesce((select array_agg(p.tenant_id) from tenant_memberships p), '{}'::bigint[]) as member_tenant_ids,
-    coalesce((select array_agg(p.tenant_id) from tenant_trainers p), '{}'::bigint[]) as trainer_tenant_ids,
-    coalesce((select array_agg(p.tenant_id) from tenant_admins p), '{}'::bigint[]) as admin_tenant_ids;
+    tc.member_ids as member_tenant_ids,
+    tc.trainer_ids as trainer_tenant_ids,
+    tc.admin_ids as admin_tenant_ids
+  from tenant_claims tc;
 $$;

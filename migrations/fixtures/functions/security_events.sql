@@ -142,25 +142,25 @@ create or replace trigger _050_relationship_status
   for each row execute function app_private.tg_relationship__status();
 
 create or replace trigger _900_security_event
-  after insert or update of status or delete on tenant_membership
+  after insert or update or delete on tenant_membership
   for each row execute function app_private.tg_security_event__range(
     'membership_granted', 'membership_revoked'
   );
 create or replace trigger _900_security_event
-  after insert or update of status or delete on tenant_trainer
+  after insert or update or delete on tenant_trainer
   for each row execute function app_private.tg_security_event__range(
     'trainer_granted', 'trainer_revoked'
   );
 create or replace trigger _900_security_event
-  after insert or update of status or delete on tenant_administrator
+  after insert or update or delete on tenant_administrator
   for each row execute function app_private.tg_security_event__range(
     'administrator_granted', 'administrator_revoked'
   );
 create or replace trigger _900_security_event
-  after insert or update of status or delete on access_credential
+  after insert or update or delete on access_credential
   for each row execute function app_private.tg_security_event__credential();
 create or replace trigger _900_security_event
-  after insert or update of status or delete on user_proxy
+  after insert or update or delete on user_proxy
   for each row execute function app_private.tg_security_event__user_proxy();
 create or replace trigger _900_security_event
   after update of u_pass on users

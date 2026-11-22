@@ -15,50 +15,21 @@ begin
     return;
   end if;
 
-  with role_flags as (
-    select
-      coalesce(bool_or(audience_role = 'member'), false) as has_member,
-      coalesce(bool_or(audience_role = 'trainer'), false) as has_trainer,
-      coalesce(bool_or(audience_role = 'administrator'), false) as has_administrator
+  with audience as (
+    select array_agg(audience_role) filter (where audience_role is not null) as roles,
+      array_agg(cohort_id) filter (where cohort_id is not null) as cohort_ids
     from announcement_audience
     where announcement_id = in_announcement_id
-      and audience_role is not null
-  ),
-  role_people as (
-    select distinct x.person_id
-    from role_flags rf
-    join lateral (
-      select tm.person_id from current_tenant_membership tm where rf.has_member
-      union all
-      select tt.person_id from current_tenant_trainer tt where rf.has_trainer
-      union all
-      select ta.person_id from current_tenant_administrator ta where rf.has_administrator
-    ) x on true
-  ),
-  role_users as (
-    select distinct u.id as user_id
-    from role_people rp
-    join user_proxy up on up.person_id = rp.person_id and up.status = 'active'
-    join users u on u.id = up.user_id
-  ),
-  cohort_users as (
-    select distinct u.id as user_id
-    from announcement_audience aa
-    join current_cohort_membership cm on cm.cohort_id = aa.cohort_id
-    join user_proxy up on up.person_id = cm.person_id and up.status = 'active'
-    join users u on u.id = up.user_id
-    where aa.announcement_id = in_announcement_id
-      and aa.cohort_id is not null
   )
-  select array_agg(distinct user_id order by user_id)
+  select array_agg(distinct up.user_id order by up.user_id)
   into v_user_ids
-  from (
-    select user_id from role_users
-    union
-    select user_id from cohort_users
-  ) recipients;
+  from app_private.tenant_relation r
+  join user_proxy up on up.person_id = r.person_id and up.status = 'active'
+  cross join audience a
+  where r.tenant_id = (select current_tenant_id())
+    and (r.current_roles && a.roles or r.current_cohort_ids && a.cohort_ids);
 
-  if v_user_ids is null or array_length(v_user_ids, 1) = 0 then
+  if v_user_ids is null then
     return;
   end if;
 

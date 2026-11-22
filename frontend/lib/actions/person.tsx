@@ -16,16 +16,14 @@ import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
 import { AddPersonAccessForm } from '@/ui/forms/AddPersonAccessForm';
 import { DialogTitle } from '@/ui/dialog';
-import { GenderType } from '@/graphql';
+import { GenderType, TenantRole } from '@/graphql';
 
 export type PersonActionItem = {
   id: string;
   name: string;
   gender: GenderType;
   externalIds?: (string | null)[] | null;
-  isMember: boolean | null;
-  isTrainer: boolean | null;
-  isAdmin: boolean | null;
+  roles: TenantRole[];
   matchingUserIds?: string[];
   tenantIds?: (string | null)[] | null;
 };
@@ -90,7 +88,7 @@ export const personActions = defineActions<PersonActionItem>()([
     label: 'Přidat jako člena',
     icon: UserPlus,
     requireAdmin: true,
-    visible: ({ auth, item }) => auth.canManagePerson(item) && !item.isMember,
+    visible: ({ auth, item }) => auth.canManagePerson(item) && !item.roles.includes('MEMBER'),
     execute: async ({ item, mutate }) => {
       await mutate(CreateTenantMembershipDocument, {
         input: { tenantMembership: { personId: item.id } },
@@ -103,7 +101,7 @@ export const personActions = defineActions<PersonActionItem>()([
     label: 'Přidat jako trenéra',
     icon: UserPlus,
     requireAdmin: true,
-    visible: ({ auth, item }) => auth.canManagePerson(item) && !item.isTrainer,
+    visible: ({ auth, item }) => auth.canManagePerson(item) && !item.roles.includes('TRAINER'),
     execute: async ({ item, mutate }) => {
       await mutate(CreateTenantTrainerDocument, {
         input: { tenantTrainer: { personId: item.id } },
@@ -116,7 +114,7 @@ export const personActions = defineActions<PersonActionItem>()([
     label: 'Přidat jako správce',
     icon: UserPlus,
     requireAdmin: true,
-    visible: ({ auth, item }) => auth.canManagePerson(item) && !item.isAdmin,
+    visible: ({ auth, item }) => auth.canManagePerson(item) && !item.roles.includes('ADMINISTRATOR'),
     execute: async ({ item, mutate }) => {
       await mutate(CreateTenantAdministratorDocument, {
         input: { tenantAdministrator: { personId: item.id } },

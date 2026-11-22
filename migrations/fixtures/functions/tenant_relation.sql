@@ -22,22 +22,28 @@ begin
     coalesce(array_agg(distinct role order by role) filter (where status = 'expired'), '{}'),
     coalesce(array_agg(distinct role order by role) filter (where status = 'pending'), '{}')
   from (
-    select 'member'::app_private.tenant_role as role, status from tenant_membership
+    select 'member'::tenant_role as role, status from tenant_membership
       where tenant_id = target_tenant_id and person_id = target_person_id
     union all
-    select 'trainer'::app_private.tenant_role, status from tenant_trainer
+    select 'trainer'::tenant_role, status from tenant_trainer
       where tenant_id = target_tenant_id and person_id = target_person_id
     union all
-    select 'administrator'::app_private.tenant_role, status from tenant_administrator
+    select 'administrator'::tenant_role, status from tenant_administrator
       where tenant_id = target_tenant_id and person_id = target_person_id
   ) relationships
+  ), (current_cohort_ids, expired_cohort_ids) = (
+    select
+      coalesce(array_agg(distinct cohort_id order by cohort_id) filter (where status = 'active'), '{}'),
+      coalesce(array_agg(distinct cohort_id order by cohort_id) filter (where status = 'expired'), '{}')
+    from cohort_membership
+    where tenant_id = target_tenant_id and person_id = target_person_id
   ) where tenant_id = target_tenant_id and person_id = target_person_id;
 end;
 $$;
 
 create or replace function app_private.tg_tenant_relation__refresh()
   returns trigger
-  language plpgsql security definer
+  language plpgsql
   set search_path = pg_catalog, public, pg_temp
 as $$
 begin
@@ -46,6 +52,21 @@ begin
        (new.tenant_id, new.person_id, new.status) then
       return null;
     end if;
+
+    -- Expiry uses coverage at the end date, not the current-role summary.
+    if new.status = 'expired' and old.status is distinct from new.status and not exists (
+      select from tenant_membership where tenant_id = new.tenant_id and person_id = new.person_id and active_range @> new.until
+      union all
+      select from tenant_trainer where tenant_id = new.tenant_id and person_id = new.person_id and active_range @> new.until
+      union all
+      select from tenant_administrator where tenant_id = new.tenant_id and person_id = new.person_id and active_range @> new.until
+    ) then
+      update cohort_membership
+      set status = 'expired', until = new.until
+      where tenant_id = new.tenant_id and person_id = new.person_id
+        and since < new.until and (until is null or until > new.until);
+    end if;
+
     if (old.tenant_id, old.person_id) is distinct from (new.tenant_id, new.person_id) then
       -- Rebuild both ends in key order when a relationship moves.
       if (old.tenant_id, old.person_id) < (new.tenant_id, new.person_id) then

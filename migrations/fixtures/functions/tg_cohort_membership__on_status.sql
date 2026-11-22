@@ -7,6 +7,11 @@ declare
   event_ids bigint[];
   person_ids bigint[];
 begin
+  if tg_op = 'UPDATE' and (old.tenant_id, old.person_id, old.cohort_id, old.status) is not distinct from
+                         (new.tenant_id, new.person_id, new.cohort_id, new.status) then
+    return null;
+  end if;
+
   select array_agg(distinct target.event_id)
   into event_ids
   from event_target_cohort target
@@ -26,14 +31,25 @@ begin
     perform app_private.reconcile_event_cohort_registrations(event_ids, person_ids);
   end if;
 
-  return case when tg_op = 'DELETE' then old else new end;
+  if tg_op = 'UPDATE' and (old.tenant_id, old.person_id) is distinct from (new.tenant_id, new.person_id) then
+    if (old.tenant_id, old.person_id) < (new.tenant_id, new.person_id) then
+      perform app_private.rebuild_tenant_relation(old.tenant_id, old.person_id);
+      perform app_private.rebuild_tenant_relation(new.tenant_id, new.person_id);
+    else
+      perform app_private.rebuild_tenant_relation(new.tenant_id, new.person_id);
+      perform app_private.rebuild_tenant_relation(old.tenant_id, old.person_id);
+    end if;
+  elsif tg_op = 'DELETE' then
+    perform app_private.rebuild_tenant_relation(old.tenant_id, old.person_id);
+  else
+    perform app_private.rebuild_tenant_relation(new.tenant_id, new.person_id);
+  end if;
+  return null;
 end;
 $$;
 
 grant all on function app_private.tg_cohort_membership__on_status to trainer;
 
-drop trigger if exists _500_on_status on cohort_membership;
-create trigger _500_on_status
-  after insert or delete or update of status, cohort_id, person_id, since, until
-  on cohort_membership
+create or replace trigger _500_on_status
+  after insert or update or delete on cohort_membership
   for each row execute function app_private.tg_cohort_membership__on_status();

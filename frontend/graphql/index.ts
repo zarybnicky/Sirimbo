@@ -679,7 +679,7 @@ export type AnnouncementAudience = {
   /** Reads a single `Announcement` that is related to this `AnnouncementAudience`. */
   announcement: Maybe<Announcement>;
   announcementId: Scalars['BigInt']['output'];
-  audienceRole: Maybe<AnnouncementAudienceRole>;
+  audienceRole: Maybe<TenantRole>;
   /** Reads a single `Cohort` that is related to this `AnnouncementAudience`. */
   cohort: Maybe<Cohort>;
   cohortId: Maybe<Scalars['BigInt']['output']>;
@@ -695,7 +695,7 @@ export type AnnouncementAudienceCondition = {
   /** Checks for equality with the object’s `announcementId` field. */
   announcementId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `audienceRole` field. */
-  audienceRole?: InputMaybe<AnnouncementAudienceRole>;
+  audienceRole?: InputMaybe<TenantRole>;
   /** Checks for equality with the object’s `cohortId` field. */
   cohortId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `id` field. */
@@ -726,14 +726,9 @@ export type AnnouncementAudienceEdge = {
   node: AnnouncementAudience;
 };
 
-export type AnnouncementAudienceRole =
-  | 'ADMINISTRATOR'
-  | 'MEMBER'
-  | 'TRAINER';
-
 /** An input for mutations affecting `AnnouncementAudienceTypeInputRecord` */
 export type AnnouncementAudienceTypeInputRecordInput = {
-  audienceRole?: InputMaybe<AnnouncementAudienceRole>;
+  audienceRole?: InputMaybe<TenantRole>;
   cohortId?: InputMaybe<Scalars['BigInt']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
 };
@@ -9023,9 +9018,13 @@ export type Person = {
   image: Maybe<File>;
   imageId: Maybe<Scalars['BigInt']['output']>;
   instagramUsername: Maybe<Scalars['String']['output']>;
+  /** @deprecated Use roles containing ADMINISTRATOR. */
   isAdmin: Maybe<Scalars['Boolean']['output']>;
+  /** @deprecated Use an empty roles array. */
   isExternal: Scalars['Boolean']['output'];
+  /** @deprecated Use roles containing MEMBER. */
   isMember: Maybe<Scalars['Boolean']['output']>;
+  /** @deprecated Use roles containing TRAINER. */
   isTrainer: Maybe<Scalars['Boolean']['output']>;
   /** Reads a single `PersonLastActivity` that is related to this `Person`. */
   lastActivity: Maybe<PersonLastActivity>;
@@ -9040,6 +9039,8 @@ export type Person = {
   personInvitationsList: Array<PersonInvitation>;
   phone: Maybe<Scalars['String']['output']>;
   prefixTitle: Scalars['String']['output'];
+  /** Current roles in the active tenant. Empty for external people. */
+  roles: Array<TenantRole>;
   /** Reads and enables pagination through a set of `ScoreboardManualAdjustment`. */
   scoreboardManualAdjustmentsList: Array<ScoreboardManualAdjustment>;
   /** Reads and enables pagination through a set of `SecurityEvent`. */
@@ -12444,6 +12445,11 @@ export type TenantPatch = {
   origins?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
+export type TenantRole =
+  | 'ADMINISTRATOR'
+  | 'MEMBER'
+  | 'TRAINER';
+
 export type TenantSetting = {
   __typename?: 'TenantSetting';
   settings: Scalars['JSON']['output'];
@@ -14318,7 +14324,7 @@ export type GraphCacheResolvers = {
   AnnouncementAudience?: {
     announcement?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, WithTypename<Announcement> | string>,
     announcementId?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    audienceRole?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, AnnouncementAudienceRole | string>,
+    audienceRole?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, TenantRole | string>,
     cohort?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, WithTypename<Cohort> | string>,
     cohortId?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -15887,6 +15893,7 @@ export type GraphCacheResolvers = {
     personInvitationsList?: GraphCacheResolver<WithTypename<Person>, PersonPersonInvitationsListArgs, Array<WithTypename<PersonInvitation> | string>>,
     phone?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     prefixTitle?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
+    roles?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Array<TenantRole | string>>,
     scoreboardManualAdjustmentsList?: GraphCacheResolver<WithTypename<Person>, PersonScoreboardManualAdjustmentsListArgs, Array<WithTypename<ScoreboardManualAdjustment> | string>>,
     securityEventsList?: GraphCacheResolver<WithTypename<Person>, PersonSecurityEventsListArgs, Array<WithTypename<SecurityEvent> | string>>,
     suffixTitle?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -18477,6 +18484,7 @@ export type GraphCacheUpdaters = {
     personInvitationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonPersonInvitationsListArgs>,
     phone?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     prefixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    roles?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     scoreboardManualAdjustmentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonScoreboardManualAdjustmentsListArgs>,
     securityEventsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonSecurityEventsListArgs>,
     suffixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,

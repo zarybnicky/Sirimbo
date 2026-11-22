@@ -9,9 +9,9 @@ export async function exportNsa(client: Client) {
   if (result.error) throw result.error;
   const data = result.data!;
 
-  const inputs = (data.people?.nodes || []).filter((x) => x.isMember || x.isTrainer);
+  const inputs = (data.people?.nodes || []).filter((x) => x.roles.includes('MEMBER') || x.roles.includes('TRAINER'));
   inputs.sort((x, y) =>
-    compareText(String(x.isTrainer), String(y.isTrainer)) ||
+    compareText(String(x.roles.includes('TRAINER')), String(y.roles.includes('TRAINER'))) ||
     compareText(x.lastName, y.lastName) ||
     compareText(x.firstName, y.firstName),
   );
@@ -20,7 +20,7 @@ export async function exportNsa(client: Client) {
 
   const rows: Record<string, string>[] = [];
   for (const x of inputs) {
-    const isTrainer = x.isTrainer;
+    const isTrainer = x.roles.includes('TRAINER');
     const isAthlete = x.cohortMembershipsList.some((x) => x.cohort?.isVisible);
     const isCzech = x.nationality === '203';
 
@@ -64,11 +64,11 @@ export async function exportNsa(client: Client) {
       '[SPORTOVEC_CETNOST]': isAthlete ? '3' : '',
       '[SPORTOVEC_DRUH_SPORTU]': isAthlete ? '66.1' : '',
       '[SPORTOVEC_UCAST_SOUTEZE_POCET]': isAthlete ? '6' : '',
-      '[TRENER]': x.isTrainer ? '1' : '0',
-      '[TRENEREM_OD]': x.isTrainer ? formatNsaDate(trainerSince) : '',
+      '[TRENER]': isTrainer ? '1' : '0',
+      '[TRENEREM_OD]': isTrainer ? formatNsaDate(trainerSince) : '',
       '[TRENEREM_DO]': '',
-      '[TRENER_CETNOST]': x.isTrainer ? '3' : '',
-      '[TRENER_DRUH_SPORTU]': x.isTrainer ? '66.1' : '',
+      '[TRENER_CETNOST]': isTrainer ? '3' : '',
+      '[TRENER_DRUH_SPORTU]': isTrainer ? '66.1' : '',
       '[EXT_ID]': x.cstsId?.toString() || '',
       '[SVAZ_ICO_SKTJ]': '',
     });

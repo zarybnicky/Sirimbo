@@ -4,41 +4,13 @@ drop function if exists person_facets;
 create or replace function app_private.person_membership_candidates(membership_state text)
 returns table(person_id bigint, in_state boolean, cohort_ids bigint[], is_trainer boolean, is_admin boolean)
 language sql stable as $$
-  with current_people as (
-    select person_id from current_tenant_membership
-    union select person_id from current_tenant_trainer
-    union select person_id from current_tenant_administrator
-  ), former_people as (
-    select person_id from tenant_membership where tenant_id = current_tenant_id() and status = 'expired'
-    union select person_id from tenant_trainer where tenant_id = current_tenant_id() and status = 'expired'
-    union select person_id from tenant_administrator where tenant_id = current_tenant_id() and status = 'expired'
-  ), trainers as (
-    select person_id from current_tenant_trainer where membership_state = 'current'
-    union all
-    select person_id from tenant_trainer
-    where membership_state = 'former' and tenant_id = current_tenant_id() and status = 'expired'
-  ), admins as (
-    select person_id from current_tenant_administrator where membership_state = 'current'
-    union all
-    select person_id from tenant_administrator
-    where membership_state = 'former' and tenant_id = current_tenant_id() and status = 'expired'
-  ), cohorts as (
-    select person_id, cohort_id from current_cohort_membership where membership_state = 'current'
-    union all
-    select person_id, cohort_id from cohort_membership
-    where membership_state = 'former' and tenant_id = current_tenant_id() and status = 'expired'
-  )
   select p.id,
-    case membership_state
-      when 'current' then p.id in (select person_id from current_people)
-      when 'former' then p.id in (select person_id from former_people)
-        and p.id not in (select person_id from current_people)
-      else false
-    end,
-    array(select distinct cohort_id from cohorts where person_id = p.id),
-    p.id in (select person_id from trainers),
-    p.id in (select person_id from admins)
-  from person p;
+    coalesce(case membership_state when 'current' then r.is_current when 'former' then r.is_former end, false),
+    coalesce(case membership_state when 'current' then r.current_cohort_ids when 'former' then r.expired_cohort_ids end, '{}'),
+    coalesce('trainer' = any(case membership_state when 'current' then r.current_roles when 'former' then r.expired_roles end), false),
+    coalesce('administrator' = any(case membership_state when 'current' then r.current_roles when 'former' then r.expired_roles end), false)
+  from person p
+  left join app_private.tenant_relation r on r.person_id = p.id and r.tenant_id = current_tenant_id();
 $$;
 grant execute on function app_private.person_membership_candidates to anonymous;
 

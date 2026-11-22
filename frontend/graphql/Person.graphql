@@ -19,10 +19,7 @@ fragment PersonBasic on Person {
   lastName
   gender
   externalIds
-  isMember
-  isTrainer
-  isAdmin
-  isExternal
+  roles
   tenantIds
 }
 

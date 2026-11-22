@@ -51,8 +51,9 @@ language sql stable as $$
           and ((condition).couple_id is null or p.couple_id = (condition).couple_id)
           and ((condition).participant_ids is null or p.person_id = any((condition).participant_ids))
           and ((condition).cohort_id is null or exists (
-            select 1 from current_cohort_membership c
-            where c.cohort_id = (condition).cohort_id and c.person_id = p.person_id
+            select 1 from app_private.tenant_relation r
+            where r.tenant_id = (select current_tenant_id()) and r.person_id = p.person_id
+              and (condition).cohort_id = any(r.current_cohort_ids)
           ))
       ))
   ), pairs as materialized (

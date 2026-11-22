@@ -59,7 +59,7 @@ function useRegistrationCandidates(
   );
 
   const people = isManager ? (query.data?.people?.nodes ?? []) : auth.persons;
-  const internalPersonIds = new Set(people.filter((x) => !x.isExternal).map((x) => x.id));
+  const internalPersonIds = new Set(people.filter((x) => x.roles.length > 0).map((x) => x.id));
   const couples = isManager
     ? (query.data?.couplesList ?? [])
     : [...new Map(auth.couples.map((c) => [c.id, c])).values()].filter(
@@ -73,8 +73,8 @@ function useRegistrationCandidates(
       .filter((x) => !registeredPeople.has(x.id))
       .map((x) => ({
         id: `person:${x.id}`,
-        label: x.name + (x.isExternal ? ' (Externí)' : ''),
-        isExternal: x.isExternal,
+        label: x.name + (x.roles.length === 0 ? ' (Externí)' : ''),
+        isExternal: x.roles.length === 0,
         personId: x.id,
         coupleId: null,
       })),

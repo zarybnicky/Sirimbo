@@ -23082,6 +23082,23 @@
             "args": []
           },
           {
+            "name": "roles",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
             "name": "scoreboardManualAdjustmentsList",
             "type": {
               "kind": "NON_NULL",

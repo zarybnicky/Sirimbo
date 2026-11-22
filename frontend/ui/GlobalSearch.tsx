@@ -296,10 +296,10 @@ function getSearchResultSummary(result: GlobalSearchQuery['globalSearchList'][nu
       ...getEntityLink('person', person),
       icon: UserRound,
       detail: [
-        person.isAdmin && 'Správce',
-        person.isTrainer && 'Trenér',
-        person.isMember && 'Člen',
-        person.isExternal && 'Externí',
+        person.roles.includes('ADMINISTRATOR') && 'Správce',
+        person.roles.includes('TRAINER') && 'Trenér',
+        person.roles.includes('MEMBER') && 'Člen',
+        person.roles.length === 0 && 'Externí',
         formatAgeGroup(person.ageGroup),
         ...person.cohortMembershipsList.map((x) => x.cohort?.name),
         ...person.couplesList

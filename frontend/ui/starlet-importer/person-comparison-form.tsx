@@ -97,19 +97,19 @@ export function PersonComparisonForm() {
       cohorts.data?.cohortsList?.map((c) => [c.id, !!c.externalIds?.length]),
     );
     return (people.data?.people?.nodes ?? [])
-      .toSorted((a, b) => Number(a.isExternal) - Number(b.isExternal))
+      .toSorted((a, b) => Number(a.roles.length === 0) - Number(b.roles.length === 0))
       .map((person): ComparisonPerson => {
         let keepReason: string | undefined;
-        if (person.isAdmin) keepReason = 'správce';
-        else if (person.isTrainer) keepReason = 'trenér';
-        else if (!person.isMember) keepReason = 'nečlen';
+        if (person.roles.includes('ADMINISTRATOR')) keepReason = 'správce';
+        else if (person.roles.includes('TRAINER')) keepReason = 'trenér';
+        else if (!person.roles.includes('MEMBER')) keepReason = 'nečlen';
         else if (!person.externalIds?.length) keepReason = 'bez vazby na evidenci';
         else if (!person.cohortIds?.some((id) => id && managedIds.get(id)))
           keepReason = 'mimo skupiny evidence';
         return {
           id: person.id,
-          isFormer: person.isExternal,
-          isMember: !!person.isMember,
+          isFormer: person.roles.length === 0,
+          isMember: person.roles.includes('MEMBER'),
           membershipId: person.tenantMembershipsList.find((x) => x.tenantId === tenantId)
             ?.id,
           keepReason,

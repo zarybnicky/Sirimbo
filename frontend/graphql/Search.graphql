@@ -4,10 +4,7 @@ query GlobalSearch($search: String!) {
     person {
       id
       name
-      isMember
-      isTrainer
-      isAdmin
-      isExternal
+      roles
       ageGroup
       cohortMembershipsList(condition: { status: ACTIVE }) {
         id

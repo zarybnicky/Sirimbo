@@ -79,7 +79,7 @@ export interface IAccessControlCredentialsQuery {
   result: IAccessControlCredentialsResult;
 }
 
-const accessControlCredentialsIR: any = {"usedParamSet":{"tenantId":true},"params":[{"name":"tenantId","required":true,"transform":{"type":"scalar"},"locs":[{"a":161,"b":170}]}],"statement":"select c.kind, c.code, c.person_id::text as \"personId!\", p.name as \"personName\"\nfrom access_credential c\njoin person p on p.id = c.person_id\nwhere c.tenant_id = :tenantId! and c.valid_range @> now()\n  and c.person_id in (\n    select person_id from current_tenant_membership\n    union all select person_id from current_tenant_trainer\n    union all select person_id from current_tenant_administrator\n  )\norder by c.id"};
+const accessControlCredentialsIR: any = {"usedParamSet":{"tenantId":true},"params":[{"name":"tenantId","required":true,"transform":{"type":"scalar"},"locs":[{"a":161,"b":170}]}],"statement":"select c.kind, c.code, c.person_id::text as \"personId!\", p.name as \"personName\"\nfrom access_credential c\njoin person p on p.id = c.person_id\nwhere c.tenant_id = :tenantId! and c.valid_range @> now()\n  and c.person_id in (\n    select person_id from app_private.current_tenant_relation\n  )\norder by c.id"};
 
 /**
  * Query generated from SQL:
@@ -89,9 +89,7 @@ const accessControlCredentialsIR: any = {"usedParamSet":{"tenantId":true},"param
  * join person p on p.id = c.person_id
  * where c.tenant_id = :tenantId! and c.valid_range @> now()
  *   and c.person_id in (
- *     select person_id from current_tenant_membership
- *     union all select person_id from current_tenant_trainer
- *     union all select person_id from current_tenant_administrator
+ *     select person_id from app_private.current_tenant_relation
  *   )
  * order by c.id
  * ```

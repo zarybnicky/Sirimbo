@@ -9,17 +9,6 @@ This guide covers changes under `migrations/current/` and `migrations/fixtures/`
 - **Document complex operations inline.** Add concise SQL comments explaining non-obvious sequences, especially when coordinating multiple triggers/functions.
 
 ### Example patterns from committed migrations
-- **New, empty table rebuilds.** Use this pattern only for tables introduced by the current work with no data to preserve:
-  ```sql
-  drop table if exists event_external_registration;
-  create table if not exists event_external_registration (
-    ...
-  );
-  ```
-- **Guarded column changes.** Use existence guards so column additions and authorized removals succeed on reruns. These guards do not protect data or dependent objects:
-  ```sql
-  alter table attachment add column if not exists thumbhash text null;
-  ```
 - **Adding enum values safely.** Use an existence check before `alter type ... add value`, as seen in `migrations/committed/000041.sql`:
   ```sql
   do $$
@@ -51,6 +40,7 @@ This guide covers changes under `migrations/current/` and `migrations/fixtures/`
   ```
 
 ## Local workflow
+- Use PostgreSQL 19 for local development. The tenant-relation rebuild uses `ON CONFLICT DO SELECT FOR UPDATE`.
 - Preserve unrelated SQL already in `1-current.sql`. Migration promotion includes the whole scratchpad, not just your changes. Leave promotion to the maintainer unless the task explicitly includes that work.
 - Edit `1-current.sql` or a fixture under `migrations/fixtures/`.
 - For each new or changed fixture, add its `--!include` directive to `1-current.sql`. Paths are relative to `migrations/fixtures/`, such as `--!include functions/upsert_location.sql`.
@@ -61,7 +51,7 @@ This guide covers changes under `migrations/current/` and `migrations/fixtures/`
 - Require a zero exit status and successful test output before reporting success. If the command fails, use its error output to diagnose the failure. An unchanged-SQL message is normal when the watcher already applied the SQL. The `--forceActions` flag still runs the tests. Do not change SQL merely to force the watcher to run again.
 - After permission changes, test both allowed and denied access, including access from another tenant. Add or update the relevant tests in `migrations/test/` for high-exposure changes.
 - Test repeatability with `pnpm exec graphile-migrate run migrations/current/1-current.sql` against the same local database. Then run `pnpm exec graphile-migrate current --forceActions` again for the tests. The `current` and `watch` commands skip unchanged SQL, so invoking them twice does not test repeatability.
-- When the migration is ready for promotion, run `pnpm exec graphile-migrate commit`. This creates a committed migration file and refreshes the schema dump through the configured hooks. It does not create a Git commit or change the Git index.
+- Leave migration promotion to the maintainer. `graphile-migrate commit` invokes the prohibited schema dump hook.
 - Do not hand-edit files under `migrations/committed/`. Put later corrections in the current migration.
 
 ## Don't dos

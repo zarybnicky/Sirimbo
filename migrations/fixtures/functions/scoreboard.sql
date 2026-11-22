@@ -10,9 +10,10 @@ language sql
 stable
 as $$
   with membership as (
-    select cm.person_id, cm.cohort_id
-    from current_cohort_membership cm
-    where (cm.cohort_id = scoreboard_entries.cohort_id or scoreboard_entries.cohort_id is null)
+    select person_id, current_cohort_ids
+    from app_private.tenant_relation
+    where tenant_id = (select current_tenant_id()) and current_cohort_ids <> '{}'
+      and (scoreboard_entries.cohort_id is null or scoreboard_entries.cohort_id = any(current_cohort_ids))
   ),
   instances as (
     select
@@ -25,10 +26,6 @@ as $$
       and i.since >= scoreboard_entries.since::timestamptz
       and i.until  < scoreboard_entries.until::timestamptz
       and i.type <> 'reservation'
-  ),
-  member_people as (
-    select distinct person_id
-    from membership
   ),
   attendance as materialized (
     select
@@ -48,7 +45,7 @@ as $$
       -- Keep date-filtered events first, avoiding RLS checks on registration history.
       offset 0
     ) ea
-    where ea.person_id = any (select person_id from member_people)
+    where ea.person_id = any (select person_id from membership)
   ),
   per_day as (
     select
@@ -87,7 +84,7 @@ as $$
         where mem.person_id = sma.person_id
           and (
             (scoreboard_entries.cohort_id is null and sma.cohort_id is null)
-            or mem.cohort_id is not distinct from coalesce(sma.cohort_id, scoreboard_entries.cohort_id)
+            or coalesce(sma.cohort_id, scoreboard_entries.cohort_id) = any(mem.current_cohort_ids)
           )
       )
     group by sma.person_id

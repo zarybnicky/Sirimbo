@@ -6,14 +6,9 @@ export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' |
 import * as Types from './index';
 
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-export type AnnouncementAudienceRole =
-  | 'ADMINISTRATOR'
-  | 'MEMBER'
-  | 'TRAINER';
-
 /** An input for mutations affecting `AnnouncementAudienceTypeInputRecord` */
 export type AnnouncementAudienceTypeInputRecordInput = {
-  audienceRole?: AnnouncementAudienceRole | null | undefined;
+  audienceRole?: TenantRole | null | undefined;
   cohortId?: string | null | undefined;
   id?: string | null | undefined;
 };
@@ -105,6 +100,11 @@ export type AnnouncementsOrderBy =
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
 
+export type TenantRole =
+  | 'ADMINISTRATOR'
+  | 'MEMBER'
+  | 'TRAINER';
+
 /** All input for the `upsertAnnouncement` mutation. */
 export type UpsertAnnouncementInput = {
   attachments?: Array<string | null | undefined> | null | undefined;
@@ -117,9 +117,9 @@ export type UpsertAnnouncementInput = {
   info?: AnnouncementTypeInputRecordInput | null | undefined;
 };
 
-export type AnnouncementAudienceFragment = { id: string, audienceRole: Types.AnnouncementAudienceRole | null, cohortId: string | null, cohort: { id: string, name: string, colorRgb: string } | null };
+export type AnnouncementAudienceFragment = { id: string, audienceRole: Types.TenantRole | null, cohortId: string | null, cohort: { id: string, name: string, colorRgb: string } | null };
 
-export type AnnouncementFragment = { __typename: 'Announcement', id: string, title: string, body: string, createdAt: string, updatedAt: string | null, scheduledSince: string | null, scheduledUntil: string | null, status: Types.AnnouncementStatus, isSticky: boolean, authorId: string | null, authorName: string | null, announcementAudiences: { nodes: Array<{ id: string, audienceRole: Types.AnnouncementAudienceRole | null, cohortId: string | null, cohort: { id: string, name: string, colorRgb: string } | null }> }, explicitAttachments: { nodes: Array<{ announcementId: string, fileId: string, file: { id: string, name: string, displayName: string | null, url: string, contentType: string | null, uploadedAt: string | null, byteSize: string | null, isPublic: boolean } | null }> } };
+export type AnnouncementFragment = { __typename: 'Announcement', id: string, title: string, body: string, createdAt: string, updatedAt: string | null, scheduledSince: string | null, scheduledUntil: string | null, status: Types.AnnouncementStatus, isSticky: boolean, authorId: string | null, authorName: string | null, announcementAudiences: { nodes: Array<{ id: string, audienceRole: Types.TenantRole | null, cohortId: string | null, cohort: { id: string, name: string, colorRgb: string } | null }> }, explicitAttachments: { nodes: Array<{ announcementId: string, fileId: string, file: { id: string, name: string, displayName: string | null, url: string, contentType: string | null, uploadedAt: string | null, byteSize: string | null, isPublic: boolean } | null }> } };
 
 export type AnnouncementsQueryVariables = Exact<{
   condition?: Types.AnnouncementCondition | null | undefined;
@@ -130,7 +130,7 @@ export type AnnouncementsQueryVariables = Exact<{
 }>;
 
 
-export type AnnouncementsQuery = { announcements: { totalCount: number, nodes: Array<{ __typename: 'Announcement', id: string, title: string, body: string, createdAt: string, updatedAt: string | null, scheduledSince: string | null, scheduledUntil: string | null, status: Types.AnnouncementStatus, isSticky: boolean, authorId: string | null, authorName: string | null, announcementAudiences: { nodes: Array<{ id: string, audienceRole: Types.AnnouncementAudienceRole | null, cohortId: string | null, cohort: { id: string, name: string, colorRgb: string } | null }> }, explicitAttachments: { nodes: Array<{ announcementId: string, fileId: string, file: { id: string, name: string, displayName: string | null, url: string, contentType: string | null, uploadedAt: string | null, byteSize: string | null, isPublic: boolean } | null }> } }>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, endCursor: any } } | null };
+export type AnnouncementsQuery = { announcements: { totalCount: number, nodes: Array<{ __typename: 'Announcement', id: string, title: string, body: string, createdAt: string, updatedAt: string | null, scheduledSince: string | null, scheduledUntil: string | null, status: Types.AnnouncementStatus, isSticky: boolean, authorId: string | null, authorName: string | null, announcementAudiences: { nodes: Array<{ id: string, audienceRole: Types.TenantRole | null, cohortId: string | null, cohort: { id: string, name: string, colorRgb: string } | null }> }, explicitAttachments: { nodes: Array<{ announcementId: string, fileId: string, file: { id: string, name: string, displayName: string | null, url: string, contentType: string | null, uploadedAt: string | null, byteSize: string | null, isPublic: boolean } | null }> } }>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, endCursor: any } } | null };
 
 export type UpdateAnnouncementMutationVariables = Exact<{
   id: string;
@@ -138,21 +138,21 @@ export type UpdateAnnouncementMutationVariables = Exact<{
 }>;
 
 
-export type UpdateAnnouncementMutation = { updateAnnouncement: { announcement: { __typename: 'Announcement', id: string, title: string, body: string, createdAt: string, updatedAt: string | null, scheduledSince: string | null, scheduledUntil: string | null, status: Types.AnnouncementStatus, isSticky: boolean, authorId: string | null, authorName: string | null, announcementAudiences: { nodes: Array<{ id: string, audienceRole: Types.AnnouncementAudienceRole | null, cohortId: string | null, cohort: { id: string, name: string, colorRgb: string } | null }> }, explicitAttachments: { nodes: Array<{ announcementId: string, fileId: string, file: { id: string, name: string, displayName: string | null, url: string, contentType: string | null, uploadedAt: string | null, byteSize: string | null, isPublic: boolean } | null }> } } | null } | null };
+export type UpdateAnnouncementMutation = { updateAnnouncement: { announcement: { __typename: 'Announcement', id: string, title: string, body: string, createdAt: string, updatedAt: string | null, scheduledSince: string | null, scheduledUntil: string | null, status: Types.AnnouncementStatus, isSticky: boolean, authorId: string | null, authorName: string | null, announcementAudiences: { nodes: Array<{ id: string, audienceRole: Types.TenantRole | null, cohortId: string | null, cohort: { id: string, name: string, colorRgb: string } | null }> }, explicitAttachments: { nodes: Array<{ announcementId: string, fileId: string, file: { id: string, name: string, displayName: string | null, url: string, contentType: string | null, uploadedAt: string | null, byteSize: string | null, isPublic: boolean } | null }> } } | null } | null };
 
 export type AnnouncementQueryVariables = Exact<{
   id: string;
 }>;
 
 
-export type AnnouncementQuery = { announcement: { __typename: 'Announcement', id: string, title: string, body: string, createdAt: string, updatedAt: string | null, scheduledSince: string | null, scheduledUntil: string | null, status: Types.AnnouncementStatus, isSticky: boolean, authorId: string | null, authorName: string | null, announcementAudiences: { nodes: Array<{ id: string, audienceRole: Types.AnnouncementAudienceRole | null, cohortId: string | null, cohort: { id: string, name: string, colorRgb: string } | null }> }, explicitAttachments: { nodes: Array<{ announcementId: string, fileId: string, file: { id: string, name: string, displayName: string | null, url: string, contentType: string | null, uploadedAt: string | null, byteSize: string | null, isPublic: boolean } | null }> } } | null };
+export type AnnouncementQuery = { announcement: { __typename: 'Announcement', id: string, title: string, body: string, createdAt: string, updatedAt: string | null, scheduledSince: string | null, scheduledUntil: string | null, status: Types.AnnouncementStatus, isSticky: boolean, authorId: string | null, authorName: string | null, announcementAudiences: { nodes: Array<{ id: string, audienceRole: Types.TenantRole | null, cohortId: string | null, cohort: { id: string, name: string, colorRgb: string } | null }> }, explicitAttachments: { nodes: Array<{ announcementId: string, fileId: string, file: { id: string, name: string, displayName: string | null, url: string, contentType: string | null, uploadedAt: string | null, byteSize: string | null, isPublic: boolean } | null }> } } | null };
 
 export type UpsertAnnouncementMutationVariables = Exact<{
   input: Types.UpsertAnnouncementInput;
 }>;
 
 
-export type UpsertAnnouncementMutation = { upsertAnnouncement: { result: { __typename: 'Announcement', id: string, title: string, body: string, createdAt: string, updatedAt: string | null, scheduledSince: string | null, scheduledUntil: string | null, status: Types.AnnouncementStatus, isSticky: boolean, authorId: string | null, authorName: string | null, announcementAudiences: { nodes: Array<{ id: string, audienceRole: Types.AnnouncementAudienceRole | null, cohortId: string | null, cohort: { id: string, name: string, colorRgb: string } | null }> }, explicitAttachments: { nodes: Array<{ announcementId: string, fileId: string, file: { id: string, name: string, displayName: string | null, url: string, contentType: string | null, uploadedAt: string | null, byteSize: string | null, isPublic: boolean } | null }> } } | null } | null };
+export type UpsertAnnouncementMutation = { upsertAnnouncement: { result: { __typename: 'Announcement', id: string, title: string, body: string, createdAt: string, updatedAt: string | null, scheduledSince: string | null, scheduledUntil: string | null, status: Types.AnnouncementStatus, isSticky: boolean, authorId: string | null, authorName: string | null, announcementAudiences: { nodes: Array<{ id: string, audienceRole: Types.TenantRole | null, cohortId: string | null, cohort: { id: string, name: string, colorRgb: string } | null }> }, explicitAttachments: { nodes: Array<{ announcementId: string, fileId: string, file: { id: string, name: string, displayName: string | null, url: string, contentType: string | null, uploadedAt: string | null, byteSize: string | null, isPublic: boolean } | null }> } } | null } | null };
 
 export type DeleteAnnouncementMutationVariables = Exact<{
   id: string;

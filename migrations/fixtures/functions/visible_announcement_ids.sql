@@ -21,16 +21,13 @@ as $$
   from announcement_audience join eligible on eligible.id = announcement_id
   where (
     cohort_id in (
-      select cohort_id from current_cohort_membership where person_id = any ((select current_person_ids())::bigint[])
+      select unnest(current_cohort_ids) from app_private.tenant_relation
+      where tenant_id = (select current_tenant_id())
+        and person_id = any ((select current_person_ids())::bigint[])
     )
-    or audience_role = 'member' and exists (
-      select from current_tenant_membership where person_id = any ((select current_person_ids())::bigint[])
-    )
-    or audience_role = 'trainer' and exists (
-      select from current_tenant_trainer where person_id = any ((select current_person_ids())::bigint[])
-    )
-    or audience_role = 'administrator' and exists (
-      select from current_tenant_administrator where person_id = any ((select current_person_ids())::bigint[])
+    or audience_role in (
+      select unnest(current_roles) from app_private.current_tenant_relation
+      where person_id = any ((select current_person_ids())::bigint[])
     )
   );
 $$;

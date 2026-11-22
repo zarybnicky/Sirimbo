@@ -180,7 +180,7 @@ fragment EventRegistration on EventRegistration {
     name
     firstName
     lastName
-    isExternal
+    roles
   }
   coupleId
   couple {
@@ -391,7 +391,7 @@ query EventFormOptions(
     nodes {
       id
       name
-      isExternal
+      roles
     }
   }
   tenant: getCurrentTenant @_required {
@@ -409,7 +409,7 @@ query EventFormOptions(
           person {
             id
             name
-            isExternal
+            roles
           }
         }
       }
@@ -425,7 +425,7 @@ query EventFormOptions(
         person {
           id
           name
-          isExternal
+          roles
         }
       }
     }

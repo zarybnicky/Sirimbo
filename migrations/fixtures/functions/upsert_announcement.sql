@@ -15,7 +15,7 @@ create type announcement_type_input as (
 create type announcement_audience_type_input as (
   id bigint,
   cohort_id bigint,
-  audience_role announcement_audience_role
+  audience_role public.tenant_role
 );
 
 create or replace function upsert_announcement(

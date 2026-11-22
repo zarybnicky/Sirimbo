@@ -3,37 +3,30 @@ returns setof bigint
 language sql stable leakproof parallel safe security definer
 set search_path = pg_catalog, public, pg_temp
 as $$
-  with related(person_id) as materialized (
-    select unnest(current_person_ids())
-    union all
-    select person_id from tenant_trainer
-    where tenant_id = any ((select current_admin_tenant_ids())::bigint[])
-      or (tenant_id = (select current_tenant_id()) and status = 'active')
-    union all
-    select person_id from tenant_administrator
-    where tenant_id = any ((select current_admin_tenant_ids())::bigint[])
-      or (tenant_id = (select current_tenant_id()) and status = 'active')
-    union all
-    select person_id from tenant_membership
-    where tenant_id = any ((select current_admin_tenant_ids())::bigint[])
-      or (tenant_id = (select current_tenant_id()) and status = 'active'
-        and (select current_tenant_id() = any(my_tenants_array())))
-    union all
-    select visible_person_id from app_private.event_people
-    where tenant_id = (select current_tenant_id())
-      and viewer_person_id = any((select current_person_ids())::bigint[])
-  ), visible(person_id) as materialized (
-    select person_id from related
-    union all
+  with visible(person_id) as materialized (
     select p.id from person p
-    where (select cardinality(current_admin_tenant_ids()) > 0)
-      and p.id not in (select person_id from related)
-      and (exists (
-        select from event_registration r
+    where p.id = any ((select current_person_ids())::bigint[])
+      or exists (
+        select from app_private.tenant_relation r
+        where r.person_id = p.id and r.has_roles and (
+          r.tenant_id = any ((select current_admin_tenant_ids())::bigint[])
+          or (r.tenant_id = (select current_tenant_id()) and r.is_current and (
+            (select current_tenant_id() = any(my_tenants_array()))
+            or r.current_roles && array['trainer', 'administrator']::public.tenant_role[]
+          ))
+        )
+      )
+      or p.id in (
+        select visible_person_id from app_private.event_people
+        where tenant_id = (select current_tenant_id())
+          and viewer_person_id = any ((select current_person_ids())::bigint[])
+      )
+      or ((select current_admin_tenant_ids() <> '{}'::bigint[]) and exists (
+        select 1 from event_registration r
         where r.person_id = p.id and r.registration_status = 'active'
           and r.tenant_id = any ((select current_admin_tenant_ids())::bigint[])
-      ) or exists (
-        select from event_trainer t
+        union all
+        select 1 from event_trainer t
         where t.person_id = p.id
           and t.tenant_id = any ((select current_admin_tenant_ids())::bigint[])
       ))

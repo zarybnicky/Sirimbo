@@ -45,17 +45,14 @@ function personPredicate(
   if (tenantMembers && personIds == null && coupleId == null && cohortId == null && !onlyMine)
     people.push(
       sql`${column} in (
-        select person_id from public.current_tenant_membership
-        union all
-        select person_id from public.current_tenant_trainer
-        union all
-        select person_id from public.current_tenant_administrator
+        select person_id from app_private.current_tenant_relation
       )`,
     );
   if (cohortId != null)
     people.push(sql`${column} in (
-      select person_id from public.current_cohort_membership
-      where cohort_id = ${sqlValueWithCodec(cohortId, TYPES.bigint)}
+      select person_id from app_private.tenant_relation
+      where tenant_id = (select public.current_tenant_id())
+        and ${sqlValueWithCodec(cohortId, TYPES.bigint)} = any(current_cohort_ids)
     )`);
 
   return people.length ? sql`(${sql.join(people, ' and ')})` : null;

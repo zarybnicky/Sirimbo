@@ -15,16 +15,13 @@ language sql stable as $$
     select p.id
     from person p
     where (person_ids is not null or couple_id is not null or p.id in (
-        select person_id from current_tenant_membership
-        union all
-        select person_id from current_tenant_trainer
-        union all
-        select person_id from current_tenant_administrator
+        select person_id from app_private.current_tenant_relation
       ))
       and (person_ids is null or p.id = any(person_ids))
       and (cohort_id is null or exists (
-        select 1 from current_cohort_membership cm
-        where cm.person_id = p.id and cm.cohort_id = suggested_competition_matches.cohort_id
+        select 1 from app_private.tenant_relation r
+        where r.tenant_id = (select current_tenant_id()) and r.person_id = p.id
+          and suggested_competition_matches.cohort_id = any(r.current_cohort_ids)
       ))
       and (couple_id is null or exists (
         select 1 from couple c

@@ -24,8 +24,8 @@ export function useEventFormOptions(variables: EventFormOptionsQueryVariables) {
       if (!person) continue;
       participants.set(`person:${person.id}`, {
         id: `person:${person.id}`,
-        label: person.name + (person.isExternal ? ' (Externí)' : ''),
-        isExternal: person.isExternal,
+        label: person.name + (person.roles.length === 0 ? ' (Externí)' : ''),
+        isExternal: person.roles.length === 0,
         personId: person.id,
         coupleId: null,
         personIds: [person.id],
