@@ -2,9 +2,32 @@
 
 set -euo pipefail
 
-ssh tango "rm -rf /tmp/olymp.dump.d && pg_dump -Fd -j 4 --compress=zstd:3 --statistics -f /tmp/olymp.dump.d olymp"
+usage() {
+  cat <<EOF
+Usage: $0 --fetch|--apply
 
-rsync -a --delete tango:/tmp/olymp.dump.d/ ./olymp.dump.d/
+  --fetch  Dump production on tango and download it to ./olymp.dump.d/.
+  --apply  Restore ./olymp.dump.d/ and replace the local olymp database.
+EOF
+}
+
+if [[ $# -ne 1 ]]; then
+  usage >&2
+  exit 1
+fi
+
+step=$1
+case "$step" in
+  --fetch|--apply) ;;
+  -h|--help) usage; exit 0 ;;
+  *) usage >&2; exit 1 ;;
+esac
+
+if [[ "$step" == --fetch ]]; then
+  ssh tango "rm -rf /tmp/olymp.dump.d && pg_dump -Fd -j 4 --compress=zstd:3 --statistics -f /tmp/olymp.dump.d olymp"
+  rsync -a --delete tango:/tmp/olymp.dump.d/ ./olymp.dump.d/
+  exit 0
+fi
 
 restore_list=$(mktemp)
 trap 'rm -f "$restore_list"' EXIT
