@@ -6,8 +6,7 @@ create policy uploader_manage on file
     and uploaded_by = (select current_user_id()));
 create policy visible on file for select
   using (
-    (tenant_id = (select current_tenant_id())
-      and id in (select app_private.visible_file_ids()))
+    id in (select * from app_private.visible_file_ids())
     -- These uncorrelated subqueries use entity RLS, including share and partner access.
     or id in (
       select image_id from person where image_id is not null

@@ -42,7 +42,6 @@ with
 
     app_private.is_system_admin(u.id) as is_system_admin,
 
-    '{}'::bigint[] as guest_tenant_ids,
     tc.member_ids as member_tenant_ids,
     tc.trainer_ids as trainer_tenant_ids,
     tc.admin_ids as admin_tenant_ids

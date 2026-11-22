@@ -13,7 +13,8 @@ as $$
   select id
   from file
   where tenant_id = (select current_tenant_id())
-    and is_public
+    and (is_public or uploaded_by = (select current_user_id())
+      or (select pg_has_role(current_setting('role'), 'administrator', 'member')))
 
   union all
 

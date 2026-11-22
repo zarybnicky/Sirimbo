@@ -22,6 +22,16 @@ do $$ begin
   end if;
 end $$;
 
+do $$ begin
+  if exists (
+    select from pg_attribute
+    where attrelid = (select typrelid from pg_type where oid = 'public.jwt_token'::regtype)
+      and attname = 'guest_tenant_ids' and not attisdropped
+  ) then
+    alter type public.jwt_token drop attribute guest_tenant_ids;
+  end if;
+end $$;
+
 create table if not exists app_private.tenant_relation (
   tenant_id bigint not null references tenant(id) on delete cascade,
   person_id bigint not null references person(id) on delete cascade,
@@ -83,6 +93,8 @@ from (
 --!include functions/scoreboard.sql
 --!include functions/event_facets.sql
 --!include functions/event_conflicts.sql
+--!include functions/visible_file_ids.sql
+--!include policies/file.sql
 
 drop type if exists announcement_audience_role;
 drop view if exists current_tenant_membership;
