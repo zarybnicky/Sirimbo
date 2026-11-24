@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai';
 import { authAtom, storeRef, useAuth, useTenantId, tenantIdAtom } from '@/lib/auth';
-import { normalizeClaims, resolveAuth } from '@/lib/auth-claims';
+import { getDevelopmentUsers, pickDevelopmentUser } from '@/lib/development-identity';
 import { logInAsAction } from '@/lib/auth-actions';
 import { DevelopmentUsersDocument } from '@/graphql/CurrentUser';
 import React from 'react';
@@ -76,7 +76,7 @@ function DevelopmentIdentity() {
   const auth = useAuth();
   const tenantId = useTenantId();
   const router = useRouter();
-  const [recently] = React.useState(() => Date.now() - 90 * 86_400_000);
+  const [now] = React.useState(Date.now);
 
   const [candidates] = useQuery({
     query: DevelopmentUsersDocument,
@@ -88,24 +88,11 @@ function DevelopmentIdentity() {
     ),
   });
 
-  const eligibleUsers = React.useMemo(() => {
-    return (candidates.data?.users?.nodes ?? []).flatMap((user) => {
-      const persons = user.userProxiesList.flatMap((x) => x.person ?? []);
-      const claims = normalizeClaims(user.claims);
-      if (!claims || persons.length === 0) return [];
-      return {
-        id: user.id,
-        email: user.uEmail,
-        name: persons.map((p) => p.name).join(', '),
-        role: resolveAuth(claims, tenantId).role,
-        recentlyActive: persons.some(
-          (p) =>
-            p.lastActivity?.trainingAt &&
-            Date.parse(p.lastActivity.trainingAt) >= recently,
-        ),
-      };
-    });
-  }, [candidates.data, tenantId, recently]);
+  const candidateUsers = candidates.data?.users?.nodes;
+  const eligibleUsers = React.useMemo(
+    () => getDevelopmentUsers(candidateUsers ?? [], tenantId, now),
+    [candidateUsers, tenantId, now],
+  );
 
   const login = useAsyncCallback(async (id: string) => {
     const result = await logInAsAction(id);
@@ -137,12 +124,8 @@ function DevelopmentIdentity() {
                 aria-pressed={auth.role === role}
                 className={buttonCls({ variant: 'outline', className: 'grow' })}
                 onClick={() => {
-                  const others = users.filter((x) => x.id !== auth.userId);
-                  const available = others.length > 0 ? others : users;
-                  const recent = available.filter((x) => x.recentlyActive);
-                  const choices = recent.length > 0 ? recent : available;
-                  const user = choices[Math.floor(Math.random() * choices.length)]!;
-                  login.execute(user.id);
+                  const user = pickDevelopmentUser(users, auth.userId);
+                  if (user) login.execute(user.id);
                 }}
               >
                 {label}

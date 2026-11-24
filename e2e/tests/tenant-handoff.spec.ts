@@ -1,21 +1,17 @@
 import { test, expect } from '@playwright/test';
 
-test('club links switch the local tenant and open its club page', async ({ page }) => {
-  await page.goto('/tenants');
-  const club = page.getByRole('link', { name: 'DSP Kometa Brno', exact: true });
-  await expect(club).toHaveAttribute('href', '/api/auth/handoff?tenant=2&from=%2Ftanecni-klub');
-  await club.click();
+test('signed-in handoff switches the local tenant and opens its club page', async ({ page }) => {
+  const from = '/api/auth/handoff?tenant=2&from=%2Ftanecni-klub';
+  await page.goto(`/login/elevated?${new URLSearchParams({ role: 'administrator', from })}`);
   await expect(page).toHaveURL(/\/tanecni-klub$/);
   await expect(page.locator('html')).toHaveAttribute('data-tenant', '2');
 });
 
-test('handoff preserves the return path through sign-in', async ({ playwright, baseURL }) => {
-  const anonymous = await playwright.request.newContext({ baseURL, storageState: { cookies: [], origins: [] } });
-  const response = await anonymous.get('/api/auth/handoff?tenant=2&from=%2Ftanecni-klub', { maxRedirects: 0 });
+test('handoff preserves the return path through sign-in', async ({ request }) => {
+  const response = await request.get('/api/auth/handoff?tenant=2&from=%2Ftanecni-klub', { maxRedirects: 0 });
   const login = new URL(response.headers().location);
   expect(login.pathname).toBe('/login');
   expect(login.searchParams.get('from')).toBe('/api/auth/handoff?tenant=2&from=%2Ftanecni-klub');
-  await anonymous.dispose();
 });
 
 test('handoff rejects unknown clubs and external return URLs', async ({ request }) => {

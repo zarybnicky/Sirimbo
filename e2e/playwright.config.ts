@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
-import path from 'node:path';
+
+const port = 5100;
+const externalURL = process.env.PLAYWRIGHT_BASE_URL;
+const baseURL = externalURL || `http://localhost:${port}`;
 
 export default defineConfig({
   testDir: './tests',
@@ -7,10 +10,14 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: 'html',
-  globalSetup: './global-setup',
+  webServer: externalURL ? undefined : {
+    command: `pnpm --filter @rozpisovnik/web exec next dev --hostname localhost --port ${port}`,
+    env: { GRAPHILE_ENV: 'development' },
+    port,
+    reuseExistingServer: !process.env.CI,
+  },
   use: {
-    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:5100',
-    storageState: path.join(__dirname, '.auth/user.json'),
+    baseURL,
     trace: 'on-first-retry',
   },
   projects: [

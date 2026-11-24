@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('event form closes and can be opened again', async ({ page }) => {
-  await page.goto('/akce');
+  await page.goto('/login/elevated?role=trainer&from=%2Fakce');
   await page.getByRole('button', { name: 'PŘIDAT UDÁLOST' }).click();
   await expect(page.getByRole('dialog').locator('form')).toBeVisible();
   await page
