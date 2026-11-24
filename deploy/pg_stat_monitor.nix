@@ -6,13 +6,13 @@
 }:
 stdenv.mkDerivation rec {
   pname = "pg_stat_monitor";
-  version = "2.4.0";
+  version = "2.4.1";
 
   src = fetchFromGitHub {
     owner = "percona";
     repo = "pg_stat_monitor";
     rev = "refs/tags/${version}";
-    sha256 = "1jy1jsya35fchxm2di8wwaff9lr5nnw7s3fankwis3bhxzwv22n3";
+    sha256 = "1xr0w5ikjqfdj0ywqljh230x7dbi5c9sh8fid3ip6bwqxjg3jqwq";
   };
 
   buildInputs = [ postgresql ] ++ postgresql.buildInputs;

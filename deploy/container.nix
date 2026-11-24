@@ -8,8 +8,8 @@
   services.postgresql = {
     enable = true;
     enableTCPIP = true;
-    package = pkgs.postgresql_18;
-    extensions = with pkgs.postgresql_18.pkgs; [
+    package = pkgs.postgresql_19;
+    extensions = with pkgs.postgresql_19.pkgs; [
       plpgsql_check
       hypopg
       pgsql-http

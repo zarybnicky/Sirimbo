@@ -21,8 +21,14 @@ BEGIN
   IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname='member') THEN
     CREATE ROLE member;
   END IF;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname='trainer') THEN
+    CREATE ROLE trainer;
+  END IF;
   IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname='administrator') THEN
     CREATE ROLE administrator;
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname='system_admin') THEN
+    CREATE ROLE system_admin;
   END IF;
 END
 $$;
@@ -34,8 +40,10 @@ alter default privileges revoke all on functions from public;
 grant all on schema public to postgres;
 grant all on schema public to :DATABASE_OWNER;
 
-grant anonymous to member, administrator;
-grant member to administrator;
+grant anonymous to member, trainer, administrator;
+grant member to trainer, administrator;
+grant trainer to administrator;
+grant administrator to system_admin;
 
 grant all on schema public to anonymous;
 alter default privileges for role :DATABASE_OWNER in schema public

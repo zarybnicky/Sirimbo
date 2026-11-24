@@ -1,7 +1,8 @@
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/release-26.05";
+  inputs.unstable.url = "github:NixOS/nixpkgs/nixos-unstable-small";
 
-  outputs = { self, nixpkgs, ... }: let
+  outputs = { self, unstable, nixpkgs, ... }: let
     allSystems = [ "x86_64-linux" "aarch64-darwin" ];
     forAllSystems = fn: nixpkgs.lib.genAttrs allSystems (system: fn (import nixpkgs {
       inherit system;
@@ -19,19 +20,23 @@
       graphile-migrate = final.callPackage ./deploy/graphile-migrate {};
       ruian-address-cache = final.callPackage ./deploy/ruian-address-cache.nix {};
       geonames-city-cache = final.callPackage ./deploy/geonames-city-cache.nix {};
-      postgresql_18 = prev.postgresql_18.overrideAttrs (old: {
-        passthru = old.passthru // {
-          pkgs = old.passthru.pkgs // {
-            pg_stat_monitor = final.postgresql_18.pkgs.callPackage ./deploy/pg_stat_monitor.nix {};
-          };
-        };
-      });
 
       rozpisovnik-migrations = final.runCommandLocal "rozpisovnik-migrations" {} ''
         mkdir -p $out
         cp -r ${./migrations} $out/migrations
         cp -r ${./.gmrc} $out/.gmrc
       '';
+
+      postgresql_19 = let
+        unstablePkgs = import unstable { system = prev.stdenv.hostPlatform.system; };
+        postgres = unstablePkgs.postgresql_19;
+      in postgres.overrideAttrs (old: {
+        passthru = old.passthru // {
+          pkgs = old.passthru.pkgs // {
+            pg_stat_monitor = final.postgresql_19.pkgs.callPackage ./packages/pg_stat_monitor.nix {};
+          };
+        };
+      });
     };
 
     devShells = forAllSystems (pkgs: {
@@ -43,7 +48,7 @@
           graphile-migrate
           pnpm_10
           nodejs_24
-          postgresql_18
+          postgresql_19
           sqlfluff
           overmind
           playwright-driver
