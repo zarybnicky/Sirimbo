@@ -123,6 +123,9 @@ alter table tenant add constraint tenant_accent_dark_check check (
   cardinality(accent_dark) = 12 and array_to_string(accent_dark, '') !~ '[;{}<>\\]|/\*'
 );
 
+grant update(accent_light) on table tenant to administrator;
+grant update(accent_dark) on table tenant to administrator;
+
 update tenant set accent_light = array[
     'hsl(0deg 100% 99%)',
     'hsl(7deg 100% 98%)',
