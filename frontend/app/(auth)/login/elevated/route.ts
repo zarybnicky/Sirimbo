@@ -18,9 +18,10 @@ export async function GET(request: NextRequest) {
   const { users } = await executeGraphql(DevelopmentUsersDocument, undefined, {
     pgSettings: { ...pgSettings, role: 'system_admin' },
   });
-  const candidates = getDevelopmentUsers(users?.nodes ?? [], String(tenant.id), Date.now());
-  const user = pickDevelopmentUser(candidates.filter((candidate) => candidate.role === role), auth.userId);
-  if (!user) return new Response('No development user found for this role', { status: 404 });
+  const candidates = getDevelopmentUsers(users?.nodes ?? [], tenant, Date.now());
+  const user = pickDevelopmentUser(candidates.filter((x) => x.role === role), auth.userId);
+  if (!user)
+    return new Response('No development user found for this role', { status: 404 });
 
   const result = await logInAsAction(user.id);
   if ('error' in result) return new Response(result.error, { status: 400 });

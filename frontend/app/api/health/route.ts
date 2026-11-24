@@ -17,7 +17,7 @@ export async function GET() {
     pending ??= executeGraphql(
       TenantSettingsDocument,
       { tenantId: String(defaultTenant.id) },
-      resolveClaims(null, String(defaultTenant.id)),
+      resolveClaims(null, defaultTenant),
     ).finally(() => { pending = undefined; });
     await Promise.race([
       pending,

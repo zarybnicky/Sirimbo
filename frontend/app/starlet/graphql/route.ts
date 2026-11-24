@@ -11,8 +11,8 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: 'Invalid origin' }, { status: 403 });
   }
 
-  const { auth, tenant } = await getRequestContext();
-  if (!tenant.config.enableStarletImport || !auth.isAdmin) {
+  const { auth } = await getRequestContext();
+  if (!auth.canAccess({ requireAdmin: true, requireStarletImport: true })) {
     return Response.json({ error: 'Forbidden' }, { status: 403 });
   }
 

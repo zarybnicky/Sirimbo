@@ -1,5 +1,5 @@
 import { atom, createStore, useAtomValue } from 'jotai';
-import { resolveAuth, type JwtClaims, type ResolvedAuth } from '@/lib/auth-claims';
+import { type JwtClaims, resolveAuth, type ResolvedAuth } from '@/lib/auth-claims';
 import { logoutAction } from '@/lib/auth-actions';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
@@ -14,25 +14,10 @@ export type RequestAuthState = {
 export const authAtom = atom<RequestAuthState>({ claims: null, user: null });
 export const tenantAtom = atom<TenantCatalogEntry>(defaultTenant);
 
-export type AccessRequirements = {
-  requireUser?: boolean;
-  requireMember?: boolean;
-  requireTrainer?: boolean;
-  requireAdmin?: boolean;
-  requireSystemAdmin?: boolean;
-  requirePublicSite?: boolean;
-  requireStarletImport?: boolean;
-};
-
 export interface AuthState extends ResolvedAuth {
   user: Pick<UserAuthFragment, 'id' | 'uLogin' | 'uEmail' | 'pendingApplications'> | null;
   persons: NonNullable<UserAuthFragment['userProxiesList'][number]['person']>[];
   couples: CoupleFragment[];
-  isMyPerson: (id: string | null | undefined) => boolean;
-  isMyCouple: (id: string | null | undefined) => boolean;
-  canAccess: (requirements: AccessRequirements) => boolean;
-  canManagePerson: (person: { tenantIds?: readonly (string | null)[] | null }) => boolean;
-  canManageEvent: (event: { managerPersonIds: readonly (string | null)[] }) => boolean;
 }
 
 export const storeRef = {
@@ -76,33 +61,14 @@ const authHelpersAtom = atom<AuthState>((get) => {
   const session = get(signedInAuthAtom);
   const tenant = get(tenantAtom);
   const user = session?.user ?? null;
-  const auth = resolveAuth(session?.claims, tenant.id.toString());
-  const isMember = auth.isMember || auth.isTrainer;
-  const persons = user?.userProxiesList.flatMap((x) => (x.person ? [x.person] : [])) ?? [];
+  const auth = resolveAuth(session?.claims, tenant);
+  const persons =
+    user?.userProxiesList.flatMap((x) => (x.person ? [x.person] : [])) ?? [];
   return {
     ...auth,
-    isMember,
     user,
     persons,
     couples: persons.flatMap((x) => x.couplesList || []),
-    isMyPerson: (id: string | null | undefined) => !!id && auth.personIds.includes(id),
-    isMyCouple: (id: string | null | undefined) => !!id && auth.coupleIds.includes(id),
-    canAccess: (requirements) =>
-      (!requirements.requireUser || auth.isLoggedIn) &&
-      (!requirements.requireMember || isMember) &&
-      (!requirements.requireTrainer || auth.isTrainer) &&
-      (!requirements.requireAdmin || auth.isAdmin) &&
-      (!requirements.requireSystemAdmin || auth.isSystemAdmin) &&
-      (!requirements.requirePublicSite || !!tenant.config.publicSite) &&
-      (!requirements.requireStarletImport || !!tenant.config.enableStarletImport),
-    canManagePerson: (person) =>
-      auth.isSystemAdmin || (auth.isAdmin && !!person.tenantIds?.some(
-        (id) => id !== null && auth.adminTenantIds.includes(id),
-      )),
-    canManageEvent: (event) =>
-      auth.isAdmin ||
-      (auth.isTrainer &&
-        auth.personIds.some((id) => event.managerPersonIds.includes(id))),
   };
 });
 

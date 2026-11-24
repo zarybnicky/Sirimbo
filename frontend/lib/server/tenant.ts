@@ -4,6 +4,7 @@ import { tenants, type ITenantsResult } from '@/lib/auth.queries';
 import { runQuery } from './postgresql';
 
 import {
+  type AuthTenant,
   type JwtClaims,
   normalizeClaims,
   resolveAuth,
@@ -49,12 +50,12 @@ export const getRequestContext = cache(async (eventShare?: string, apiRequest?: 
 
   const cookieTenant = getTenant(cookieStore.get('tenant_id')?.value);
   const tenant = getTenant(apiRequest?.headers.get('x-tenant-id'))
-    ?? cookieTenant ?? (await getRequestHostTenant());
+    ?? cookieTenant ?? (await getRequestTenant());
   eventShare ??= apiRequest?.headers.get('x-event-share') ?? undefined;
-  return { claims, tenant, ...resolveClaims(claims, tenant.id.toString(), eventShare) };
+  return { claims, tenant, ...resolveClaims(claims, tenant, eventShare) };
 });
 
-export async function getRequestHostTenant() {
+export async function getRequestTenant() {
   const headerStore = await headers();
   const host = headerStore.get('x-forwarded-host') ?? headerStore.get('host');
   const hostname =
@@ -65,13 +66,13 @@ export async function getRequestHostTenant() {
 
 export function resolveClaims(
   claims: JwtClaims | null,
-  tenantId: string,
+  tenant: AuthTenant,
   eventShare?: string,
 ) {
-  const auth = resolveAuth(claims, tenantId);
+  const auth = resolveAuth(claims, tenant);
   const pgSettings: Record<string, string> = {
     role: auth.role,
-    'jwt.claims.tenant_id': tenantId,
+    'jwt.claims.tenant_id': String(tenant.id),
     'jwt.claims.user_id': '',
     'jwt.claims.email': '',
     'jwt.claims.my_person_ids': '{}',

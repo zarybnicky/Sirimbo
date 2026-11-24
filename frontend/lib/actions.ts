@@ -1,5 +1,6 @@
 import React, { type ComponentType, useMemo } from 'react';
-import { useAuth, useTenantId, type AccessRequirements, type AuthState } from '@/lib/auth';
+import { useAuth, useTenantId, type AuthState } from '@/lib/auth';
+import type { AccessRequirements } from '@/lib/auth-claims';
 import { Client, TypedDocumentNode, useClient } from 'urql';
 import { usePathname, useRouter } from 'next/navigation';
 import type { ConfirmOptions } from '@/ui/Confirm';

@@ -1,4 +1,5 @@
-import { useAuth, type AccessRequirements, type AuthState } from '@/lib/auth';
+import { useAuth } from '@/lib/auth';
+import type { AccessRequirements } from '@/lib/auth-claims';
 import { useAtomValue } from 'jotai';
 import { calendarPreferencesAtom } from '@/calendar/state';
 import {
@@ -49,22 +50,6 @@ export type MenuStructItem =
       children: MenuLink[];
     }
   | MenuLink;
-
-function filterMenu(
-  items: readonly MenuStructItem[],
-  canAccess: AuthState['canAccess'],
-): MenuStructItem[] {
-  const result: MenuStructItem[] = [];
-  for (const item of items) {
-    if (item.type === 'menu') {
-      const children = item.children.filter(canAccess);
-      if (children.length > 0) result.push({ ...item, children });
-    } else if (canAccess(item)) {
-      result.push(item);
-    }
-  }
-  return result;
-}
 
 export const topMenu: MenuStructItem[] = [
   { title: 'Domů', href: '/' },
@@ -213,7 +198,18 @@ export function useMemberMenu(): MenuStructItem[] {
   const preferences = useAtomValue(calendarPreferencesAtom);
   const params = new URLSearchParams(preferences);
   const calendarHref = `/rozpis${params.size > 0 ? `?${params}` : ''}`;
-  return filterMenu(memberMenu, canAccess).map((item) =>
+
+  const visibleMenu: MenuStructItem[] = [];
+  for (const item of memberMenu) {
+    if (item.type === 'menu') {
+      const children = item.children.filter(canAccess);
+      if (children.length > 0) visibleMenu.push({ ...item, children });
+    } else if (canAccess(item)) {
+      visibleMenu.push(item);
+    }
+  }
+
+  return visibleMenu.map((item) =>
     item.type !== 'menu' && item.href === '/rozpis'
       ? { ...item, href: calendarHref }
       : item,

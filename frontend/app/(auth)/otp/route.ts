@@ -3,7 +3,7 @@ import { sanitizeReturnURL } from '@/lib/sanitize';
 import { executeGraphql } from '@/lib/server/graphql';
 import { runQuery } from '@/lib/server/postgresql';
 import { clearTenantCookie, setSessionCookie } from '@/lib/server/session';
-import { resolveClaims, getRequestContext, getRequestHostTenant } from '@/lib/server/tenant';
+import { resolveClaims, getRequestContext, getRequestTenant } from '@/lib/server/tenant';
 import { NextResponse, type NextRequest } from 'next/server';
 import { otpDestination } from '@/lib/auth.queries';
 
@@ -22,8 +22,8 @@ export async function GET(request: NextRequest) {
     if (!otp) throw new Error('Invalid OTP');
 
     const switchingClub = otp.intent === 'tenant_handoff';
-    if (switchingClub) {
-      const hostTenant = await getRequestHostTenant();
+    const hostTenant = switchingClub ? await getRequestTenant() : null;
+    if (hostTenant) {
       if (String(hostTenant.id) !== otp.tenant_id) throw new Error('Wrong tenant');
       origin = hostTenant.config.origin;
       destination = new URL('/otp/invalid', origin);
@@ -35,8 +35,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const data = await executeGraphql(OtpLoginDocument, { token }, switchingClub
-      ? resolveClaims(null, otp.tenant_id)
+    const data = await executeGraphql(OtpLoginDocument, { token }, hostTenant
+      ? resolveClaims(null, hostTenant)
       : undefined);
     const result = data.otpLogin?.result;
     if (!result?.jwt) throw new Error('Invalid OTP');

@@ -1,9 +1,9 @@
 import type { DevelopmentUsersQuery } from '@/graphql/CurrentUser';
-import { normalizeClaims, resolveAuth } from '@/lib/auth-claims';
+import { type AuthTenant, normalizeClaims, resolveAuth } from '@/lib/auth-claims';
 
 export function getDevelopmentUsers(
   users: NonNullable<DevelopmentUsersQuery['users']>['nodes'],
-  tenantId: string,
+  tenant: AuthTenant,
   now: number,
 ) {
   const recentCutoff = now - 90 * 86_400_000;
@@ -15,7 +15,7 @@ export function getDevelopmentUsers(
       id: user.id,
       email: user.uEmail,
       name: persons.map((person) => person.name).join(', '),
-      role: resolveAuth(claims, tenantId).role,
+      role: resolveAuth(claims, tenant).role,
       recentlyActive: persons.some(
         ({ lastActivity }) => lastActivity?.trainingAt &&
           Date.parse(lastActivity.trainingAt) >= recentCutoff,

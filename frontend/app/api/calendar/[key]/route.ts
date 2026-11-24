@@ -30,6 +30,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
   const claims = normalizeClaims(owner)!;
 
   const calendars = await Promise.all((search.tenant_ids ?? []).map(async (tenantId) => {
+    const tenant = getTenant(tenantId);
+    const context = resolveClaims(claims, tenant ?? { id: tenantId });
     const pages: CalendarDataQuery[] = [];
     let hasNextPage = false;
     do {
@@ -43,11 +45,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
         withBirthdays: pages.length === 0 && !!search.with_birthdays && !search.can_register,
         registrationLimit: null,
         offset: pages.length * 300,
-      }, resolveClaims(claims, tenantId));
+      }, context);
       pages.push(data);
       hasNextPage = data.federationEvents?.pageInfo.hasNextPage ?? false;
     } while (hasNextPage);
-    const origin = getTenant(tenantId)?.config.origin ?? new URL(request.url).origin;
+    const origin = tenant?.config.origin ?? new URL(request.url).origin;
     return { origin, pages };
   }));
 

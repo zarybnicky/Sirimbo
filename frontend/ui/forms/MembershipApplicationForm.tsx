@@ -84,7 +84,7 @@ export const MembershipApplicationForm = React.memo(function MembershipApplicati
             email: data.email ?? '',
             phone: data.phone ?? undefined,
           })
-        : { email: auth.user?.uEmail ?? '', note: '' }),
+        : { email: auth.email ?? '', note: '' }),
       isMember: true,
       isTrainer: false,
       isAdmin: false,

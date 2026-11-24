@@ -1,5 +1,5 @@
-import { useAtom } from 'jotai';
-import { authAtom, storeRef, useAuth, useTenantId, tenantIdAtom } from '@/lib/auth';
+import { useAtom, useAtomValue } from 'jotai';
+import { authAtom, storeRef, useAuth, tenantAtom, tenantIdAtom } from '@/lib/auth';
 import { getDevelopmentUsers, pickDevelopmentUser } from '@/lib/development-identity';
 import { logInAsAction } from '@/lib/auth-actions';
 import { DevelopmentUsersDocument } from '@/graphql/CurrentUser';
@@ -74,7 +74,8 @@ export function TenantSelect() {
 
 function DevelopmentIdentity() {
   const auth = useAuth();
-  const tenantId = useTenantId();
+  const tenant = useAtomValue(tenantAtom);
+  const tenantId = String(tenant.id);
   const router = useRouter();
   const [now] = React.useState(Date.now);
 
@@ -90,8 +91,8 @@ function DevelopmentIdentity() {
 
   const candidateUsers = candidates.data?.users?.nodes;
   const eligibleUsers = React.useMemo(
-    () => getDevelopmentUsers(candidateUsers ?? [], tenantId, now),
-    [candidateUsers, tenantId, now],
+    () => getDevelopmentUsers(candidateUsers ?? [], tenant, now),
+    [candidateUsers, tenant, now],
   );
 
   const login = useAsyncCallback(async (id: string) => {

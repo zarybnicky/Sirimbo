@@ -1,6 +1,7 @@
 'use client';
 
-import { useAuth, type AccessRequirements } from '@/lib/auth';
+import { useAuth } from '@/lib/auth';
+import type { AccessRequirements } from '@/lib/auth-claims';
 import { cn } from '@/lib/cn';
 import React, { useCallback } from 'react';
 

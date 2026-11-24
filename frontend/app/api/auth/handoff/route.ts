@@ -1,5 +1,5 @@
 import { runQuery } from '@/lib/server/postgresql';
-import { getRequestContext, getRequestHostTenant } from '@/lib/server/tenant';
+import { getRequestContext, getRequestTenant } from '@/lib/server/tenant';
 import { clearTenantCookie } from '@/lib/server/session';
 import { sanitizeReturnURL } from '@/lib/sanitize';
 import { getTenant } from '@/tenant/catalog';
@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   const { auth, tenant } = await getRequestContext();
   const params = request.nextUrl.searchParams;
   const switchingClub = params.has('tenant');
-  const source = switchingClub ? await getRequestHostTenant() : tenant;
+  const source = switchingClub ? await getRequestTenant() : tenant;
   const development = process.env.NODE_ENV === 'development';
   const origin = development ? request.nextUrl.origin : source.config.origin;
   const eventId = params.get('event');

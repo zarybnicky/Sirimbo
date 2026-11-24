@@ -2,7 +2,8 @@
 
 import { getTenantUi } from '@/tenant/ui';
 import { StatusPage } from '@/ui/StatusPage';
-import { useAuth, useTenantConfig, useTenantId, type AccessRequirements } from '@/lib/auth';
+import { useAuth, useTenantConfig, useTenantId } from '@/lib/auth';
+import type { AccessRequirements } from '@/lib/auth-claims';
 import { CallToAction } from '@/ui/CallToAction';
 import React from 'react';
 import { Header } from '@/ui/Header';
