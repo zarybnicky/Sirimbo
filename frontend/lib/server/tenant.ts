@@ -1,8 +1,7 @@
 import 'server-only';
 
-import { tenants, type ITenantsResult } from '@/lib/auth.queries';
+import { type ITenantsResult, tenants } from '@/lib/auth.queries';
 import { runQuery } from './postgresql';
-
 import {
   type AuthTenant,
   type JwtClaims,
@@ -10,7 +9,6 @@ import {
   resolveAuth,
   type ResolvedAuth,
 } from '@/lib/auth-claims';
-import { SESSION_COOKIE } from '@/lib/session-cookies';
 import {
   defaultTenant,
   getTenant,
@@ -28,32 +26,38 @@ export type RequestContext = {
   pgSettings: Record<string, string>;
 };
 
-export const getRequestContext = cache(async (eventShare?: string, apiRequest?: Request): Promise<RequestContext> => {
-  const cookieStore = await cookies();
-  const authorization = apiRequest?.headers.get('authorization');
-  const token = authorization?.toLowerCase().startsWith('bearer ')
-    ? authorization.slice(7)
-    : cookieStore.get(SESSION_COOKIE)?.value;
-  let claims: JwtClaims | null = null;
+export const SESSION_COOKIE = 'rozpisovnik';
 
-  if (token) {
-    try {
-      const payload = jwt.verify(token, process.env.JWT_SECRET!, {
-        algorithms: ['HS256'],
-        ignoreExpiration: true,
-      }) as JwtClaims;
-      claims = normalizeClaims(payload);
-    } catch (error) {
-      if (!(error instanceof jwt.JsonWebTokenError)) throw error;
+export const getRequestContext = cache(
+  async (eventShare?: string, apiRequest?: Request): Promise<RequestContext> => {
+    const cookieStore = await cookies();
+    const authorization = apiRequest?.headers.get('authorization');
+    const token = authorization?.toLowerCase().startsWith('bearer ')
+      ? authorization.slice(7)
+      : cookieStore.get(SESSION_COOKIE)?.value;
+    let claims: JwtClaims | null = null;
+
+    if (token) {
+      try {
+        const payload = jwt.verify(token, process.env.JWT_SECRET!, {
+          algorithms: ['HS256'],
+          ignoreExpiration: true,
+        }) as JwtClaims;
+        claims = normalizeClaims(payload);
+      } catch (error) {
+        if (!(error instanceof jwt.JsonWebTokenError)) throw error;
+      }
     }
-  }
 
-  const cookieTenant = getTenant(cookieStore.get('tenant_id')?.value);
-  const tenant = getTenant(apiRequest?.headers.get('x-tenant-id'))
-    ?? cookieTenant ?? (await getRequestTenant());
-  eventShare ??= apiRequest?.headers.get('x-event-share') ?? undefined;
-  return { claims, tenant, ...resolveClaims(claims, tenant, eventShare) };
-});
+    const cookieTenant = getTenant(cookieStore.get('tenant_id')?.value);
+    const tenant =
+      getTenant(apiRequest?.headers.get('x-tenant-id')) ??
+      cookieTenant ??
+      (await getRequestTenant());
+    eventShare ??= apiRequest?.headers.get('x-event-share') ?? undefined;
+    return { claims, tenant, ...resolveClaims(claims, tenant, eventShare) };
+  },
+);
 
 export async function getRequestTenant() {
   const headerStore = await headers();
@@ -104,8 +108,12 @@ let pending: Promise<void> | undefined;
 export async function getTenants() {
   if (!pending && Date.now() >= refreshAfter) {
     pending = runQuery(tenants)
-      .then((rows) => { snapshot = rows; })
-      .catch((error: unknown) => { console.error('Tenant refresh failed', error); })
+      .then((rows) => {
+        snapshot = rows;
+      })
+      .catch((error: unknown) => {
+        console.error('Tenant refresh failed', error);
+      })
       .finally(() => {
         refreshAfter = Date.now() + 60_000;
         pending = undefined;

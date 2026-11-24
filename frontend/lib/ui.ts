@@ -1,25 +1,36 @@
-import { UI_COOKIE } from './session-cookies.ts';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next/client';
 import { atom } from 'jotai';
 import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 import { z } from 'zod';
 import type { EventSavedSearchFragment } from '@/graphql/Event';
 
+export const UI_COOKIE = 'ui';
+
 const SIDEBAR_MIN_WIDTH = 224;
 const SIDEBAR_MAX_WIDTH = 448;
 
 export function clampSidebarWidth(width: number) {
-  return Math.round(
-    Math.min(SIDEBAR_MAX_WIDTH, Math.max(SIDEBAR_MIN_WIDTH, width)),
-  );
+  return Math.round(Math.min(SIDEBAR_MAX_WIDTH, Math.max(SIDEBAR_MIN_WIDTH, width)));
 }
 
 const uiStateSchema = z.object({
-  savedSearches: z.record(z.string(), z.custom<EventSavedSearchFragment>((value) =>
-      !!value && typeof value === 'object' &&
-      'id' in value && typeof value.id === 'string' &&
-      'condition' in value && !!value.condition && typeof value.condition === 'object',
-    ).nullable()).optional(),
+  savedSearches: z
+    .record(
+      z.string(),
+      z
+        .custom<EventSavedSearchFragment>(
+          (value) =>
+            !!value &&
+            typeof value === 'object' &&
+            'id' in value &&
+            typeof value.id === 'string' &&
+            'condition' in value &&
+            !!value.condition &&
+            typeof value.condition === 'object',
+        )
+        .nullable(),
+    )
+    .optional(),
   sidebarWidth: z.number().int().min(SIDEBAR_MIN_WIDTH).max(SIDEBAR_MAX_WIDTH).nullable(),
 });
 

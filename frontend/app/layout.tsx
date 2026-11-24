@@ -1,15 +1,15 @@
 import { loadCurrentUser } from '@/lib/server/session';
 import { getRequestContext, getTenants } from '@/lib/server/tenant';
-import { UI_COOKIE } from '@/lib/session-cookies';
 import { Providers } from '@/ui/Providers';
 import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import type { ReactNode } from 'react';
+import { isTruthy } from '@/lib/truthyFilter';
+import { UI_COOKIE } from '@/lib/ui.ts';
 
 import '../style/index.css';
 import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
-import { isTruthy } from '@/lib/truthyFilter';
 
 export async function generateMetadata(): Promise<Metadata> {
   const {
@@ -108,7 +108,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     [tenant.accent_light, tenant.accent_dark]
       .filter(isTruthy)
       .map((values, mode) => {
-        const scale = values.map((value, i) => `--color-accent-${i + 1}:${value};`).join('');
+        const scale = values
+          .map((value, i) => `--color-accent-${i + 1}:${value};`)
+          .join('');
         const rule = `[data-tenant='${tenant.id}']{${scale}}`;
         return mode === 1 ? `@media(prefers-color-scheme:dark){${rule}}` : rule;
       })

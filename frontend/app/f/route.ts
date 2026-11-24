@@ -1,11 +1,16 @@
-import { fileBucket, fileStorage } from '@/lib/server/file-storage';
+import { fileBucket, fileStorage } from './file-storage';
 import { withRequestPgClient } from '@/lib/server/postgresql';
 import { sameOrigin } from '@/lib/server/session';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { Readable } from 'node:stream';
 import type { ReadableStream } from 'node:stream/web';
 import { type NextRequest, NextResponse } from 'next/server';
-import { createUploadedFile, deleteUploadedFile, markFileUploaded, type ICreateUploadedFileResult } from './file.queries';
+import {
+  createUploadedFile,
+  deleteUploadedFile,
+  type ICreateUploadedFileResult,
+  markFileUploaded,
+} from './file.queries';
 
 export async function POST(request: NextRequest) {
   if (!sameOrigin(request)) {
@@ -36,12 +41,15 @@ export async function POST(request: NextRequest) {
   try {
     file = await withRequestPgClient(async (client, settings) => {
       const objectKey = `${settings['jwt.claims.tenant_id']}/${Date.now()}-${name}`;
-      const [result] = await createUploadedFile.run({
-        objectKey,
-        name,
-        contentType,
-        byteSize,
-      }, client);
+      const [result] = await createUploadedFile.run(
+        {
+          objectKey,
+          name,
+          contentType,
+          byteSize,
+        },
+        client,
+      );
       return result!;
     });
   } catch (error) {

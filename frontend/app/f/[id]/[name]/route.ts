@@ -1,16 +1,16 @@
-import { fileBucket, fileStorage } from '@/lib/server/file-storage';
+import { fileBucket, fileStorage } from '@/app/f/file-storage.ts';
 import { withRequestPgClient } from '@/lib/server/postgresql';
 import { imageWidths } from '@/lib/image-presets';
-import { imageThumbnail } from '@/lib/server/image-thumbnail';
 import { findDownloadFile, type IFindDownloadFileResult } from '../../file.queries';
 import {
   GetObjectCommand,
-  HeadObjectCommand,
-  PutObjectCommand,
   type GetObjectCommandInput,
   type GetObjectCommandOutput,
+  HeadObjectCommand,
+  PutObjectCommand,
   type S3ServiceException,
 } from '@aws-sdk/client-s3';
+import sharp from 'sharp';
 
 export const runtime = 'nodejs';
 
@@ -23,7 +23,10 @@ function requestDate(request: Request, name: string) {
   return Number.isNaN(date.valueOf()) ? undefined : date;
 }
 
-function objectInput(request: Request, file: IFindDownloadFileResult): GetObjectCommandInput {
+function objectInput(
+  request: Request,
+  file: IFindDownloadFileResult,
+): GetObjectCommandInput {
   return {
     Bucket: fileBucket,
     Key: file.object_key,
@@ -84,6 +87,31 @@ async function findFile(context: RouteContext<'/f/[id]/[name]'>) {
     const [file] = await findDownloadFile.run({ id }, client);
     return file;
   });
+}
+
+async function imageThumbnail(input: Uint8Array, width: number) {
+  const image = sharp(input);
+  const metadata = await image.metadata();
+  if (metadata.format === 'svg' || (metadata.pages ?? 1) > 1) return;
+
+  if (metadata.format === 'png') {
+    const png = Buffer.from(input.buffer, input.byteOffset, input.byteLength);
+    for (
+      let offset = 8;
+      offset + 12 <= png.length;
+      offset += 12 + png.readUInt32BE(offset)
+    ) {
+      const type = png.toString('ascii', offset + 4, offset + 8);
+      if (type === 'acTL') return;
+      if (type === 'IDAT') break;
+    }
+  }
+
+  return image
+    .autoOrient()
+    .resize({ width, withoutEnlargement: true })
+    .webp({ quality: 75 })
+    .toBuffer();
 }
 
 export async function GET(request: Request, context: RouteContext<'/f/[id]/[name]'>) {

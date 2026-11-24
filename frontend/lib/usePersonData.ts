@@ -2,10 +2,10 @@ import { useMemo } from 'react';
 import { useQuery } from 'urql';
 import {
   createLoader,
+  type inferParserType,
   parseAsBoolean,
   parseAsString,
   parseAsStringLiteral,
-  type inferParserType,
 } from 'nuqs';
 import type { PersonMembershipCondition } from '@/graphql';
 import { PersonListDocument } from '@/graphql/Person';
