@@ -12,13 +12,13 @@ import { coupleActions } from '@/lib/actions/couple';
 import { ActivityList } from '@/ui/ActivityList';
 import { CompetitionHistory, CompetitionSuggestions } from '@/ui/Competitions';
 import { EntityLink } from '@/ui/EntityLink';
-import { FederationRankBadge, FederationRankings } from '@/ui/FederationRankings';
+import { FederationRankings } from '@/ui/FederationRankings';
 import { formatAgeGroup } from '@/ui/csts';
 import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
-import { DefinitionList } from '@/ui/DefinitionList';
 import { DotSeparated } from '@/ui/DotSeparated';
+import { User } from 'lucide-react';
 
 export function Couple({ id }: { id: string }) {
   const [editingImage, setEditingImage] = React.useState(false);
@@ -58,7 +58,7 @@ export function Couple({ id }: { id: string }) {
         breadcrumbs={[{ title: 'Páry', href: '/pary' }]}
         actions={actions}
         subtitle={
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5">
             <DotSeparated>
               {formatAgeGroup(item.ageGroup)}
               {item.federationCompetitors.nodes.map((competitor) => (
@@ -74,19 +74,28 @@ export function Couple({ id }: { id: string }) {
                     : competitor.federation.toUpperCase()}
                 </EntityLink>
               ))}
+              {formatOpenDateRange(item)}
             </DotSeparated>
-            <FederationRankBadge entries={item.federationRanklistEntries.nodes} />
+            <DotSeparated>
+              {item.man ? (
+                <EntityLink type="person" entity={item.man}>
+                  <User className="inline-flex size-4 mr-0.5" />
+                  {item.man.name}
+                </EntityLink>
+              ) : (
+                '?'
+              )}
+              {item.woman ? (
+                <EntityLink type="person" entity={item.woman}>
+                  <User className="inline-flex size-4 mr-0.5" />
+                  {item.woman.name}
+                </EntityLink>
+              ) : (
+                '?'
+              )}
+            </DotSeparated>
           </div>
         }
-      />
-
-      <DefinitionList
-        className="mb-2 text-sm tabular"
-        items={{
-          Partner: item.man ? <EntityLink type="person" entity={item.man} /> : '?',
-          Partnerka: item.woman ? <EntityLink type="person" entity={item.woman} /> : '?',
-          Aktivní: formatOpenDateRange(item),
-        }}
       />
 
       <TabMenu selected={tab} onSelect={setTab}>

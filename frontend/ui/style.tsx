@@ -101,7 +101,7 @@ export const typographyCls = tv({
   base: 'tracking-tight',
   variants: {
     variant: {
-      heading: 'text-3xl md:text-4xl text-accent-12 drop-shadow-sm tracking-wide',
+      heading: 'text-3xl text-accent-12 drop-shadow-sm tracking-wide',
       smallHeading: 'text-xl md:text-2xl text-neutral-12 drop-shadow-sm tracking-wide',
       cardHeading: 'text-lg font-bold text-accent-12',
       section: 'text-3xl text-accent-11 drop-shadow-sm tracking-wide',

@@ -39,55 +39,6 @@ function ranklistRows(entries: FederationRankingFragment[]) {
     .toSorted((a, b) => compareCategories(a.category, b.category));
 }
 
-export function FederationRankBadge({
-  entries,
-}: {
-  entries: FederationRankingFragment[];
-}) {
-  const groups = Map.groupBy(
-    ranklistRows(entries).filter(
-      (row) => row.category.ageGroup && row.percentile !== null,
-    ),
-    (row) => row.category.ageGroup!,
-  );
-  let rows: ReturnType<typeof ranklistRows> = [];
-  let bestCoverage = 0;
-  let bestScore = Infinity;
-  for (const group of groups.values()) {
-    const disciplines = Map.groupBy(group, (row) => row.category.discipline);
-    // Count each discipline once, even with results in several ranklists.
-    const scores = [...disciplines.values()].map((results) =>
-      Math.min(...results.map((row) => row.percentile!)),
-    );
-    const score = scores.reduce((sum, value) => sum + value, 0) / scores.length;
-    if (
-      scores.length > bestCoverage ||
-      (scores.length === bestCoverage && score < bestScore)
-    ) {
-      rows = group;
-      bestCoverage = scores.length;
-      bestScore = score;
-    }
-  }
-  const first = rows[0];
-  if (!first) return null;
-  return (
-    <span className="inline-flex self-start flex-wrap gap-x-1 rounded-full bg-accent-3 px-2 py-0.5">
-      <span title="Ranklist">RL</span>
-      <span>{formatAgeGroup(first.category.ageGroup)}</span>
-      {rows.map((row) => (
-        <span
-          key={row.id}
-          className="whitespace-nowrap"
-          title={`${row.competitor?.name} · ${row.ranklist.name} · ${formatDateOnly(row.snapshot.asOfDate)}`}
-        >
-          {formatDiscipline(row.category.discipline)} {row.placement}
-        </span>
-      ))}
-    </span>
-  );
-}
-
 export function FederationRankings({
   entries,
 }: {
