@@ -1,7 +1,11 @@
 /** Types generated for queries found in "lib/auth.sql" */
 import { PreparedQuery } from '@pgtyped/runtime';
 
+export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
+
 export type NumberOrString = number | string;
+
+export type stringArray = (string)[];
 
 /** 'HandoffEvent' parameters type */
 export interface IHandoffEventParams {
@@ -89,5 +93,44 @@ const otpDestinationIR: any = {"usedParamSet":{"token":true},"params":[{"name":"
  * ```
  */
 export const otpDestination = new PreparedQuery<IOtpDestinationParams,IOtpDestinationResult>(otpDestinationIR);
+
+
+/** 'Tenants' parameters type */
+export type ITenantsParams = void;
+
+/** 'Tenants' return type */
+export interface ITenantsResult {
+  accent_dark: stringArray | null;
+  accent_light: stringArray | null;
+  address: Json | null;
+  bank_account: string;
+  /** @behavior -attribute:insert -attribute:update */
+  created_at: Date | null;
+  csts_id: number | null;
+  cz_dic: string;
+  cz_ico: string;
+  description: string;
+  id: string;
+  name: string;
+  origins: stringArray;
+}
+
+/** 'Tenants' query type */
+export interface ITenantsQuery {
+  params: ITenantsParams;
+  result: ITenantsResult;
+}
+
+const tenantsIR: any = {"usedParamSet":{},"params":[],"statement":"select id, name, origins, cz_ico, cz_dic, to_json(address) as address,\n  description, bank_account, csts_id, created_at, accent_light, accent_dark\nfrom public.tenant order by id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * select id, name, origins, cz_ico, cz_dic, to_json(address) as address,
+ *   description, bank_account, csts_id, created_at, accent_light, accent_dark
+ * from public.tenant order by id
+ * ```
+ */
+export const tenants = new PreparedQuery<ITenantsParams,ITenantsResult>(tenantsIR);
 
 

@@ -24,6 +24,8 @@ export type RelationshipStatus =
 
 /** Represents an update to a `Tenant`. Fields that are set will be updated. */
 export type TenantPatch = {
+  accentDark?: Array<string | null | undefined> | null | undefined;
+  accentLight?: Array<string | null | undefined> | null | undefined;
   address?: AddressDomainInput | null | undefined;
   bankAccount?: string | null | undefined;
   cstsId?: number | null | undefined;

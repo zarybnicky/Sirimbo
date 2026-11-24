@@ -109,3 +109,106 @@ drop view if exists current_tenant_membership;
 drop view if exists current_tenant_trainer;
 drop view if exists current_tenant_administrator;
 drop view if exists current_cohort_membership;
+
+alter table tenant
+  add column if not exists accent_light text[],
+  add column if not exists accent_dark text[];
+
+alter table tenant drop constraint if exists tenant_accent_light_check;
+alter table tenant add constraint tenant_accent_light_check check (
+  cardinality(accent_light) = 12 and array_to_string(accent_light, '') !~ '[;{}<>\\]|/\*'
+);
+alter table tenant drop constraint if exists tenant_accent_dark_check;
+alter table tenant add constraint tenant_accent_dark_check check (
+  cardinality(accent_dark) = 12 and array_to_string(accent_dark, '') !~ '[;{}<>\\]|/\*'
+);
+
+update tenant set accent_light = array[
+    'hsl(0deg 100% 99%)',
+    'hsl(7deg 100% 98%)',
+    'hsl(5deg 100% 95%)',
+    'hsl(6deg 100% 92%)',
+    'hsl(5deg 100% 89%)',
+    'hsl(4deg 100% 85%)',
+    'hsl(3deg 98% 81%)',
+    'hsl(3deg 88% 74%)',
+    'hsl(352deg 86% 51%)',
+    'hsl(350deg 100% 44%)',
+    'hsl(350deg 100% 43%)',
+    'hsl(352deg 89% 22%)'
+] where id = 1 and accent_light is null;
+
+update tenant set accent_light = array[
+    'hsl(50deg 20% 99.1%)',
+    'hsl(47deg 52.9% 96.7%)',
+    'hsl(46deg 38.2% 93.7%)',
+    'hsl(44deg 32.7% 90.1%)',
+    'hsl(43deg 29.9% 85.7%)',
+    'hsl(41deg 28.3% 79.8%)',
+    'hsl(39deg 27.6% 71.9%)',
+    'hsl(36deg 27.2% 61.8%)',
+    'hsl(36deg 20% 49.5%)',
+    'hsl(36deg 19.8% 45.7%)',
+    'hsl(36deg 20% 39%)',
+    'hsl(36deg 16% 20%)'
+] where id in (2, 4) and accent_light is null;
+
+update tenant set accent_light = array[
+    'hsl(45deg 67% 99%)',
+    'hsl(46deg 100% 96%)',
+    'hsl(47deg 100% 88%)',
+    'hsl(45deg 100% 83%)',
+    'hsl(43deg 100% 77%)',
+    'hsl(39deg 100% 73%)',
+    'hsl(39deg 81% 68%)',
+    'hsl(40deg 70% 56%)',
+    'hsl(40deg 73% 58%)',
+    'hsl(40deg 67% 53%)',
+    'hsl(41deg 100% 31%)',
+    'hsl(38deg 38% 20%)'
+] where id = 3 and accent_light is null;
+
+update tenant set accent_dark = array[
+    'hsl(0deg 26% 7%)',
+    'hsl(4deg 32% 10%)',
+    'hsl(359deg 66% 15%)',
+    'hsl(352deg 100% 17%)',
+    'hsl(352deg 93% 21%)',
+    'hsl(356deg 70% 28%)',
+    'hsl(358deg 59% 37%)',
+    'hsl(357deg 58% 48%)',
+    'hsl(352deg 86% 51%)',
+    'hsl(358deg 56% 51%)',
+    'hsl(3deg 100% 77%)',
+    'hsl(5deg 100% 90%)'
+] where id = 1 and accent_dark is null;
+
+update tenant set accent_dark = array[
+    'hsl(44deg 9% 8.3%)',
+    'hsl(43deg 14.3% 9.6%)',
+    'hsl(42deg 15.5% 13%)',
+    'hsl(41deg 16.4% 15.6%)',
+    'hsl(41deg 16.9% 17.8%)',
+    'hsl(40deg 17.6% 20.8%)',
+    'hsl(38deg 18.5% 26.4%)',
+    'hsl(36deg 19.6% 35.1%)',
+    'hsl(36deg 20% 49.5%)',
+    'hsl(36deg 22.3% 54.5%)',
+    'hsl(35deg 30% 64%)',
+    'hsl(49deg 52% 93.8%)'
+] where id in (2, 4) and accent_dark is null;
+
+update tenant set accent_dark = array[
+    'hsl(43deg 23% 6%)',
+    'hsl(38deg 24% 9%)',
+    'hsl(39deg 48% 11%)',
+    'hsl(41deg 87% 12%)',
+    'hsl(41deg 94% 14%)',
+    'hsl(41deg 77% 19%)',
+    'hsl(40deg 69% 24%)',
+    'hsl(41deg 75% 30%)',
+    'hsl(40deg 73% 58%)',
+    'hsl(40deg 67% 53%)',
+    'hsl(39deg 78% 61%)',
+    'hsl(38deg 78% 85%)'
+] where id = 3 and accent_dark is null;

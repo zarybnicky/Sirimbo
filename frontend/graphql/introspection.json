@@ -30627,6 +30627,28 @@
         "name": "Tenant",
         "fields": [
           {
+            "name": "accentDark",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "accentLight",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "accessCredentialsList",
             "type": {
               "kind": "NON_NULL",

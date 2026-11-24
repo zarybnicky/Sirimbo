@@ -1,6 +1,5 @@
-
 import { loadCurrentUser } from '@/lib/server/session';
-import { getRequestContext } from '@/lib/server/tenant';
+import { getRequestContext, getTenants } from '@/lib/server/tenant';
 import { UI_COOKIE } from '@/lib/session-cookies';
 import { Providers } from '@/ui/Providers';
 import type { Metadata, Viewport } from 'next';
@@ -10,9 +9,12 @@ import type { ReactNode } from 'react';
 
 import '../style/index.css';
 import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
+import { isTruthy } from '@/lib/truthyFilter';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { tenant: { name, config } } = await getRequestContext();
+  const {
+    tenant: { name, config },
+  } = await getRequestContext();
   const { seo, publicSite, origin } = config;
   const linkTags = seo.additionalLinkTags ?? [];
 
@@ -95,14 +97,29 @@ export async function generateViewport(): Promise<Viewport> {
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const [{ tenant }, { auth, stale }, cookieStore] = await Promise.all([
+  const [{ tenant }, { auth, stale }, cookieStore, tenants] = await Promise.all([
     getRequestContext(),
     loadCurrentUser(),
     cookies(),
+    getTenants(),
   ]);
+
+  const palette = tenants.map((tenant) =>
+    [tenant.accent_light, tenant.accent_dark]
+      .filter(isTruthy)
+      .map((values, mode) => {
+        const scale = values.map((value, i) => `--color-accent-${i + 1}:${value};`).join('');
+        const rule = `[data-tenant='${tenant.id}']{${scale}}`;
+        return mode === 1 ? `@media(prefers-color-scheme:dark){${rule}}` : rule;
+      })
+      .join(''),
+  );
 
   return (
     <html lang="cs" data-tenant={tenant.id} suppressHydrationWarning>
+      <head>
+        <style>{palette.join('')}</style>
+      </head>
       <body suppressHydrationWarning>
         <NuqsAdapter>
           <Providers

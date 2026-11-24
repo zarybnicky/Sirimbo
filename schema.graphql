@@ -14529,6 +14529,9 @@ type SystemAdminUpdateTenantPayload {
 }
 
 type Tenant {
+  accentDark: [String]
+  accentLight: [String]
+
   """Reads and enables pagination through a set of `AccessCredential`."""
   accessCredentialsList(
     """
@@ -15665,6 +15668,8 @@ enum TenantMembershipsOrderBy {
 Represents an update to a `Tenant`. Fields that are set will be updated.
 """
 input TenantPatch {
+  accentDark: [String]
+  accentLight: [String]
   address: AddressDomainInput
   bankAccount: String
   cstsId: Int

@@ -1,5 +1,8 @@
 import 'server-only';
 
+import { tenants, type ITenantsResult } from '@/lib/auth.queries';
+import { runQuery } from './postgresql';
+
 import {
   type JwtClaims,
   normalizeClaims,
@@ -91,4 +94,22 @@ export function resolveClaims(
     eventShare && /^(?:\d{1,18}|[A-Za-z0-9_-]{32})$/.test(eventShare) ? eventShare : '';
 
   return { auth, pgSettings };
+}
+
+let snapshot: ITenantsResult[] | undefined;
+let refreshAfter = 0;
+let pending: Promise<void> | undefined;
+
+export async function getTenants() {
+  if (!pending && Date.now() >= refreshAfter) {
+    pending = runQuery(tenants)
+      .then((rows) => { snapshot = rows; })
+      .catch((error: unknown) => { console.error('Tenant refresh failed', error); })
+      .finally(() => {
+        refreshAfter = Date.now() + 60_000;
+        pending = undefined;
+      });
+  }
+  if (!snapshot) await pending;
+  return snapshot ?? [];
 }

@@ -11746,6 +11746,8 @@ export type SystemAdminUpdateTenantPayloadTenantEdgeArgs = {
 
 export type Tenant = {
   __typename?: 'Tenant';
+  accentDark: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  accentLight: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Reads and enables pagination through a set of `AccessCredential`. */
   accessCredentialsList: Array<AccessCredential>;
   /** Reads and enables pagination through a set of `AccessEvent`. */
@@ -12434,6 +12436,8 @@ export type TenantMembershipsOrderBy =
 
 /** Represents an update to a `Tenant`. Fields that are set will be updated. */
 export type TenantPatch = {
+  accentDark?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  accentLight?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   address?: InputMaybe<AddressDomainInput>;
   bankAccount?: InputMaybe<Scalars['String']['input']>;
   cstsId?: InputMaybe<Scalars['Int']['input']>;
@@ -16144,6 +16148,8 @@ export type GraphCacheResolvers = {
     tenantEdge?: GraphCacheResolver<WithTypename<SystemAdminUpdateTenantPayload>, SystemAdminUpdateTenantPayloadTenantEdgeArgs, WithTypename<TenantEdge> | string>
   },
   Tenant?: {
+    accentDark?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
+    accentLight?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
     accessCredentialsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccessCredentialsListArgs, Array<WithTypename<AccessCredential> | string>>,
     accessEventsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccessEventsListArgs, Array<WithTypename<AccessEvent> | string>>,
     accountsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccountsListArgs, Array<WithTypename<Account> | string>>,
@@ -18735,6 +18741,8 @@ export type GraphCacheUpdaters = {
     tenantEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminUpdateTenantPayload>>, SystemAdminUpdateTenantPayloadTenantEdgeArgs>
   },
   Tenant?: {
+    accentDark?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
+    accentLight?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     accessCredentialsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccessCredentialsListArgs>,
     accessEventsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccessEventsListArgs>,
     accountsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccountsListArgs>,
