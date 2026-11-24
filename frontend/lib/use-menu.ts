@@ -1,6 +1,4 @@
-import { useAuth, useTenantConfig } from '@/lib/auth';
-import { canAccess, type AccessRequirements, type ResolvedAuth } from '@/lib/auth-claims';
-import type { TenantConfig } from '@/tenant/types';
+import { useAuth, type AccessRequirements, type AuthState } from '@/lib/auth';
 import { useAtomValue } from 'jotai';
 import { calendarPreferencesAtom } from '@/calendar/state';
 import {
@@ -54,15 +52,14 @@ export type MenuStructItem =
 
 function filterMenu(
   items: readonly MenuStructItem[],
-  auth: ResolvedAuth,
-  tenant: TenantConfig,
+  canAccess: AuthState['canAccess'],
 ): MenuStructItem[] {
   const result: MenuStructItem[] = [];
   for (const item of items) {
     if (item.type === 'menu') {
-      const children = item.children.filter((x) => canAccess(auth, tenant, x));
+      const children = item.children.filter(canAccess);
       if (children.length > 0) result.push({ ...item, children });
-    } else if (canAccess(auth, tenant, item)) {
+    } else if (canAccess(item)) {
       result.push(item);
     }
   }
@@ -212,12 +209,11 @@ const memberMenu: MenuStructItem[] = [
 ];
 
 export function useMemberMenu(): MenuStructItem[] {
-  const auth = useAuth();
-  const tenant = useTenantConfig();
+  const { canAccess } = useAuth();
   const preferences = useAtomValue(calendarPreferencesAtom);
   const params = new URLSearchParams(preferences);
   const calendarHref = `/rozpis${params.size > 0 ? `?${params}` : ''}`;
-  return filterMenu(memberMenu, auth, tenant).map((item) =>
+  return filterMenu(memberMenu, canAccess).map((item) =>
     item.type !== 'menu' && item.href === '/rozpis'
       ? { ...item, href: calendarHref }
       : item,

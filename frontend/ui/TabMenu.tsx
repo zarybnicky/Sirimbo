@@ -1,7 +1,6 @@
 'use client';
 
-import { useAuth, useTenantConfig } from '@/lib/auth';
-import { canAccess, type AccessRequirements } from '@/lib/auth-claims';
+import { useAuth, type AccessRequirements } from '@/lib/auth';
 import { cn } from '@/lib/cn';
 import React, { useCallback } from 'react';
 
@@ -31,9 +30,8 @@ export interface TabMenuProps {
 }
 
 export function TabMenu({ className, children, selected, onSelect }: TabMenuProps) {
-  const auth = useAuth();
-  const tenant = useTenantConfig();
-  const tabs = collectTabs(children).filter((tab) => canAccess(auth, tenant, tab));
+  const { canAccess } = useAuth();
+  const tabs = collectTabs(children).filter(canAccess);
   const active = tabs.find((tab) => tab.id === selected) ?? tabs[0];
   if (!active) return null;
 

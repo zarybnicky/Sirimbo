@@ -1,18 +1,14 @@
 import React, { type ComponentType, useMemo } from 'react';
-import type { AuthState } from '@/lib/auth';
-import { useAuth, useTenantConfig, useTenantId } from '@/lib/auth';
+import { useAuth, useTenantId, type AccessRequirements, type AuthState } from '@/lib/auth';
 import { Client, TypedDocumentNode, useClient } from 'urql';
 import { usePathname, useRouter } from 'next/navigation';
 import type { ConfirmOptions } from '@/ui/Confirm';
 import { DialogContent } from '@/ui/dialog';
-import type { TenantConfig } from '@/tenant/types';
-import { canAccess, type AccessRequirements } from '@/lib/auth-claims';
 import type { VariantProps } from 'tailwind-variants';
 import type { buttonCls } from '@/ui/style';
 
 export type ActionContext<T> = {
   auth: AuthState;
-  tenant: TenantConfig;
   tenantId: string;
   client: Client;
   router: {
@@ -145,7 +141,7 @@ function forItem<T, const A extends readonly Action<T>[]>(
   key?: string,
 ): ResolvedAction<IdOf<A>>[] {
   return actions
-    .filter((a) => canAccess(ctx.auth, ctx.tenant, a))
+    .filter(ctx.auth.canAccess)
     .filter((a) => resolve(a.visible, ctx) ?? true)
     .map((a) => resolveOne(a, ctx, key ? `${key}:${a.id}` : a.id));
 }
@@ -155,7 +151,6 @@ function useBase() {
   const client = useClient();
   const router = useRouter();
   const pathname = usePathname();
-  const tenant = useTenantConfig();
   const tenantId = useTenantId();
 
   return useMemo(() => {
@@ -171,11 +166,10 @@ function useBase() {
       auth,
       client,
       mutate,
-      tenant,
       tenantId,
       router: { pathname, push: router.push, replace: router.replace },
     };
-  }, [auth, client, router, pathname, tenant, tenantId]);
+  }, [auth, client, router, pathname, tenantId]);
 }
 
 export function useActions<T extends object, Ids extends string>(

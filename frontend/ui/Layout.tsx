@@ -1,9 +1,8 @@
 'use client';
 
-import { canAccess, type AccessRequirements } from '@/lib/auth-claims';
 import { getTenantUi } from '@/tenant/ui';
 import { StatusPage } from '@/ui/StatusPage';
-import { useAuth, useTenantConfig, useTenantId } from '@/lib/auth';
+import { useAuth, useTenantConfig, useTenantId, type AccessRequirements } from '@/lib/auth';
 import { CallToAction } from '@/ui/CallToAction';
 import React from 'react';
 import { Header } from '@/ui/Header';
@@ -38,7 +37,7 @@ export const Layout = React.memo(function Layout({
   const search = useSearchParams()?.toString();
   const url = usePathname() + (search ? `?${search}` : '');
 
-  const missingPermission = !canAccess(auth, tenant, requirements);
+  const missingPermission = !auth.canAccess(requirements);
 
   React.useEffect(() => {
     if (missingPermission && !auth.isLoggedIn) {

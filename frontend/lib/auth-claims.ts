@@ -1,5 +1,3 @@
-import type { TenantConfig } from '@/tenant/types';
-
 export type JwtClaims = {
   user_id: string;
   tenant_id: string;
@@ -63,29 +61,3 @@ export function resolveAuth(claims: JwtClaims | null | undefined, tenantId: stri
 }
 
 export type ResolvedAuth = ReturnType<typeof resolveAuth>;
-
-export type AccessRequirements = {
-  requireUser?: boolean;
-  requireMember?: boolean;
-  requireTrainer?: boolean;
-  requireAdmin?: boolean;
-  requireSystemAdmin?: boolean;
-  requirePublicSite?: boolean;
-  requireStarletImport?: boolean;
-};
-
-export function canAccess(
-  auth: ResolvedAuth,
-  tenant: TenantConfig,
-  x: AccessRequirements,
-) {
-  return (
-    (!x.requireUser || auth.isLoggedIn) &&
-    (!x.requireMember || auth.isMember || auth.isTrainer) &&
-    (!x.requireTrainer || auth.isTrainer) &&
-    (!x.requireAdmin || auth.isAdmin) &&
-    (!x.requireSystemAdmin || auth.isSystemAdmin) &&
-    (!x.requirePublicSite || !!tenant.publicSite) &&
-    (!x.requireStarletImport || !!tenant.enableStarletImport)
-  );
-}
