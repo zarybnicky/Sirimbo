@@ -132,7 +132,8 @@ export const CampSchedule = React.memo(function CampSchedule({
     if (result.error) throw result.error;
   });
   const requestError = scheduleRequest.error || removeLesson.error;
-  const canShowRequests = auth.isTrainer && requestCount > 0;
+  const canManage = auth.canManageEvent(event);
+  const canShowRequests = canManage && requestCount > 0;
   const showRequests = requestsOpen && canShowRequests;
 
   const dragPreview = React.useRef<HTMLDivElement>(null);
@@ -185,7 +186,7 @@ export const CampSchedule = React.memo(function CampSchedule({
           parent={event}
           initialDate={initialDate}
           dateRange={dateRange}
-          onDropFromOutside={scheduleRequest.execute}
+          onDropFromOutside={canManage ? scheduleRequest.execute : undefined}
           onRemove={removeLesson.execute}
           availableTrainers={availableTrainers}
           defaultGroupBy="day-trainer"

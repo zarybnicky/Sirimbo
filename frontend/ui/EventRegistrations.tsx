@@ -50,7 +50,7 @@ export const EventRegistrations = memo(function EventRegistrations({
         <span key="attendee" className="sr-only">
           Účastník
         </span>,
-        auth.isTrainer && rows.length > 0 && (
+        auth.canManageEvent(event) && rows.length > 0 && (
           <div key="attendance" className="flex justify-center gap-2">
             <span className="rounded-full bg-green-3 px-3 py-2 tabular-nums text-sm font-medium text-green-11">
               {attendees.filter((r) => r.status === 'ATTENDED').length}
@@ -93,7 +93,7 @@ export const EventRegistrations = memo(function EventRegistrations({
                       : '-'}
                   </div>
                 )}
-                {auth.isTrainer && (
+                {auth.canManageEvent(event) && (
                   <div className="text-sm text-neutral-11">
                     {x.lessonRequestsList.map((request) => (
                       <div key={request.id}>
@@ -106,7 +106,7 @@ export const EventRegistrations = memo(function EventRegistrations({
               </div>
             </div>
           </td>
-          {auth.isTrainer && (
+          {auth.canManageEvent(event) && (
             <td className="text-center">
               <EventAttendance attendance={x} canEdit={canEditAttendance} />
             </td>

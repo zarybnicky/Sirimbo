@@ -215,7 +215,7 @@ export const ActivityList = React.memo(function ActivityList({
                       ))}
                     </div>
                     <div className="flex gap-1">
-                      {auth.isTrainer && (
+                      {auth.canCreateEvent && (
                         <Dialog modal={false}>
                           <DialogTrigger.Plain
                             type="button"

@@ -165,6 +165,7 @@ export function Calendar({
       withBirthdays: !filters.canRegister && filters.types.includes('BIRTHDAY'),
     });
   const [, moveEvent] = useMutation(MoveEventDocument);
+  const canManageEvents = events.some(auth.canManageEvent);
 
   const [creating, setCreating] = React.useState<CreateEventDefaults>();
 
@@ -172,28 +173,30 @@ export function Calendar({
     setDragListeners({
       onRemove,
       onDropFromOutside,
-      async onMove({ instance }: CalendarClubEvent, info: InteractionInfo) {
-        const { resource } = info;
-        await moveEvent({
-          input: {
-            id: instance.id,
-            since: info.start.toISOString(),
-            until: info.end.toISOString(),
-            trainerPersonId: resource?.type === 'person' ? resource.id : null,
-            locationId: resource?.type === 'location' ? resource.id : null,
-            locationText: resource?.type === 'locationText' ? resource.id : null,
-          },
-        });
-      },
-      async onResize({ instance }: CalendarClubEvent, { start, end }: InteractionInfo) {
-        await moveEvent({
-          input: {
-            id: instance.id,
-            since: start.toISOString(),
-            until: end.toISOString(),
-          },
-        });
-      },
+      ...(canManageEvents && {
+        async onMove({ instance }: CalendarClubEvent, info: InteractionInfo) {
+          const { resource } = info;
+          await moveEvent({
+            input: {
+              id: instance.id,
+              since: info.start.toISOString(),
+              until: info.end.toISOString(),
+              trainerPersonId: resource?.type === 'person' ? resource.id : null,
+              locationId: resource?.type === 'location' ? resource.id : null,
+              locationText: resource?.type === 'locationText' ? resource.id : null,
+            },
+          });
+        },
+        async onResize({ instance }: CalendarClubEvent, { start, end }: InteractionInfo) {
+          await moveEvent({
+            input: {
+              id: instance.id,
+              since: start.toISOString(),
+              until: end.toISOString(),
+            },
+          });
+        },
+      }),
       onCreate(defaults: CreateEventDefaults) {
         const [locationId] = filters.location;
         if (!defaults.after && filters.location.length === 1 && locationId) {
@@ -210,6 +213,7 @@ export function Calendar({
   }, [
     onRemove,
     onDropFromOutside,
+    canManageEvents,
     moveEvent,
     filters.location,
     availableViews,
@@ -372,7 +376,7 @@ export function Calendar({
 
       {auth.isLoggedIn && <CalendarConflictsIndicator conflicts={conflicts} fetching={fetching} />}
 
-      {auth.isTrainer && (
+      {auth.canCreateEvent && (
         <Dialog
           open={!!creating}
           onOpenChange={(open) => {

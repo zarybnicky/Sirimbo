@@ -65,7 +65,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
           <div className="mt-8 mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
             <div className="flex items-center text-xl tracking-tight">
               {capitalize(longDayFormatter.format(new Date(date)))}
-              {auth.isTrainer && (
+              {auth.canCreateEvent && (
                 <button
                   type="button"
                   className={buttonCls({ display: 'none', variant: 'none' })}
@@ -142,7 +142,7 @@ function LessonGroup({ items }: { items: EventWithTrainerFragment[] }) {
           'relative group min-w-50 w-full sm:w-72 p-1 pt-2 rounded-lg border-accent-7 border flex flex-col gap-y-px',
       })}
     >
-      {auth.isTrainer && (
+      {auth.canCreateEvent && (
         <button
           type="button"
           title="Přidat lekci"

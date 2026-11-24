@@ -59,7 +59,7 @@ export const eventActions = defineActions<EventWithTrainerFragment>()([
         : !auth.isLoggedIn || !item.registrationInfo?.my
           ? 'Přihlásit'
           : 'Moje přihlášky',
-    variant: ({ auth }) => (auth.isMember || auth.isTrainer ? 'outline' : 'primary'),
+    variant: ({ auth }) => (auth.isMember ? 'outline' : 'primary'),
     icon: UserPlus,
     visible: ({ auth, item }) =>
       auth.canManageEvent(item) ||

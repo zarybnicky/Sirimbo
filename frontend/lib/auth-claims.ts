@@ -91,6 +91,7 @@ export function resolveAuth(claims: JwtClaims | null | undefined, tenant: AuthTe
       (isAdmin && !!person.tenantIds?.some(
         (id) => id !== null && adminTenantIds.includes(id),
       )),
+    canCreateEvent: isTrainer,
     canManageEvent: (event: { managerPersonIds: readonly (string | null)[] }) =>
       isAdmin || (isTrainer && personIds.some((id) => event.managerPersonIds.includes(id))),
   };

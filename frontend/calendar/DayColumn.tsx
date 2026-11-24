@@ -116,7 +116,7 @@ function DayColumn({
   }, [date, minTime, maxTime, step, timeslots]);
 
   useLayoutEffect(() => {
-    if (!auth.isTrainer) return;
+    if (!auth.canCreateEvent) return;
 
     const selector = new Selection(() => columnRef.current, {
       shouldSelect(point) {
@@ -194,13 +194,14 @@ function DayColumn({
     });
 
     return () => selector.teardown();
-  }, [onCreate, resource, slotMetrics, auth.isTrainer]);
+  }, [onCreate, resource, slotMetrics, auth.canCreateEvent]);
 
   useLayoutEffect(() => {
-    if (!auth.isTrainer) return;
+    if (!onMove && !onResize && !onDropFromOutside) return;
 
     const selector = new Selection(() => gridRef.current, {
       shouldSelect(point) {
+        if (!onMove && !onResize) return false;
         const bounds = getBoundsForNode(columnRef.current!);
         const dragSubject = store.get(dragSubjectAtom);
         if (!dragSubject?.action) return false;
@@ -295,61 +296,63 @@ function DayColumn({
       });
     });
 
-    selector.addEventListener('dragOverFromOutside', ({ detail: point }) => {
-      const subject = readExternalDragSubject(
-        point.dataTransfer,
-        store.get(externalDragSubjectAtom),
-      );
-      const bounds = getBoundsForNode(columnRef.current!);
-      if (
-        !subject ||
-        (subject.resource
-          ? resourceKey(subject.resource) !== resourceKey(resource) ||
-            !pointTargetsDate(gridRef.current!, date, point)
-          : !eventTargetsNode(columnRef.current!, point.target))
-      ) {
+    if (onDropFromOutside) {
+      selector.addEventListener('dragOverFromOutside', ({ detail: point }) => {
+        const subject = readExternalDragSubject(
+          point.dataTransfer,
+          store.get(externalDragSubjectAtom),
+        );
+        const bounds = getBoundsForNode(columnRef.current!);
+        if (
+          !subject ||
+          (subject.resource
+            ? resourceKey(subject.resource) !== resourceKey(resource) ||
+              !pointTargetsDate(gridRef.current!, date, point)
+            : !eventTargetsNode(columnRef.current!, point.target))
+        ) {
+          setBackgroundState(EMPTY);
+          return;
+        }
+
+        if (point.dataTransfer) point.dataTransfer.dropEffect = 'copy';
+        const start = slotMetrics.closestSlotFromPoint(point, bounds);
+        const end = add(start, subject.durationMinutes, 'minutes');
+        const preview = slotMetrics.getRange(start, end, false, true);
+        setBackgroundState({
+          ...preview,
+          selecting: true,
+          top: `${preview.top}%`,
+          height: `${preview.height}%`,
+        });
+        setIsDragging(true);
+      });
+
+      selector.addEventListener('dropFromOutside', ({ detail: point }) => {
+        const subject = readExternalDragSubject(
+          point.dataTransfer,
+          store.get(externalDragSubjectAtom),
+        );
+        const bounds = getBoundsForNode(columnRef.current!);
         setBackgroundState(EMPTY);
-        return;
-      }
+        if (
+          !subject ||
+          (subject.resource
+            ? resourceKey(subject.resource) !== resourceKey(resource) ||
+              !pointTargetsDate(gridRef.current!, date, point)
+            : !eventTargetsNode(columnRef.current!, point.target))
+        )
+          return;
 
-      if (point.dataTransfer) point.dataTransfer.dropEffect = 'copy';
-      const start = slotMetrics.closestSlotFromPoint(point, bounds);
-      const end = add(start, subject.durationMinutes, 'minutes');
-      const preview = slotMetrics.getRange(start, end, false, true);
-      setBackgroundState({
-        ...preview,
-        selecting: true,
-        top: `${preview.top}%`,
-        height: `${preview.height}%`,
+        const start = slotMetrics.closestSlotFromPoint(point, bounds);
+        void onDropFromOutside(subject, {
+          start,
+          end: add(start, subject.durationMinutes, 'minutes'),
+          resource,
+        });
+        setExternalDragSubject(null);
+        setIsDragging(false);
       });
-      setIsDragging(true);
-    });
-
-    selector.addEventListener('dropFromOutside', ({ detail: point }) => {
-      const subject = readExternalDragSubject(
-        point.dataTransfer,
-        store.get(externalDragSubjectAtom),
-      );
-      const bounds = getBoundsForNode(columnRef.current!);
-      setBackgroundState(EMPTY);
-      if (
-        !subject ||
-        (subject.resource
-          ? resourceKey(subject.resource) !== resourceKey(resource) ||
-            !pointTargetsDate(gridRef.current!, date, point)
-          : !eventTargetsNode(columnRef.current!, point.target))
-      )
-        return;
-
-      const start = slotMetrics.closestSlotFromPoint(point, bounds);
-      void onDropFromOutside?.(subject, {
-        start,
-        end: add(start, subject.durationMinutes, 'minutes'),
-        resource,
-      });
-      setExternalDragSubject(null);
-      setIsDragging(false);
-    });
+    }
 
     selector.addEventListener('selectStart', ({ detail: point }) => {
       const bounds = getBoundsForNode(columnRef.current!);
@@ -418,7 +421,6 @@ function DayColumn({
     onResize,
     onRemove,
     onDropFromOutside,
-    auth.isTrainer,
     store,
     setDragSubject,
     setExternalDragSubject,

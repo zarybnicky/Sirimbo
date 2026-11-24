@@ -9,7 +9,6 @@ import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection
 import { eventSegments, type Segment } from './common';
 import { diff, merge, inEventRange } from './localizer';
 import type { CalendarEvent, Resource } from './types';
-import { useAuth } from '@/lib/auth';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
 import { formPreviewFor, dragListenersAtom, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/lib/cn';
@@ -44,7 +43,6 @@ function DateContentRow({
   const setDragSubject = useSetAtom(dragSubjectAtom);
   const { onMove, onResize, onDrillDown } = useAtomValue(dragListenersAtom);
 
-  const auth = useAuth();
   const [segment, setSegment] = React.useState<Segment | null>(null);
   const [maxRows, setMaxRows] = React.useState(5);
   const [previousDate, setPreviousDate] = React.useState(range[0]!);
@@ -61,7 +59,7 @@ function DateContentRow({
   }, [range, events, maxRows]);
 
   useLayoutEffect(() => {
-    if (!auth.isTrainer) return;
+    if (!onMove && !onResize) return;
 
     const selector = new Selection(() => containerRef.current, {
       shouldSelect() {
@@ -217,7 +215,6 @@ function DateContentRow({
     onMove,
     onResize,
     store,
-    auth.isTrainer,
   ]);
 
   React.useEffect(() => {

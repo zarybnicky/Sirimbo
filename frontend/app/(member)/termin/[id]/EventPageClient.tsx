@@ -169,7 +169,7 @@ export function EventPageClient({
             </Tab>
           )}
 
-        {(auth.isTrainer || (auth.isLoggedIn && numRegistrations > 0)) && (
+        {(auth.canManageEvent(event) || (auth.isLoggedIn && numRegistrations > 0)) && (
           <Tab id="registrations" title={`Přihlášky (${numRegistrations})`}>
             <div className="col-popout">
               <EventRegistrations event={event} />

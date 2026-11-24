@@ -215,7 +215,7 @@ function EventRow({
         ))}
       </DotSeparated>
 
-      {auth.isTrainer &&
+      {auth.canManageEvent(event) &&
         (!event.isCancelled || event.stats.attended > 0 || event.stats.notExcused > 0) && (
         <div className="col-start-4 row-start-1">
           <AttendanceStatsLink eventId={event.id} stats={event.stats} />
