@@ -32,7 +32,7 @@ export const EventRegistrations = memo(function EventRegistrations({
     .filter((r) => !r.parentRegistrationId)
     .flatMap((r, groupIndex) =>
       [r, ...sortedRegistrations.filter((x) => x.parentRegistrationId === r.id)].map(
-        (registration) => ({ ...registration, groupIndex }),
+        (x) => ({ ...x, groupIndex }),
       ),
     );
   const attendees = rows.filter((r) => r.person && r.status);
@@ -65,7 +65,7 @@ export const EventRegistrations = memo(function EventRegistrations({
       {rows.map((x) => (
         <tr
           key={x.id}
-          className={x.groupIndex % 2 === 0 ? 'bg-neutral-3/80' : 'bg-neutral-1'}
+          className={x.groupIndex % 2 === 0 ? 'bg-neutral-1' : 'bg-neutral-3/80'}
         >
           <td>
             <div
