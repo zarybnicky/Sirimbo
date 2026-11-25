@@ -42,9 +42,13 @@ for REF in "$@"; do
       IGNORE+=(--ignore "$PWD/$OPERATIONS/$NAME.graphql")
     done < "$KNOWN_INVALID"
   fi
-  if ! graphql-inspector validate "$PWD/$OPERATIONS/**/*.graphql" "$SCHEMA" "${IGNORE[@]}"; then
+  REPORT=$(mktemp "$TMP/validation.XXXXXX")
+  if ! graphql-inspector validate "$PWD/$OPERATIONS/**/*.graphql" "$SCHEMA" --onlyErrors --output "$REPORT" "${IGNORE[@]}"; then
     STATUS=1
   fi
+  # Inspector omits warning details for documents without validation errors.
+  jq -r '.documents[] | select(.deprecated | length > 0) |
+    "\nWARNING in \(.source.name):", (.deprecated[] | "  \(.message)")' "$REPORT"
   popd
 done
 exit "$STATUS"

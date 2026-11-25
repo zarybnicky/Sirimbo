@@ -4,7 +4,7 @@ import { PostGraphileAmberPreset } from 'postgraphile/presets/amber';
 import { QueryControlsPlugin } from './plugins/query-controls.ts';
 
 import currentUserPlugin from './plugins/current-user.ts';
-import { LegacyRelationAliasesPlugin, LegacyShimsPlugin } from './plugins/legacy-shims.ts';
+import { LegacyRelationAliasesPlugin } from './plugins/legacy-shims.ts';
 import federationConditionPlugins from './plugins/federation-condition.ts';
 import competitionParticipantConditionPlugins from './plugins/competition-participant-condition.ts';
 import competitionSuggestionConditionPlugins from './plugins/competition-suggestion-condition.ts';
@@ -45,7 +45,6 @@ const preset: GraphileConfig.Preset = {
     ...competitionParticipantConditionPlugins,
     ...competitionSuggestionConditionPlugins,
     federationOrderPlugin,
-    LegacyShimsPlugin,
     LegacyRelationAliasesPlugin,
     OTELPlugin,
     QueryControlsPlugin,
