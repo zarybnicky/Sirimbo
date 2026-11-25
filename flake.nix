@@ -33,7 +33,7 @@
       in postgres.overrideAttrs (old: {
         passthru = old.passthru // {
           pkgs = old.passthru.pkgs // {
-            pg_stat_monitor = final.postgresql_19.pkgs.callPackage ./packages/pg_stat_monitor.nix {};
+            pg_stat_monitor = final.postgresql_19.pkgs.callPackage ./deploy/pg_stat_monitor.nix {};
           };
         };
       });
