@@ -453,8 +453,6 @@ export type AktualitiesOrderBy =
   | 'AT_FOTO_DESC'
   | 'AT_JMENO_ASC'
   | 'AT_JMENO_DESC'
-  | 'AT_KAT_ASC'
-  | 'AT_KAT_DESC'
   | 'AT_KDO_ASC'
   | 'AT_KDO_DESC'
   | 'AT_PREVIEW_ASC'
@@ -483,8 +481,6 @@ export type Aktuality = {
   __typename?: 'Aktuality';
   atFoto: Maybe<Scalars['BigInt']['output']>;
   atJmeno: Scalars['String']['output'];
-  /** @deprecated true */
-  atKat: Scalars['String']['output'];
   atKdo: Maybe<Scalars['BigInt']['output']>;
   atPreview: Scalars['String']['output'];
   atText: Scalars['String']['output'];
@@ -521,8 +517,6 @@ export type AktualityCondition = {
   atFoto?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `atJmeno` field. */
   atJmeno?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `atKat` field. */
-  atKat?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `atKdo` field. */
   atKdo?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `atPreview` field. */
@@ -4880,8 +4874,6 @@ export type EventDetailsInputRecordInput = {
   capacityUnit?: InputMaybe<EventCapacityUnit>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
   hasPublicDetails?: InputMaybe<Scalars['Boolean']['input']>;
-  /** @deprecated Use registrationPeriod. */
-  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -14269,7 +14261,6 @@ export type GraphCacheResolvers = {
   Aktuality?: {
     atFoto?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     atJmeno?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String']['output'] | string>,
-    atKat?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String']['output'] | string>,
     atKdo?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     atPreview?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String']['output'] | string>,
     atText?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -16862,7 +16853,6 @@ export type GraphCacheUpdaters = {
   Aktuality?: {
     atFoto?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     atJmeno?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
-    atKat?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     atKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     atPreview?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     atText?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,

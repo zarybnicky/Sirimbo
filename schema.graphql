@@ -525,8 +525,6 @@ enum AktualitiesOrderBy {
   AT_FOTO_DESC
   AT_JMENO_ASC
   AT_JMENO_DESC
-  AT_KAT_ASC
-  AT_KAT_DESC
   AT_KDO_ASC
   AT_KDO_DESC
   AT_PREVIEW_ASC
@@ -555,7 +553,6 @@ enum AktualitiesOrderBy {
 type Aktuality {
   atFoto: BigInt
   atJmeno: String!
-  atKat: String! @deprecated(reason: "true")
   atKdo: BigInt
   atPreview: String!
   atText: String!
@@ -610,9 +607,6 @@ input AktualityCondition {
 
   """Checks for equality with the object’s `atJmeno` field."""
   atJmeno: String
-
-  """Checks for equality with the object’s `atKat` field."""
-  atKat: String
 
   """Checks for equality with the object’s `atKdo` field."""
   atKdo: BigInt
@@ -6064,7 +6058,6 @@ input EventDetailsInputRecordInput {
   capacityUnit: EventCapacityUnit
   enableNotes: Boolean
   hasPublicDetails: Boolean
-  isLocked: Boolean @deprecated(reason: "Use registrationPeriod.")
   isPublic: Boolean
   isVisible: Boolean
   locationId: BigInt

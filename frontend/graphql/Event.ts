@@ -152,8 +152,6 @@ export type EventDetailsInputRecordInput = {
   capacityUnit?: EventCapacityUnit | null | undefined;
   enableNotes?: boolean | null | undefined;
   hasPublicDetails?: boolean | null | undefined;
-  /** @deprecated Use registrationPeriod. */
-  isLocked?: boolean | null | undefined;
   isPublic?: boolean | null | undefined;
   isVisible?: boolean | null | undefined;
   locationId?: string | null | undefined;

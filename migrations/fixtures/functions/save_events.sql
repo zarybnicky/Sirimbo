@@ -29,7 +29,6 @@ create type event_details_input as (
   is_visible boolean,
   is_public boolean,
   has_public_details boolean,
-  is_locked boolean,
   enable_notes boolean,
   registration_period tstzrange
 );
@@ -53,11 +52,6 @@ declare
   v_is_visible boolean := coalesce((details).is_visible, true);
   v_is_public boolean := coalesce((details).is_public, false);
   v_has_public_details boolean := v_is_public and coalesce((details).has_public_details, false);
-  v_registration_period tstzrange := case
-    when (details).is_locked is null then (details).registration_period
-    when (details).is_locked then null
-    else '(,)'::tstzrange
-  end;
   v_enable_notes boolean := coalesce((details).enable_notes, false);
   v_expected_existing_count bigint;
   v_locked_existing_count bigint;
@@ -202,7 +196,7 @@ begin
         v_is_visible,
         v_is_public,
         v_has_public_details,
-        v_registration_period,
+        (details).registration_period,
         v_enable_notes,
         '',
         '',
@@ -223,7 +217,7 @@ begin
           is_visible = v_is_visible,
           is_public = v_is_public,
           has_public_details = v_has_public_details,
-          registration_period = v_registration_period,
+          registration_period = (details).registration_period,
           enable_notes = v_enable_notes,
           series_id = case
             when v_assign_series then v_series_id

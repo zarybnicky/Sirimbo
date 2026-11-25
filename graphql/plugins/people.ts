@@ -10,10 +10,8 @@ const PersonFieldsPlugin = extendSchema(() => ({
       tenantIds: [BigInt]
       """Current roles in the active tenant. Empty for external people."""
       roles: [TenantRole!]!
-      isMember: Boolean @deprecated(reason: "Use roles containing MEMBER.")
       isTrainer: Boolean @deprecated(reason: "Use roles containing TRAINER.")
       isAdmin: Boolean @deprecated(reason: "Use roles containing ADMINISTRATOR.")
-      isExternal: Boolean! @deprecated(reason: "Use an empty roles array.")
     }
   `,
   objects: {
@@ -37,10 +35,6 @@ const PersonFieldsPlugin = extendSchema(() => ({
             where person_id = ${$person.get('id')}
           ), '{}'::text[])`;
         },
-        isMember($person: PgSelectSingleStep) {
-          return pgClassExpression($person, TYPES.boolean)`
-            ${$person.get('id')} in (select person_id from app_private.current_tenant_relation where 'member' = any(current_roles))`;
-        },
         isTrainer($person: PgSelectSingleStep) {
           return pgClassExpression($person, TYPES.boolean)`
             ${$person.get('id')} in (select person_id from app_private.current_tenant_relation where 'trainer' = any(current_roles))`;
@@ -48,12 +42,6 @@ const PersonFieldsPlugin = extendSchema(() => ({
         isAdmin($person: PgSelectSingleStep) {
           return pgClassExpression($person, TYPES.boolean)`
             ${$person.get('id')} in (select person_id from app_private.current_tenant_relation where 'administrator' = any(current_roles))`;
-        },
-        isExternal($person: PgSelectSingleStep) {
-          return pgClassExpression($person, TYPES.boolean)`
-            ${$person.get('id')} not in (
-              select person_id from app_private.current_tenant_relation
-            )`;
         },
       },
     },

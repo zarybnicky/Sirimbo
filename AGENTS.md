@@ -77,7 +77,7 @@
 - PostGraphile exposes the database schema. Custom plugins add fields, filters, and Grafast plans.
 - The frontend consumes the API via URQL. Operation documents reside in `frontend/graphql/*.graphql`, and the generated typed documents next to them. Avoid hand-editing generated files!
 - `graphql.config.yml` and `graphql-starlet.config.yml` configure code generation for different tenant bundles.
-- `Person.roles` exposes current-tenant roles as `[TenantRole!]!` from `public.tenant_role`. An empty array means external. Prefer this field over the deprecated `isMember`, `isTrainer`, `isAdmin`, and `isExternal` fields. Those fields remain for external consumers. Authentication flags and similarly named fields on other types have separate meanings.
+- `Person.roles` exposes current-tenant roles as `[TenantRole!]!` from `public.tenant_role`. An empty array means external. Authentication flags and similarly named fields on other types have separate meanings.
 
 ## Database performance investigations
 

@@ -215,3 +215,7 @@ update tenant set accent_dark = array[
     'hsl(39deg 78% 61%)',
     'hsl(38deg 78% 85%)'
 ] where id = 3 and accent_dark is null;
+
+comment on column aktuality.at_kat is '@behavior -*';
+
+--!include functions/save_events.sql

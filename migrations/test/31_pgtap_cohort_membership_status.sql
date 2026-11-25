@@ -79,7 +79,7 @@ SELECT public.save_events(
     instance.location_id, instance.location_text,
     instance.capacity, instance.capacity_unit,
     instance.is_visible, instance.is_public, instance.has_public_details,
-    instance.is_locked, true, instance.registration_period
+    true, instance.registration_period
   )::public.event_details_input,
   events => ARRAY[
     ROW(
@@ -408,7 +408,7 @@ FROM public.save_events(
   details => ROW(
     9900001, 'Scheduled lesson copy', 'lesson'::event_type,
     null::bigint, 'Scheduled lesson', 2, 'registrations'::event_capacity_unit,
-    false, true, false, false, true, null
+    false, true, false, true, '(,)'::tstzrange
   )::public.event_details_input,
   events => ARRAY[
     ROW(
@@ -488,7 +488,7 @@ FROM public.save_events(
   details => ROW(
     null::bigint, 'Created series', 'lesson'::event_type,
     null::bigint, '', 2, 'people'::event_capacity_unit,
-    null, null, null, null, null, null
+    null, null, null, null, null
   )::public.event_details_input,
   events => ARRAY[
     ROW(
@@ -678,7 +678,7 @@ SELECT public.save_events(
     instance.location_id, instance.location_text,
     4, 'registrations'::event_capacity_unit,
     instance.is_visible, instance.is_public, instance.has_public_details,
-    true, true, null
+    true, null
   )::public.event_details_input,
   events => ARRAY[
     ROW(
@@ -785,7 +785,7 @@ SELECT public.save_events(
     instance.location_id, instance.location_text,
     instance.capacity, instance.capacity_unit,
     instance.is_visible, instance.is_public, instance.has_public_details,
-    instance.is_locked, instance.enable_notes, instance.registration_period
+    instance.enable_notes, instance.registration_period
   )::public.event_details_input,
   events => ARRAY[
     ROW(

@@ -31,7 +31,7 @@ CREATE FUNCTION pg_temp.save_group(
   LEFT JOIN event old ON old.id = event_id
   CROSS JOIN LATERAL save_events(
     details => ROW(null, 'Registration intent', 'group', null, '', 0, 'people',
-      true, false, false, false, false, null)::event_details_input,
+      true, false, false, false, '(,)'::tstzrange)::event_details_input,
     events => ARRAY[ROW(event_id, coalesce(old.since, starts_at),
       coalesce(old.until, starts_at + interval '1 hour'), false,
       ARRAY(SELECT r FROM jsonb_populate_recordset(null::event_registration_input, registrations) r)
