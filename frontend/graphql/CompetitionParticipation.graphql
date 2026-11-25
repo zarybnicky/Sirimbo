@@ -103,7 +103,7 @@ query CompetitionSuggestionEvents(
 query CompetitionSuggestions(
   $personIds: [BigInt!]
   $coupleId: BigInt
-  $cohortId: BigInt
+  $cohortIds: [BigInt!]
   $since: Date!
   $eventIds: [BigInt!]!
   $registeredOnly: Boolean! = false
@@ -111,7 +111,7 @@ query CompetitionSuggestions(
   competitionSuggestionsList(
     personIds: $personIds
     coupleId: $coupleId
-    cohortId: $cohortId
+    cohortIds: $cohortIds
     since: $since
     eventIds: $eventIds
     registeredOnly: $registeredOnly

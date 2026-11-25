@@ -10,7 +10,7 @@ import { useMutation, useQuery } from 'urql';
 import { useActions } from '@/lib/actions';
 import { coupleActions } from '@/lib/actions/couple';
 import { ActivityList } from '@/ui/ActivityList';
-import { CompetitionHistory, CompetitionSuggestions } from '@/ui/Competitions';
+import { CompetitionHistory } from '@/ui/Competitions';
 import { EntityLink } from '@/ui/EntityLink';
 import { FederationRankings } from '@/ui/FederationRankings';
 import { formatAgeGroup } from '@/ui/csts';
@@ -109,9 +109,6 @@ export function Couple({ id }: { id: string }) {
             <FederationRankings entries={item.federationRanklistEntries.nodes} />
             <CompetitionHistory competitor={{ coupleId: id }} />
           </div>
-        </Tab>
-        <Tab id="eligible" title="Možné soutěže">
-          <CompetitionSuggestions competitor={{ coupleId: id }} />
         </Tab>
       </TabMenu>
     </>

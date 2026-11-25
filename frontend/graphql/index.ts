@@ -1883,6 +1883,8 @@ export type CompetitionOfficialsOrderBy =
 export type CompetitionParticipantCondition = {
   /** Require a current member of this local cohort. */
   cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Require a current member of any selected cohort. An empty list matches nobody. */
+  cohortIds?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   /** An exact local partnership, across federations. */
   coupleId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Intersect the selection with all person IDs assigned to the viewer. */
@@ -10153,6 +10155,7 @@ export type QueryCompetitionRoundByCompetitionIdAndRoundKeyArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryCompetitionSuggestionsListArgs = {
   cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  cohortIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   coupleId?: InputMaybe<Scalars['BigInt']['input']>;
   eventIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   first?: InputMaybe<Scalars['Int']['input']>;

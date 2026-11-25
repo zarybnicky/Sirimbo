@@ -7,7 +7,7 @@ import { useActions } from '@/lib/actions';
 import { personActions } from '@/lib/actions/person';
 import { useAuth } from '@/lib/auth';
 import { ActivityList } from '@/ui/ActivityList';
-import { CompetitionHistory, CompetitionSuggestions } from '@/ui/Competitions';
+import { CompetitionHistory } from '@/ui/Competitions';
 import { formatAgeGroup, formatClass, getBestCstsProgress } from '@/ui/csts';
 import { EntityLink } from '@/ui/EntityLink';
 import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
@@ -209,9 +209,6 @@ export const PersonView = React.memo(function PersonView({
             <FederationRankings entries={item.federationRanklistEntries.nodes} />
             <CompetitionHistory competitor={{ personIds: [id] }} />
           </div>
-        </Tab>
-        <Tab id="eligible" title="Možné soutěže">
-          <CompetitionSuggestions competitor={{ personIds: [id] }} />
         </Tab>
         {isAdminOrCurrentPerson && item.eventTrainersList.length > 0 && (
           <Tab id="workReport" title="Výkaz práce" requireTrainer>

@@ -2435,6 +2435,11 @@ input CompetitionParticipantCondition {
   """Require a current member of this local cohort."""
   cohortId: BigInt
 
+  """
+  Require a current member of any selected cohort. An empty list matches nobody.
+  """
+  cohortIds: [BigInt!]
+
   """An exact local partnership, across federations."""
   coupleId: BigInt
 
@@ -12563,6 +12568,7 @@ type Query {
   competitionRoundByCompetitionIdAndRoundKey(competitionId: BigInt!, roundKey: String!): CompetitionRound
   competitionSuggestionsList(
     cohortId: BigInt
+    cohortIds: [BigInt]
     coupleId: BigInt
     eventIds: [BigInt]
 

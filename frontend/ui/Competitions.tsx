@@ -1,23 +1,16 @@
-import dynamic from 'next/dynamic';
-import type { MapView } from '@/ui/EventMap';
-import { DotSeparated } from '@/ui/DotSeparated';
 import {
   CompetitionsDocument,
   type CompetitionsQueryVariables,
   type FederationEventSummaryFragment,
-  CompetitionSuggestionEventsDocument,
-  CompetitionSuggestionsDocument,
 } from '@/graphql/CompetitionParticipation';
 import type { CompetitionParticipantCondition } from '@/graphql';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
-import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { Pagination } from '@/ui/Pagination';
 import { FormError } from '@/ui/form';
-import { compareCategories, formatCategoryName } from '@/ui/csts';
+import { formatCategoryName } from '@/ui/csts';
 import { cn } from '@/lib/cn';
 import { compareText } from '@/lib/compare';
 import {
-  formatCount,
   formatDateOnly,
   formatOfficialRole,
   formatPointsAndFinals,
@@ -25,11 +18,8 @@ import {
 } from '@/ui/format';
 import { buttonCls, cardCls } from '@/ui/style';
 import { ArrowLeftRight, ChevronLeft } from 'lucide-react';
-import * as Collapsible from '@radix-ui/react-collapsible';
 import Link from 'next/link';
 import * as React from 'react';
-import { useQuery } from 'urql';
-import { parseAsBoolean, parseAsInteger, useQueryStates } from 'nuqs';
 import { EntityLink } from '@/ui/EntityLink';
 import {
   groupCompetitionEvents,
@@ -39,7 +29,6 @@ import {
 export { groupCompetitionEvents } from '@/calendar/competitions';
 export type { CompetitionEntry, CompetitionOfficialAssignment } from '@/calendar/competitions';
 
-const EventMap = dynamic(() => import('@/ui/EventMap'));
 
 function entryLabel(entry: CompetitionEntry, competition: boolean) {
   return competition
@@ -319,7 +308,7 @@ function CompetitionGroupContent({
   );
 }
 
-function CompetitionLink({
+export function CompetitionLink({
   federation,
   eventId,
   competitionId,
@@ -365,8 +354,20 @@ export function CompetitionHistory({
     getTotal: (data) => data.competitions?.totalCount,
   });
 
+  const planningParams = new URLSearchParams();
+  if (competitor.personIds?.length)
+    planningParams.set('personIds', competitor.personIds.join(','));
+  if (competitor.coupleId) planningParams.set('coupleId', competitor.coupleId);
+  if (competitor.cohortId) planningParams.set('cohortIds', competitor.cohortId);
+
   return (
     <>
+      <Link
+        href={`/planovani-soutezi${planningParams.size > 0 ? `?${planningParams}` : ''}`}
+        className={buttonCls({ variant: 'outline', size: 'sm', className: 'self-end' })}
+      >
+        Plánování
+      </Link>
       {error ? (
         <FormError error={error} />
       ) : fetching ? (
@@ -380,283 +381,5 @@ export function CompetitionHistory({
       )}
       <Pagination {...pagination} />
     </>
-  );
-}
-
-export function CompetitionSuggestions({
-  competitor = {},
-}: {
-  competitor?: CompetitionParticipantCondition;
-}) {
-  const [since] = React.useState(() => new Date().toISOString().slice(0, 10));
-  const [mapView, setMapView] = React.useState<MapView>();
-  const [showMap, setShowMap] = React.useState(true);
-  const [filters, setFilters] = useQueryStates(
-    {
-      registered: parseAsBoolean.withDefault(false),
-      suggestionPage: parseAsInteger,
-    },
-    { shallow: true, scroll: false },
-  );
-  const { data, fetching, error, pagination } = usePaginatedQuery({
-    query: CompetitionSuggestionEventsDocument,
-    variables: (offset) => ({
-      competitor,
-      since,
-      offset,
-      registeredOnly: filters.registered,
-    }),
-    limit: 50,
-    pageKey: 'suggestionPage',
-    getTotal: (data) => data.federationEvents?.totalCount,
-  });
-  const events = data?.federationEvents?.nodes ?? [];
-  const [{ data: matchData, fetching: matchFetching, error: matchError }] = useQuery({
-    query: CompetitionSuggestionsDocument,
-    variables: {
-      ...competitor,
-      since,
-      eventIds: events.map((event) => event.id),
-      registeredOnly: filters.registered,
-    },
-    pause: fetching || !!error || events.length === 0,
-  });
-
-  const matches = (matchData?.competitionSuggestionsList ?? []).flatMap((row) => {
-    const competitor = row.couple ?? row.person;
-    if (!row.competition || !competitor) return [];
-    return [
-      {
-        competition: row.competition,
-        status: row.status,
-        name: competitor.name,
-        href: `/${row.couple ? 'pary' : 'clenove'}/${competitor.id}`,
-      },
-    ];
-  });
-  const byEvent = Map.groupBy(matches, (match) => match.competition.eventId);
-  const queryError = error ?? (events.length > 0 ? matchError : undefined);
-  const hasCoordinates = events.some((x) => x.venueLat !== null && x.venueLng !== null);
-  const isPending = fetching || (events.length > 0 && matchFetching);
-  const { total, page, limit } = pagination;
-
-  return (
-    <div>
-      <div className="flex flex-wrap items-center gap-2 py-2">
-        <p className="whitespace-nowrap text-xs tabular-nums text-neutral-11">
-          {isPending
-            ? 'Načítám…'
-            : queryError
-              ? null
-              : total === 0
-                ? '0 / 0'
-                : `${(page - 1) * limit + 1}–${Math.min(page * limit, total)} / ${total}`}
-        </p>
-        <button
-          type="button"
-          aria-pressed={filters.registered}
-          className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
-          onClick={() =>
-            setFilters(
-              { registered: !filters.registered, suggestionPage: null },
-              { history: 'push' },
-            )
-          }
-        >
-          Již přihlášení
-        </button>
-        {hasCoordinates && (
-          <button
-            type="button"
-            aria-pressed={showMap}
-            className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
-            onClick={() => setShowMap((x) => !x)}
-          >
-            Mapa
-          </button>
-        )}
-      </div>
-      {queryError ? (
-        <FormError error={queryError} />
-      ) : isPending ? (
-        <p className="text-sm text-neutral-11">Načítám...</p>
-      ) : events.length > 0 ? (
-        <div className="flex flex-col gap-3">
-          {showMap && hasCoordinates && (
-            <EventMap
-              events={events}
-              view={mapView}
-              onViewChange={setMapView}
-              getEventWeight={(x) => byEvent.get(x.id)?.length ?? 0}
-              renderEventDetails={(event) => {
-                const matches = byEvent.get(event.id) ?? [];
-                return (
-                  <DotSeparated className="text-xs text-neutral-11">
-                    {formatCount(new Set(matches.map((x) => x.href)).size, {
-                      one: 'soutěžící',
-                      few: 'soutěžící',
-                      other: 'soutěžících',
-                    })}
-                    {formatCount(new Set(matches.map((x) => x.competition.id)).size, {
-                      one: 'soutěž',
-                      few: 'soutěže',
-                      other: 'soutěží',
-                    })}
-                  </DotSeparated>
-                );
-              }}
-            />
-          )}
-          {events.map((event) => {
-            const eventMatches = byEvent.get(event.id) ?? [];
-            const competitors = Map.groupBy(eventMatches, (x) => x.href)
-              .values()
-              .map((xs) => xs.find((x) => x.status === 'registered') ?? xs[0]!)
-              .toArray();
-            const competitions = Map.groupBy(eventMatches, (x) => x.competition.id)
-              .values()
-              .toArray()
-              .toSorted((a, b) =>
-                compareCategories(a[0]!.competition.category, b[0]!.competition.category),
-              );
-            return (
-              <Collapsible.Root key={event.id} asChild>
-                <article className={cardCls({ className: 'rounded-lg p-3' })}>
-                  <div className="relative">
-                    <div className="pointer-events-none relative z-10 min-w-0 pr-11 [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
-                      <h3 className="font-semibold">
-                        <CompetitionLink
-                          federation={event.federation}
-                          eventId={event.externalId}
-                        >
-                          {event.name}
-                        </CompetitionLink>
-                      </h3>
-
-                      <DotSeparated className="flex text-sm text-neutral-11">
-                        {[
-                          formatDateOnly(event.startDate),
-                          event.endDate &&
-                            event.endDate !== event.startDate &&
-                            formatDateOnly(event.endDate),
-                        ]
-                          .filter(Boolean)
-                          .join(' – ')}
-                        {event.location || event.city}
-                        <span className="font-medium text-accent-11">
-                          {formatCount(competitions.length, {
-                            one: 'soutěž',
-                            few: 'soutěže',
-                            other: 'soutěží',
-                          })}
-                        </span>
-                        <EligibleCompetitors competitors={competitors} />
-                      </DotSeparated>
-                    </div>
-                    <Collapsible.Trigger asChild>
-                      <button
-                        type="button"
-                        className="absolute inset-0 flex w-full cursor-pointer items-center justify-end rounded px-2 text-neutral-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8 [&[data-state=open]>svg]:-rotate-90"
-                      >
-                        <ChevronLeft className="size-5 transition-transform" />
-                      </button>
-                    </Collapsible.Trigger>
-                  </div>
-
-                  <Collapsible.Content>
-                    <ul className="mt-2 space-y-1 text-sm">
-                      {competitions.map((matches) => {
-                        const entry = matches[0]!;
-                        return (
-                          <li
-                            key={entry.competition.id}
-                            className="flex items-baseline justify-between gap-3"
-                          >
-                            <CompetitionLink
-                              federation={entry.competition.federation}
-                              eventId={event.externalId}
-                              competitionId={entry.competition.externalId}
-                            >
-                              {formatCategoryName(entry.competition)}
-                            </CompetitionLink>
-                            <EligibleCompetitors competitors={matches} />
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </Collapsible.Content>
-                </article>
-              </Collapsible.Root>
-            );
-          })}
-        </div>
-      ) : (
-        <p className="text-sm text-neutral-11">Nebyly nalezeny žádné možné soutěže.</p>
-      )}
-      <Pagination {...pagination} />
-    </div>
-  );
-}
-
-function EligibleCompetitors({
-  competitors,
-}: {
-  competitors: { name: string; href: string; status: string | null }[];
-}) {
-  if (competitors.length === 0) return null;
-  const registered = competitors.filter((x) => x.status === 'registered').length;
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          className="shrink-0 font-medium text-accent-11 underline decoration-dotted underline-offset-2"
-        >
-          {competitors.length - registered > 0 &&
-            formatCount(competitors.length - registered, {
-              one: 'potenciální',
-              few: 'potenciální',
-              other: 'potenciálních',
-            })}
-          {registered > 0 && (
-            <>
-              {registered < competitors.length && ' · '}
-              {formatCount(registered, {
-                one: 'přihlášený',
-                few: 'přihlášení',
-                other: 'přihlášených',
-              })}
-            </>
-          )}
-        </button>
-      </PopoverTrigger>
-      <PopoverContent align="start" className="max-h-80 overflow-y-auto text-sm">
-        <h4 className="mb-2 pr-6 font-semibold">Potenciální soutěžící</h4>
-        <ul className="space-y-1">
-          {competitors
-            .toSorted((a, b) => compareText(a.name, b.name))
-            .map((competitor) => (
-              <li
-                key={competitor.href}
-                className="flex items-baseline justify-between gap-3"
-              >
-                <Link
-                  href={competitor.href}
-                  prefetch={false}
-                  className="text-accent-11 underline"
-                >
-                  {competitor.name}
-                </Link>
-                {(competitor.status === 'registered' ||
-                  competitor.status === 'cancelled') && (
-                  <span className="shrink-0 text-xs text-neutral-11">
-                    {competitor.status === 'registered' ? 'Přihlášeno' : 'Odhlášeno'}
-                  </span>
-                )}
-              </li>
-            ))}
-        </ul>
-      </PopoverContent>
-    </Popover>
   );
 }

@@ -20,7 +20,7 @@ import { PeopleAccessOverview } from '@/ui/PeopleAccessOverview';
 import React from 'react';
 import { ActionRow } from '@/ui/ActionRow';
 import { personActions } from '@/lib/actions/person';
-import { CompetitionHistory, CompetitionSuggestions } from '@/ui/Competitions';
+import { CompetitionHistory } from '@/ui/Competitions';
 import { ActivityList } from '@/ui/ActivityList';
 import { useAuth } from '@/lib/auth';
 import { Tab, TabMenu } from '@/ui/TabMenu';
@@ -107,9 +107,6 @@ export function Cohort({
         </Tab>
         <Tab id="fed" title="Soutěže" requireMember>
           <CompetitionHistory competitor={{ cohortId: cohort.id }} />
-        </Tab>
-        <Tab id="eligible" title="Možné soutěže" requireMember>
-          <CompetitionSuggestions competitor={{ cohortId: cohort.id }} />
         </Tab>
         <Tab id="access" title="Přístupy" requireAdmin>
           <PeopleAccessOverview cohortId={cohort.id} />

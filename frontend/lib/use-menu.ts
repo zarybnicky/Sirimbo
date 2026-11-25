@@ -139,6 +139,12 @@ const memberMenu: MenuStructItem[] = [
         requireMember: true,
       },
       {
+        title: 'Plánování soutěží',
+        href: '/planovani-soutezi',
+        icon: CalendarDays,
+        requireMember: true,
+      },
+      {
         title: 'Soutěžní data',
         href: '/federated',
         icon: Globe,

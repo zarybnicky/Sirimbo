@@ -29,6 +29,8 @@ export type CalendarFilterInput = {
 export type CompetitionParticipantCondition = {
   /** Require a current member of this local cohort. */
   cohortId?: string | null | undefined;
+  /** Require a current member of any selected cohort. An empty list matches nobody. */
+  cohortIds?: Array<string> | null | undefined;
   /** An exact local partnership, across federations. */
   coupleId?: string | null | undefined;
   /** Intersect the selection with all person IDs assigned to the viewer. */

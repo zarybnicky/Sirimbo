@@ -1,4 +1,4 @@
-import { pgClassExpression, sqlValueWithCodec, TYPES, type PgCondition, type PgSelectSingleStep } from 'postgraphile/@dataplan/pg';
+import { listOfCodec, pgClassExpression, sqlValueWithCodec, TYPES, type PgCondition, type PgSelectSingleStep } from 'postgraphile/@dataplan/pg';
 import { sql, type SQL } from 'postgraphile/pg-sql2';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 
@@ -7,6 +7,7 @@ type ParticipantCondition = {
   onlyMine?: boolean | null;
   coupleId?: string | null;
   cohortId?: string | null;
+  cohortIds?: string[] | null;
 };
 
 type DateCondition = {
@@ -25,7 +26,7 @@ declare global {
 
 function personPredicate(
   column: SQL,
-  { personIds, onlyMine, coupleId, cohortId }: ParticipantCondition,
+  { personIds, onlyMine, coupleId, cohortId, cohortIds }: ParticipantCondition,
   tenantMembers = false,
 ): SQL | null {
   if (personIds?.length === 0) return sql`false`;
@@ -42,7 +43,7 @@ function personPredicate(
         ', ',
       )})`,
     );
-  if (tenantMembers && personIds == null && coupleId == null && cohortId == null && !onlyMine)
+  if (tenantMembers && personIds == null && coupleId == null && cohortId == null && cohortIds == null && !onlyMine)
     people.push(
       sql`${column} in (
         select person_id from app_private.current_tenant_relation
@@ -53,6 +54,13 @@ function personPredicate(
       select person_id from app_private.tenant_relation
       where tenant_id = (select public.current_tenant_id())
         and ${sqlValueWithCodec(cohortId, TYPES.bigint)} = any(current_cohort_ids)
+    )`);
+
+  if (cohortIds != null)
+    people.push(sql`${column} in (
+      select person_id from app_private.tenant_relation
+      where tenant_id = (select public.current_tenant_id())
+        and current_cohort_ids && ${sqlValueWithCodec(cohortIds, listOfCodec(TYPES.bigint))}
     )`);
 
   return people.length ? sql`(${sql.join(people, ' and ')})` : null;
@@ -133,6 +141,8 @@ const plugins: GraphileConfig.Plugin[] = [
         coupleId: BigInt
         """Require a current member of this local cohort."""
         cohortId: BigInt
+        """Require a current member of any selected cohort. An empty list matches nobody."""
+        cohortIds: [BigInt!]
       }
     `,
     objects: {
@@ -231,8 +241,8 @@ const plugins: GraphileConfig.Plugin[] = [
     (value, { sqlTableAlias: row }) => {
       if (value == null) return null;
       const scope = value as ParticipantCondition;
-      const { personIds, coupleId, cohortId, onlyMine } = scope;
-      if (personIds == null && coupleId == null && cohortId == null && !onlyMine) return null;
+      const { personIds, coupleId, cohortId, cohortIds, onlyMine } = scope;
+      if (personIds == null && coupleId == null && cohortId == null && cohortIds == null && !onlyMine) return null;
       const registration = sql.identifier(Symbol('registration'));
       const registered = sql`exists (select 1 from public.event_registration ${registration}
         where ${registration}.event_id = ${row}.id

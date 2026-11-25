@@ -8,6 +8,7 @@ type SuggestionCondition = {
     onlyMine?: boolean | null;
     coupleId?: string | null;
     cohortId?: string | null;
+    cohortIds?: string[] | null;
   } | null;
   date: { since?: string | null; until?: string | null };
   registeredOnly?: boolean | null;
@@ -54,7 +55,8 @@ const plugins: GraphileConfig.Plugin[] = [
           ${sqlValueWithCodec(competitor.coupleId ?? null, TYPES.bigint)},
           ${sqlValueWithCodec(competitor.cohortId ?? null, TYPES.bigint)},
           null,
-          ${registeredOnly ? sql`true` : sql`false`}
+          ${registeredOnly ? sql`true` : sql`false`},
+          ${sqlValueWithCodec(competitor.cohortIds ?? null, listOfCodec(TYPES.bigint))}
         ) m
         ${tableName === 'event' ? sql`join federated.competition c on c.id = m.competition_id` : sql``}
       )`;

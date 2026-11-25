@@ -8,7 +8,8 @@ create or replace function suggested_competition_matches(
   couple_id bigint default null,
   cohort_id bigint default null,
   event_ids bigint[] default null,
-  registered_only boolean default false
+  registered_only boolean default false,
+  cohort_ids bigint[] default null
 ) returns table (competition_id bigint, competitor_id text, local_person_id bigint, local_couple_id bigint, status text)
 language sql stable as $$
   with scoped_people as materialized (
@@ -22,6 +23,11 @@ language sql stable as $$
         select 1 from app_private.tenant_relation r
         where r.tenant_id = (select current_tenant_id()) and r.person_id = p.id
           and suggested_competition_matches.cohort_id = any(r.current_cohort_ids)
+      ))
+      and (cohort_ids is null or exists (
+        select 1 from app_private.tenant_relation r
+        where r.tenant_id = (select current_tenant_id()) and r.person_id = p.id
+          and r.current_cohort_ids && suggested_competition_matches.cohort_ids
       ))
       and (couple_id is null or exists (
         select 1 from couple c
@@ -180,7 +186,8 @@ create or replace function competition_suggestions(
   person_ids bigint[] default null,
   couple_id bigint default null,
   cohort_id bigint default null,
-  registered_only boolean default false
+  registered_only boolean default false,
+  cohort_ids bigint[] default null
 ) returns table (
   competition federated.competition,
   person public.person,
@@ -200,7 +207,7 @@ begin
       when bool_or(matches.status = 'cancelled') then 'cancelled'
       else 'suggested'
     end as status
-    from suggested_competition_matches(since, until, person_ids, couple_id, cohort_id, event_ids, registered_only)
+    from suggested_competition_matches(since, until, person_ids, couple_id, cohort_id, event_ids, registered_only, cohort_ids)
       matches
     group by competition_id, local_person_id, local_couple_id
   ) m

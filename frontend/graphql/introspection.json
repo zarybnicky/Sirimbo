@@ -25319,6 +25319,16 @@
                 }
               },
               {
+                "name": "cohortIds",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
                 "name": "coupleId",
                 "type": {
                   "kind": "SCALAR",
