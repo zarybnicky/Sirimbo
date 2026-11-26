@@ -20,7 +20,7 @@
 ## Design preferences
 
 - Trace the affected data flow and callers, inspect existing implementations, and briefly state what you will extend before editing. Fix the cause at the appropriate shared boundary.
-- Prefer compact code that is easy to read end to end. Evaluate total code, branching, indirection, and concepts. More elementary steps do not necessarily make code simpler.
+- Prefer brief, human-maintainable code without superfluous abstractions or overly descriptive naming. Evaluate total code, branching, indirection, and concepts. More elementary steps do not necessarily make code simpler.
 - Extend existing queries, components, and modules at their current boundaries. Follow repository patterns and use native platform features before adding custom machinery or dependencies.
 - Extract functions to remove meaningful duplication, isolate complex behavior, or name a real concept. Keep related logic together. Avoid speculative flexibility and trivial single-use wrappers.
 - Preserve correctness, security, data integrity, and required behavior. Keep accessibility work, defensive handling, and verification proportional to concrete task needs. Extra fallbacks and hypothetical edge-case handling are not automatically improvements.
@@ -43,7 +43,7 @@
 - `schema.sql` and `schema/`: generated database DDL for review. `python schema/split.py < schema.sql` produces the split tree. Do not hand-edit either output or run the dump workflow.
 
 ## Frontend tenancy model
-- Tenant host mapping lives in `frontend/tenant/catalog.ts`. `frontend/proxy.ts` preserves a valid `tenant_id` cookie; otherwise it selects the host's tenant or the default tenant.
+- Tenant host mapping lives in `frontend/tenant/catalog.ts`. `frontend/proxy.ts` seeds a missing `tenant_id` cookie from the host or default tenant. In production, a hostname listed by exactly one tenant selects that tenant regardless of the cookie. Shared hosts and development retain cookie-based tenant selection.
 - Production club switches use `/api/auth/handoff?tenant=…&from=…` to transfer sign-in to the club's origin. Development keeps cookie-based switching. Club hand-off OTPs are single-use and bound to the destination tenant; the return path is restricted to its origin.
 - Tenant-specific assets/config live under `frontend/tenant/{olymp,kometa,starlet}`. `frontend/tenant/ui.pages.ts` wires those configs to dynamically loaded tenant UI components.
 - Shared tenant metadata/types sit in `frontend/tenant/types.ts`; use these helpers when adding new tenant-aware UI.

@@ -4,6 +4,7 @@ import { executeGraphql } from '@/lib/server/graphql';
 import { runQuery } from '@/lib/server/postgresql';
 import { clearTenantCookie, setSessionCookie } from '@/lib/server/session';
 import { resolveClaims, getRequestContext, getRequestTenant } from '@/lib/server/tenant';
+import { getTenant } from '@/tenant/catalog';
 import { NextResponse, type NextRequest } from 'next/server';
 import { otpDestination } from '@/lib/auth.queries';
 
@@ -22,7 +23,9 @@ export async function GET(request: NextRequest) {
     if (!otp) throw new Error('Invalid OTP');
 
     const switchingClub = otp.intent === 'tenant_handoff';
-    const hostTenant = switchingClub ? await getRequestTenant() : null;
+    const hostTenant = switchingClub
+      ? getRequestTenant(request.headers, getTenant(otp.tenant_id))
+      : null;
     if (hostTenant) {
       if (String(hostTenant.id) !== otp.tenant_id) throw new Error('Wrong tenant');
       origin = hostTenant.config.origin;
@@ -51,7 +54,15 @@ export async function GET(request: NextRequest) {
       headers: { 'Referrer-Policy': 'no-referrer', 'Cache-Control': 'no-store' },
     });
     await setSessionCookie(result.jwt, response);
-    if (switchingClub) clearTenantCookie(request, response);
+    if (switchingClub) {
+      clearTenantCookie(request, response);
+      if (String(getRequestTenant(request.headers).id) !== otp.tenant_id) {
+        response.headers.append(
+          'Set-Cookie',
+          `tenant_id=${otp.tenant_id}; Path=/; SameSite=Lax${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`,
+        );
+      }
+    }
     return response;
   } catch {
     if (destination.pathname !== '/otp/invalid')

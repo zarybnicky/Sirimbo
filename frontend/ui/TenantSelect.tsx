@@ -34,9 +34,11 @@ export function TenantSelect() {
 
   const options = React.useMemo(() => {
     return Object.values(tenantCatalog)
-      .filter((x) => isElevated || auth.tenantIds.includes(x.id))
+      .filter(
+        (x) => isElevated || String(x.id) === tenantId || auth.tenantIds.includes(x.id),
+      )
       .map(({ id, name }) => ({ value: id.toString(), label: name }));
-  }, [isElevated, auth.tenantIds]);
+  }, [isElevated, auth.tenantIds, tenantId]);
 
   const onChange = React.useCallback(
     (tenantId: string) => {
@@ -59,7 +61,7 @@ export function TenantSelect() {
 
   return (
     <>
-      {(isElevated || auth.tenantIds.length > 1) && (
+      {(isElevated || options.length > 1) && (
         <SelectField
           className="text-neutral-12"
           onChange={onChange}

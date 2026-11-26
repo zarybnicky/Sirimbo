@@ -1,5 +1,5 @@
 import { runQuery } from '@/lib/server/postgresql';
-import { getRequestContext, getRequestTenant } from '@/lib/server/tenant';
+import { getRequestContext } from '@/lib/server/tenant';
 import { clearTenantCookie } from '@/lib/server/session';
 import { sanitizeReturnURL } from '@/lib/sanitize';
 import { getTenant } from '@/tenant/catalog';
@@ -10,9 +10,8 @@ export async function GET(request: NextRequest) {
   const { auth, tenant } = await getRequestContext();
   const params = request.nextUrl.searchParams;
   const switchingClub = params.has('tenant');
-  const source = switchingClub ? await getRequestTenant() : tenant;
   const development = process.env.NODE_ENV === 'development';
-  const origin = development ? request.nextUrl.origin : source.config.origin;
+  const origin = development ? request.nextUrl.origin : tenant.config.origin;
   const eventId = params.get('event');
   const [event] = !switchingClub && eventId && /^\d{1,18}$/.test(eventId)
     ? await runQuery(handoffEvent, { eventId })
@@ -39,7 +38,7 @@ export async function GET(request: NextRequest) {
       intent: switchingClub ? 'tenant_handoff' : 'event_handoff',
       eventId: switchingClub ? null : eventId,
     });
-    redirectTo = new URL('/otp', destination.id === source.id ? origin : destinationOrigin);
+    redirectTo = new URL('/otp', destination.id === tenant.id ? origin : destinationOrigin);
     redirectTo.searchParams.set('token', otp!.access_token);
     if (switchingClub) redirectTo.searchParams.set('from', from);
   }

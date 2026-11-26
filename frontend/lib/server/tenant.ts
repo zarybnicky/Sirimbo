@@ -13,6 +13,7 @@ import {
   defaultTenant,
   getTenant,
   hostToTenant,
+  tenantCatalog,
   type TenantCatalogEntry,
 } from '@/tenant/catalog';
 import jwt from 'jsonwebtoken';
@@ -52,20 +53,24 @@ export const getRequestContext = cache(
     const cookieTenant = getTenant(cookieStore.get('tenant_id')?.value);
     const tenant =
       getTenant(apiRequest?.headers.get('x-tenant-id')) ??
-      cookieTenant ??
-      (await getRequestTenant());
+      getRequestTenant(await headers(), cookieTenant);
     eventShare ??= apiRequest?.headers.get('x-event-share') ?? undefined;
     return { claims, tenant, ...resolveClaims(claims, tenant, eventShare) };
   },
 );
 
-export async function getRequestTenant() {
-  const headerStore = await headers();
+export function getRequestTenant(headerStore: Headers, cookieTenant?: TenantCatalogEntry) {
   const host = headerStore.get('x-forwarded-host') ?? headerStore.get('host');
   const hostname =
     host?.split(',', 1)[0]?.trim()?.split(':', 1)[0]?.toLowerCase() || null;
+  const hostTenants = Object.values(tenantCatalog).filter((tenant) =>
+    tenant.hosts.some((host) => host.toLowerCase() === hostname),
+  );
 
-  return hostToTenant.get(hostname ?? '') ?? defaultTenant;
+  if (process.env.NODE_ENV === 'production' && hostTenants.length === 1) {
+    return hostTenants[0]!;
+  }
+  return cookieTenant ?? hostToTenant.get(hostname ?? '') ?? defaultTenant;
 }
 
 export function resolveClaims(
