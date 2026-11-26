@@ -232,7 +232,9 @@ export const numericDateWithYearFormatter = new Intl.DateTimeFormat('cs-CZ', {
 
 export function formatDateOnly(value: string | null | undefined) {
   if (!value) return '';
-  return numericDateWithYearFormatter.format(new Date(`${value}T00:00:00`));
+  return numericDateWithYearFormatter.format(
+    new Date(value.length > 10 ? value : `${value}T00:00:00`),
+  );
 }
 
 function createCompactFormatter(options: Intl.DateTimeFormatOptions = {}) {
