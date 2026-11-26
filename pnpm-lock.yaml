@@ -9,7 +9,7 @@ overrides:
   graphile-migrate>@types/pg: '*'
   eslint-config-next>eslint-plugin-react-hooks: ^7.1.1
   '@opentelemetry/sdk-trace-base': 2.8.0
-  zod: 4.4.3
+  zod: 4.6.6
 
 patchedDependencies:
   '@haathie/postgraphile-targeted-conditions@0.1.1':
@@ -112,7 +112,7 @@ importers:
         version: 11.2.0(ckeditor5@47.6.2)(react@19.3.1)
       '@hookform/resolvers':
         specifier: ~5.9.2
-        version: 5.9.2(@standard-schema/spec@1.1.0)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(fp-ts@2.16.11)(io-ts@2.2.22(fp-ts@2.16.11))(react-hook-form@7.87.0(react@19.3.1))(zod@4.4.3)
+        version: 5.9.2(@standard-schema/spec@1.1.0)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(fp-ts@2.16.11)(io-ts@2.2.22(fp-ts@2.16.11))(react-hook-form@7.87.0(react@19.3.1))(zod@4.6.6)
       '@icons-pack/react-simple-icons':
         specifier: ^13.15.1
         version: 13.15.1(react@19.3.1)
@@ -303,8 +303,8 @@ importers:
         specifier: ^6.3.6
         version: 6.3.6
       zod:
-        specifier: 4.4.3
-        version: 4.4.3
+        specifier: 4.6.6
+        version: 4.6.6
     devDependencies:
       '@graphql-eslint/eslint-plugin':
         specifier: ^4.4.2
@@ -474,7 +474,7 @@ importers:
         version: 2.4.2
       '@traversable/zod':
         specifier: ^0.0.57
-        version: 0.0.57(zod@4.4.3)
+        version: 0.0.57(zod@4.6.6)
       cheerio:
         specifier: ~1.2.0
         version: 1.2.0
@@ -515,8 +515,8 @@ importers:
         specifier: ^3.19.3
         version: 3.19.3
       zod:
-        specifier: 4.4.3
-        version: 4.4.3
+        specifier: 4.6.6
+        version: 4.6.6
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -1815,7 +1815,7 @@ packages:
       valibot: '>=0.31.0 || ^1.0.0-beta.4 || ^1.0.0-rc'
       vest: '>=6.0.0'
       yup: ^1.0.0
-      zod: 4.4.3
+      zod: 4.6.6
     peerDependenciesMeta:
       '@sinclair/typebox':
         optional: true
@@ -4320,14 +4320,14 @@ packages:
     resolution: {integrity: sha512-aPkUQctDzpXLSWhlx7jUDi3mInsI18xcnrK1hvIyIa88ab1ax88cACr7xU+BKMCGB4NZYNwh4SoNSEbv3RY2NA==}
     engines: {node: '>=20'}
 
-  '@tanstack/react-virtual@3.14.26':
-    resolution: {integrity: sha512-HUDlfsrYH6ko5xH56L62Mcl/uzT+AGVNMHFuDNqDJMdZWc1AQa2oeVKNUvZ/RWBZQ4TYtyQerFrNvLnp39h65A==}
+  '@tanstack/react-virtual@3.14.28':
+    resolution: {integrity: sha512-zoM4eddIVUsOsunOe26ur+h6YJQbvdzU10a2tKzIovThu5P4SvEyQ+cRx0mbeKfgnR0Mz7KR/NwrZ3GzVnUF/g==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@tanstack/virtual-core@3.19.11':
-    resolution: {integrity: sha512-/5iHb0RHBvj8Di59FDs4ESNm45jls33aZAi4zccVXZjc/6ZvwQP6nzEYeT6weXjTf9E6/vrp2JhYWRyO+ZP13A==}
+  '@tanstack/virtual-core@3.19.13':
+    resolution: {integrity: sha512-CyCvMm7m5JuvPW6eMPZkZBZk6diySrlUQNNRpQPiEnh2vakyghx82Hw3wW2THFUsl6xJ6uM4lSUaiA2T0oYW8w==}
 
   '@traversable/json@0.0.52':
     resolution: {integrity: sha512-QddhvjiJULZw6z/OhHE0YchZfKr1LRvRvs5dZqGpYb0UB3GpWSn/2fIJjYTOCT0pG95QhuxexPpKky6eihFBLA==}
@@ -4346,12 +4346,12 @@ packages:
     peerDependencies:
       '@traversable/json': ^0.0.52
       '@traversable/registry': ^0.0.49
-      zod: 4.4.3
+      zod: 4.6.6
 
   '@traversable/zod@0.0.57':
     resolution: {integrity: sha512-oOSaBQitiav6QrwPZFF8GY1J2VDKDeA/GQTgsi2E6D8dn6V+5jcji+Qp2zRz6XDGUzfJy+Xda+2LqzwDT2G8nA==}
     peerDependencies:
-      zod: 4.4.3
+      zod: 4.6.6
 
   '@tsconfig/node24@24.0.5':
     resolution: {integrity: sha512-DWC54fGPuhZgg3Ighg4Y/A/bA3ZdB5hnzAuv/MkQ/X85sVsBsMQxu8t7khutdYeiNksBbFdDyeqv1HSW2Zl8aA==}
@@ -4488,6 +4488,9 @@ packages:
   '@types/estree@1.0.10':
     resolution: {integrity: sha512-lTyOMnOcmRBzdCv6/4zUZCrEhV0xrqQiUZBZtVcbmLHBXKLnN8q89v/wKRF/Q0HbwVsqbIG3o5HDoFl9sduM+g==}
 
+  '@types/estree@1.0.11':
+    resolution: {integrity: sha512-YBdNe5JcjYR0sPhJW1QIeRCmI11YhYvaRuGCs9+WCeTTb+Yhb2BE2XMe5/wAqF10FK5g3+q1PDhQABfT7aX0gg==}
+
   '@types/estree@1.0.9':
     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
 
@@ -4552,8 +4555,14 @@ packages:
   '@types/node@22.20.5':
     resolution: {integrity: sha512-U2+DNr+wSjpsTS/wZGYHq7GcwfuSmKiKvoPvK22zwTlRhU91yOniN4qRR5KhIjvif7ysw/dz/hKmfDH0Ris4aA==}
 
+  '@types/node@22.20.7':
+    resolution: {integrity: sha512-F/Mcc4pD3YwXQCG50hb8BjB5RmrOere6hge7n2XHf0V8tpkZOVEjwYv9Ql7n0MpMn8Bv7+q12P9w6UHsBm0Sfw==}
+
   '@types/node@24.19.2':
     resolution: {integrity: sha512-93d49wCWJkCyN87MxLpNN6KXPCwFw7bVUg79mGUV1OS40JGWwVCr8n61DXCSqz7CV6/VfPkb7xec7uP2M+QHWQ==}
+
+  '@types/node@24.19.4':
+    resolution: {integrity: sha512-s04odlR3ksJrLu7QLi+pddkWLD0RmSbcP9KuWn2/ozQKAp/YgwBC/6x9kJj8yAzZnGPfxePm7zm7nysVPCRagw==}
 
   '@types/nodemailer@8.0.2':
     resolution: {integrity: sha512-c7M5ox8p0nEOfbJ2E9Qcmt8/QCu/VzsiAhzBiZbvky2PhKZDHpKB3sQHBM5MEZNkCfBOaS6S9//AGPRTNB7IaA==}
@@ -10093,10 +10102,10 @@ packages:
     resolution: {integrity: sha512-Q6/nZLe6jxuU80qb/4uJ4t5v2VEZ44lzQjPDhYJNztRQ4wyWc6VF3D3Kb/fAuPetZQnhS3hnajCf9CsWesghLQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      zod: 4.4.3
+      zod: 4.6.6
 
-  zod@4.4.3:
-    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+  zod@4.6.6:
+    resolution: {integrity: sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==}
 
   zustand@5.1.0:
     resolution: {integrity: sha512-ciJZlP48M1PTQbVQq81CGVFxHTLpZNrFjKqwjtCU34AWuXTZT/jrF3p9+fI84Cf1eSCMLapxqBy/SNTfwOBuqA==}
@@ -10422,8 +10431,6 @@ snapshots:
       '@ckeditor/ckeditor5-core': 47.6.2
       '@ckeditor/ckeditor5-upload': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-alignment@47.6.2':
     dependencies:
@@ -10526,16 +10533,12 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-cloud-services@47.6.2':
     dependencies:
       '@ckeditor/ckeditor5-core': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-code-block@47.6.2':
     dependencies:
@@ -10578,8 +10581,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-editor-classic@47.6.2':
     dependencies:
@@ -10589,8 +10590,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-editor-decoupled@47.6.2':
     dependencies:
@@ -10600,8 +10599,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-editor-inline@47.6.2':
     dependencies:
@@ -10643,16 +10640,12 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-utils': 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-enter@47.6.2':
     dependencies:
       '@ckeditor/ckeditor5-core': 47.6.2
       '@ckeditor/ckeditor5-engine': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-essentials@47.6.2':
     dependencies:
@@ -10675,8 +10668,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-font@47.6.2':
     dependencies:
@@ -10732,8 +10723,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-html-embed@47.6.2':
     dependencies:
@@ -10888,8 +10877,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-minimap@47.6.2':
     dependencies:
@@ -10898,8 +10885,6 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-page-break@47.6.2':
     dependencies:
@@ -10940,6 +10925,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-restricted-editing@47.6.2':
     dependencies:
@@ -10965,6 +10952,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-source-editing@47.6.2':
     dependencies:
@@ -10995,6 +10984,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-table@47.6.2':
     dependencies:
@@ -11007,6 +10998,8 @@ snapshots:
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-theme-lark@47.6.2':
     dependencies:
@@ -11041,6 +11034,8 @@ snapshots:
       '@ckeditor/ckeditor5-icons': 47.6.2
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-upload@47.6.2':
     dependencies:
@@ -11051,8 +11046,6 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-ui': 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-watchdog@47.6.2':
     dependencies:
@@ -11082,6 +11075,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@colordx/core@5.5.0': {}
 
@@ -11100,7 +11095,7 @@ snapshots:
     dependencies:
       '@dataplan/json': 1.0.1(grafast@1.1.3(@envelop/core@5.6.1)(graphql@16.14.2))
       '@graphile/lru': 5.0.1
-      '@types/node': 22.20.5
+      '@types/node': 22.20.7
       chalk: 4.1.2
       debug: 4.4.3(supports-color@5.5.0)
       eventemitter3: 5.0.4
@@ -12205,12 +12200,12 @@ snapshots:
       '@floating-ui/react': 0.26.28(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@react-aria/focus': 3.22.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@react-aria/interactions': 3.28.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@tanstack/react-virtual': 3.14.26(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@tanstack/react-virtual': 3.14.28(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
       use-sync-external-store: 1.7.0(react@19.3.1)
 
-  '@hookform/resolvers@5.9.2(@standard-schema/spec@1.1.0)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(fp-ts@2.16.11)(io-ts@2.2.22(fp-ts@2.16.11))(react-hook-form@7.87.0(react@19.3.1))(zod@4.4.3)':
+  '@hookform/resolvers@5.9.2(@standard-schema/spec@1.1.0)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(fp-ts@2.16.11)(io-ts@2.2.22(fp-ts@2.16.11))(react-hook-form@7.87.0(react@19.3.1))(zod@4.6.6)':
     dependencies:
       '@standard-schema/utils': 0.3.0
       react-hook-form: 7.87.0(react@19.3.1)
@@ -12220,7 +12215,7 @@ snapshots:
       ajv-formats: 2.1.1(ajv@8.20.0)
       fp-ts: 2.16.11
       io-ts: 2.2.22(fp-ts@2.16.11)
-      zod: 4.4.3
+      zod: 4.6.6
 
   '@humanfs/core@0.19.2':
     dependencies:
@@ -14523,7 +14518,7 @@ snapshots:
       pretty-bytes: 6.1.1
       source-map: 0.8.0
       type-fest: 5.10.0
-      zod: 4.4.3
+      zod: 4.6.6
     optionalDependencies:
       typescript: 6.0.3
     transitivePeerDependencies:
@@ -14542,7 +14537,7 @@ snapshots:
       pretty-bytes: 6.1.1
       stringify-object: 6.0.0
       update-notifier: 7.3.1
-      zod: 4.4.3
+      zod: 4.6.6
     optionalDependencies:
       esbuild: 0.28.2
     transitivePeerDependencies:
@@ -14563,7 +14558,7 @@ snapshots:
       react: 19.3.1
       semver: 7.8.5
       serwist: 9.5.15(browserslist@4.29.6)(typescript@6.0.3)
-      zod: 4.4.3
+      zod: 4.6.6
     optionalDependencies:
       '@serwist/cli': 9.5.15(@types/node@24.19.2)(browserslist@4.29.6)(esbuild@0.28.2)(typescript@6.0.3)
       typescript: 6.0.3
@@ -14579,7 +14574,7 @@ snapshots:
       '@serwist/build': 9.5.15(browserslist@4.29.6)(typescript@6.0.3)
       '@serwist/utils': 9.5.15(browserslist@4.29.6)
       pretty-bytes: 6.1.1
-      zod: 4.4.3
+      zod: 4.6.6
     optionalDependencies:
       typescript: 6.0.3
       webpack: 5.108.4(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.5(@types/node@24.19.2))
@@ -14721,13 +14716,13 @@ snapshots:
     dependencies:
       remove-accents: 0.5.0
 
-  '@tanstack/react-virtual@3.14.26(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@tanstack/react-virtual@3.14.28(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@tanstack/virtual-core': 3.19.11
+      '@tanstack/virtual-core': 3.19.13
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
 
-  '@tanstack/virtual-core@3.19.11': {}
+  '@tanstack/virtual-core@3.19.13': {}
 
   '@traversable/json@0.0.52(@traversable/registry@0.0.49)':
     dependencies:
@@ -14735,18 +14730,18 @@ snapshots:
 
   '@traversable/registry@0.0.49': {}
 
-  '@traversable/zod-types@0.0.30(@traversable/json@0.0.52(@traversable/registry@0.0.49))(@traversable/registry@0.0.49)(zod@4.4.3)':
+  '@traversable/zod-types@0.0.30(@traversable/json@0.0.52(@traversable/registry@0.0.49))(@traversable/registry@0.0.49)(zod@4.6.6)':
     dependencies:
       '@traversable/json': 0.0.52(@traversable/registry@0.0.49)
       '@traversable/registry': 0.0.49
-      zod: 4.4.3
+      zod: 4.6.6
 
-  '@traversable/zod@0.0.57(zod@4.4.3)':
+  '@traversable/zod@0.0.57(zod@4.6.6)':
     dependencies:
       '@traversable/json': 0.0.52(@traversable/registry@0.0.49)
       '@traversable/registry': 0.0.49
-      '@traversable/zod-types': 0.0.30(@traversable/json@0.0.52(@traversable/registry@0.0.49))(@traversable/registry@0.0.49)(zod@4.4.3)
-      zod: 4.4.3
+      '@traversable/zod-types': 0.0.30(@traversable/json@0.0.52(@traversable/registry@0.0.49))(@traversable/registry@0.0.49)(zod@4.6.6)
+      zod: 4.6.6
     transitivePeerDependencies:
       - fast-check
 
@@ -14910,6 +14905,8 @@ snapshots:
 
   '@types/estree@1.0.10': {}
 
+  '@types/estree@1.0.11': {}
+
   '@types/estree@1.0.9': {}
 
   '@types/facebook-pixel@0.0.31': {}
@@ -14973,7 +14970,15 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  '@types/node@22.20.7':
+    dependencies:
+      undici-types: 6.21.0
+
   '@types/node@24.19.2':
+    dependencies:
+      undici-types: 7.24.6
+
+  '@types/node@24.19.4':
     dependencies:
       undici-types: 7.24.6
 
@@ -16923,8 +16928,8 @@ snapshots:
       '@babel/parser': 7.29.7
       eslint: 10.15.0(jiti@2.7.0)
       hermes-parser: 0.25.1
-      zod: 4.4.3
-      zod-validation-error: 4.0.2(zod@4.4.3)
+      zod: 4.6.6
+      zod-validation-error: 4.0.2(zod@4.6.6)
     transitivePeerDependencies:
       - supports-color
 
@@ -17417,7 +17422,7 @@ snapshots:
   graphile-build-pg@5.1.4(@dataplan/pg@1.1.2(@dataplan/json@1.0.1(grafast@1.1.3(@envelop/core@5.6.1)(graphql@16.14.2)))(grafast@1.1.3(@envelop/core@5.6.1)(graphql@16.14.2))(graphile-config@1.1.2)(graphql@16.14.2)(pg-sql2@5.0.1)(pg@8.22.0))(grafast@1.1.3(@envelop/core@5.6.1)(graphql@16.14.2))(graphile-build@5.1.1(grafast@1.1.3(@envelop/core@5.6.1)(graphql@16.14.2))(graphile-config@1.1.2)(graphql@16.14.2))(graphile-config@1.1.2)(graphql@16.14.2)(pg-sql2@5.0.1)(pg@8.22.0)(tamedevil@0.1.1):
     dependencies:
       '@dataplan/pg': 1.1.2(@dataplan/json@1.0.1(grafast@1.1.3(@envelop/core@5.6.1)(graphql@16.14.2)))(grafast@1.1.3(@envelop/core@5.6.1)(graphql@16.14.2))(graphile-config@1.1.2)(graphql@16.14.2)(pg-sql2@5.0.1)(pg@8.22.0)
-      '@types/node': 22.20.5
+      '@types/node': 22.20.7
       debug: 4.4.3(supports-color@5.5.0)
       grafast: 1.1.3(@envelop/core@5.6.1)(graphql@16.14.2)
       graphile-build: 5.1.1(grafast@1.1.3(@envelop/core@5.6.1)(graphql@16.14.2))(graphile-config@1.1.2)(graphql@16.14.2)
@@ -17435,7 +17440,7 @@ snapshots:
 
   graphile-build@5.1.1(grafast@1.1.3(@envelop/core@5.6.1)(graphql@16.14.2))(graphile-config@1.1.2)(graphql@16.14.2):
     dependencies:
-      '@types/node': 22.20.5
+      '@types/node': 22.20.7
       '@types/pluralize': 0.0.33
       '@types/semver': 7.8.0
       chalk: 4.1.2
@@ -18214,7 +18219,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 24.19.2
+      '@types/node': 24.19.4
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -21423,7 +21428,7 @@ snapshots:
 
   webpack@5.108.4(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.5(@types/node@24.19.2)):
     dependencies:
-      '@types/estree': 1.0.10
+      '@types/estree': 1.0.11
       '@types/json-schema': 7.0.15
       '@webassemblyjs/ast': 1.14.1
       '@webassemblyjs/wasm-edit': 1.14.1
@@ -21625,11 +21630,11 @@ snapshots:
       compress-commons: 4.1.2
       readable-stream: 3.6.2
 
-  zod-validation-error@4.0.2(zod@4.4.3):
+  zod-validation-error@4.0.2(zod@4.6.6):
     dependencies:
-      zod: 4.4.3
+      zod: 4.6.6
 
-  zod@4.4.3: {}
+  zod@4.6.6: {}
 
   zustand@5.1.0(@types/react@19.3.0)(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1)):
     optionalDependencies:
