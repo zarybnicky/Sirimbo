@@ -95,9 +95,7 @@ export default async function FrontierPage({
           discovered: frontier.discoveredAt
             ? numericFullFormatter.format(new Date(frontier.discoveredAt))
             : '-',
-          'reference date': frontier.referenceDate
-            ? formatDateOnly(frontier.referenceDate)
-            : '-',
+          'reference date': formatDateOnly(frontier.referenceDate) || '-',
           'last fetched': frontier.lastFetchedAt
             ? numericFullFormatter.format(new Date(frontier.lastFetchedAt))
             : '-',

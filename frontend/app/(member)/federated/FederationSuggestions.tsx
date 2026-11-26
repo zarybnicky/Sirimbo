@@ -144,7 +144,7 @@ function CoupleSuggestion({
           {(candidate.latestResultAt || candidate.latestEntryAt) && (
             <span>
               Poslední soutěž:{' '}
-              {candidate.latestResultAt ? formatDateOnly(candidate.latestResultAt) : ''}
+              {formatDateOnly(candidate.latestResultAt)}
               {candidate.latestEntryAt &&
               candidate.latestEntryAt > new Date().toISOString()
                 ? ' (+ budoucí)'

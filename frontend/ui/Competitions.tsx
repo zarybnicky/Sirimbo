@@ -128,7 +128,7 @@ export function CompetitionEventCard({
           )}
         >
           <span className="min-w-0 truncate">
-            {[event?.location || event?.city, showDate && date && formatDateOnly(date)]
+            {[event?.location || event?.city, showDate && formatDateOnly(date)]
               .filter(Boolean)
               .join(', ')}
           </span>

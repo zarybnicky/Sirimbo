@@ -5,7 +5,7 @@ import { eventRegistrationActions } from '@/lib/actions/event';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { EventAttendance } from '@/ui/EventAttendance';
 import { Table } from '@/ui/Table';
-import { dateTimeFormatter, formatDateOnly } from '@/ui/format';
+import { formatDateOnly } from '@/ui/format';
 import { EntityLink } from '@/ui/EntityLink';
 import { useAuth } from '@/lib/auth';
 import { compareText } from '@/lib/compare';
@@ -88,9 +88,7 @@ export const EventRegistrations = memo(function EventRegistrations({
                 {canEditAttendance && (event.seriesInfo?.length ?? 0) > 1 && (
                   <div className="text-xs text-neutral-9">
                     Poslední účast:{' '}
-                    {x.lastAttended
-                      ? formatDateOnly(x.lastAttended)
-                      : '-'}
+                    {formatDateOnly(x.lastAttended) || '-'}
                   </div>
                 )}
                 {auth.canManageEvent(event) && (

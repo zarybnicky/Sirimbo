@@ -230,7 +230,8 @@ export const numericDateWithYearFormatter = new Intl.DateTimeFormat('cs-CZ', {
   year: 'numeric',
 });
 
-export function formatDateOnly(value: string) {
+export function formatDateOnly(value: string | null | undefined) {
+  if (!value) return '';
   return numericDateWithYearFormatter.format(new Date(`${value}T00:00:00`));
 }
 

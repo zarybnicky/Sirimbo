@@ -66,7 +66,7 @@ export default async function CompetitorPage({ params }: Props) {
           Typ: formatCompetitorType(competitor.competitorType),
           Věk: formatAgeGroup(competitor.ageGroup),
           'Poslední soutěž':
-            (competitor.latestResultAt ? formatDateOnly(competitor.latestResultAt) : '') +
+            formatDateOnly(competitor.latestResultAt) +
             (competitor.latestEntryAt && competitor.latestEntryAt > today
               ? ' (+ budoucí)'
               : ''),

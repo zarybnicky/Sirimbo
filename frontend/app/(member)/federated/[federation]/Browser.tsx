@@ -643,7 +643,7 @@ function Competitors(props: BrowserProps) {
 
                     {index === 0 && (
                       <td rowSpan={ageGroups.length} className="whitespace-nowrap">
-                        {row.latestResultAt ? formatDateOnly(row.latestResultAt) : ''}
+                        {formatDateOnly(row.latestResultAt)}
                         {row.latestEntryAt && row.latestEntryAt > today && (
                           <div className="text-xs text-neutral-11">(+ budoucí)</div>
                         )}

@@ -84,7 +84,7 @@ export default async function FederatedPersonPage({ params }: Props) {
               <ExternalLink className="size-3.5" />
             </a>
           ),
-          'Datum narození': person.dob && formatDateOnly(person.dob),
+          'Datum narození': formatDateOnly(person.dob),
           Pohlaví: genderLabels[person.gender ?? 'UNKNOWN'],
           Národnost: person.nationality,
           'Aktuální klub': person.club?.name,
@@ -157,7 +157,7 @@ export default async function FederatedPersonPage({ params }: Props) {
                 <td>{license.grade || '-'}</td>
                 <td>{license.status.toLowerCase()}</td>
                 <td className="whitespace-nowrap tabular-nums">
-                  {license.validUntil ? formatDateOnly(license.validUntil) : '-'}
+                  {formatDateOnly(license.validUntil) || '-'}
                 </td>
               </tr>
             ))}
