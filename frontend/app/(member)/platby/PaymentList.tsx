@@ -42,15 +42,16 @@ export function PaymentList() {
     Number(filters.personIds.length > 0);
   const search = React.useDeferredValue(filters.search.trim());
   const searchPending = search !== filters.search.trim();
+  const personIds = filters.personIds.length > 0 ? filters.personIds : null;
   const condition = {
     status: filters.status || undefined,
     kind: filters.kind || undefined,
-    personIds: filters.personIds.length > 0 ? filters.personIds : null,
+    debtors: personIds == null ? null : { personId: { eqIn: personIds } },
     search,
   };
   const [options] = useQuery({
     query: PaymentListOptionsDocument,
-    variables: condition,
+    variables: { ...condition, personIds },
     pause: searchPending,
   });
   const counts: Record<string, Record<string, number>> = {};

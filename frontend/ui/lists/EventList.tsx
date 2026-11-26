@@ -34,7 +34,7 @@ function EventListPage({ search, currentId }: EventListPageProps) {
   const [{ data }] = useQuery({
     query: EventListDocument,
     variables: {
-      condition: { type: 'CAMP', parentId: null },
+      condition: { type: { eq: 'CAMP' }, parentId: null },
       orderBy: ['SINCE_DESC'],
       includeCoverImage: true,
     },
@@ -96,7 +96,7 @@ export function EventList() {
           <Dialog modal={false}>
             <DialogTrigger.Add size="sm" text="Přidat událost" />
             <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-              <EventForm type="CAMP" date={createDate} trainerPersonIds={[]} />
+              <EventForm type="CAMP" date={createDate} />
             </DialogContent>
           </Dialog>
         )}

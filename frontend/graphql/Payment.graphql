@@ -228,7 +228,7 @@ query Transactions(
   $first: Int!
   $offset: Int!
   $condition: TransactionCondition!
-  $accountIds: [BigInt!]
+  $postingAccount: PostingAccountIdCondition
 ) {
   transactions(
     first: $first
@@ -245,7 +245,7 @@ query Transactions(
       payment {
         ...Payment
       }
-      postingsList(condition: { accountIds: $accountIds }) {
+      postingsList(condition: { accountId: $postingAccount }) {
         id
         amount
         account {

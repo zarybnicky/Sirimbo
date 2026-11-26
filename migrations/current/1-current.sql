@@ -219,3 +219,25 @@ update tenant set accent_dark = array[
 comment on column aktuality.at_kat is '@behavior -*';
 
 --!include functions/save_events.sql
+
+comment on column public.person.id is '@behavior filterType:eq filterType:eqIn';
+comment on column public.posting.account_id is '@behavior filterType:eq filterType:eqIn';
+comment on column public.transaction.source is '@behavior filterType:eq filterType:eqIn';
+comment on column federated.competitor.competitor_type is '@behavior filterType:eq filterType:eqIn';
+
+comment on column federated.person.age_group_code is '@name ageGroup
+@behavior -insert -update filterType:eq filterType:eqIn';
+comment on column federated.person.gender is '@behavior filterType:eq filterType:eqIn';
+comment on column federated.person.nationality is '@behavior filterType:eq filterType:eqIn';
+--!include functions/federation_people_facets.sql
+
+comment on column public.event.type is '@behavior filterType:eq filterType:eqIn';
+comment on column public.event.location_id is '@behavior filterType:eq filterType:eqIn';
+comment on column public.event_trainer.person_id is '@behavior filterType:eq filterType:eqIn';
+comment on column public.payment_debtor.person_id is '@behavior filterType:eq filterType:eqIn';
+comment on table public.event is '@behavior +list -connection -insert
+@ref trainers via:public.event_trainer behavior:"filterable -list -connection -single"';
+comment on table public.payment is '@behavior +list +connection -insert -query:resource:list +query:resource:connection
+@ref debtors via:public.payment_debtor behavior:"filterable -list -connection -single"';
+comment on table public.transaction is '@behavior -insert -update
+@ref postings via:public.posting behavior:"filterable -list -connection -single"';

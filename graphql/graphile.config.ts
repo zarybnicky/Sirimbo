@@ -1,3 +1,4 @@
+import { TargetedConditionsPlugin } from '@haathie/postgraphile-targeted-conditions';
 import { PgSimplifyInflectionPreset } from '@graphile/simplify-inflection';
 import 'graphile-config';
 import { PostGraphileAmberPreset } from 'postgraphile/presets/amber';
@@ -32,6 +33,7 @@ const preset: GraphileConfig.Preset = {
   ],
   plugins: [
     ApiInflectionPlugin,
+    TargetedConditionsPlugin,
     currentUserPlugin,
     DateRangeConditionPlugin,
     ...peoplePlugins,

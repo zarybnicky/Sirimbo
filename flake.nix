@@ -33,6 +33,15 @@
       in postgres.overrideAttrs (old: {
         passthru = old.passthru // {
           pkgs = old.passthru.pkgs // {
+            plpgsql_check = old.passthru.pkgs.plpgsql_check.overrideAttrs {
+              version = "2.11.1";
+              src = final.fetchFromGitHub {
+                owner = "okbob";
+                repo = "plpgsql_check";
+                tag = "v2.11.1";
+                hash = "sha256-2IopKRKgBeyzwVhuB4jK+rgmlRBk0LQjKz2PoCAXlGM=";
+              };
+            };
             pg_stat_monitor = final.postgresql_19.pkgs.callPackage ./deploy/pg_stat_monitor.nix {};
           };
         };

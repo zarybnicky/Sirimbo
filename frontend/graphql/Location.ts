@@ -63,9 +63,7 @@ export type EventCondition = {
   isPublic?: boolean | null | undefined;
   /** Checks for equality with the object’s `isVisible` field. */
   isVisible?: boolean | null | undefined;
-  /** Checks for equality with the object’s `locationId` field. */
-  locationId?: string | null | undefined;
-  locationIds?: Array<string | null | undefined> | null | undefined;
+  locationId?: EventLocationIdCondition | null | undefined;
   /** Checks for equality with the object’s `locationText` field. */
   locationText?: string | null | undefined;
   /** Checks for equality with the object’s `name` field. */
@@ -86,15 +84,20 @@ export type EventCondition = {
   summary?: string | null | undefined;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: string | null | undefined;
-  trainerIds?: Array<string | null | undefined> | null | undefined;
-  /** Checks for equality with the object’s `type` field. */
-  type?: EventType | null | undefined;
+  trainers?: EventTrainerCondition | null | undefined;
+  type?: EventTypeCondition | null | undefined;
+  /** @deprecated Use type: { eqIn: [...] }. */
   types?: Array<EventType> | null | undefined;
   /** Checks for equality with the object’s `until` field. */
   until?: string | null | undefined;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: string | null | undefined;
 };
+
+/** Conditions for filtering by event's location_id */
+export type EventLocationIdCondition =
+  {   eq: string; eqIn?: never; }
+  |  { eq?: never;   eqIn: Array<string | null | undefined>; };
 
 export type EventRangeCondition = {
   /** Exclusive end of the time window. Omit for an unbounded end. */
@@ -103,12 +106,42 @@ export type EventRangeCondition = {
   start: string;
 };
 
+/**
+ * A condition to be used against `EventTrainer` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type EventTrainerCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: string | null | undefined;
+  /** Checks for equality with the object’s `eventId` field. */
+  eventId?: string | null | undefined;
+  /** Checks for equality with the object’s `id` field. */
+  id?: string | null | undefined;
+  /** Checks for equality with the object’s `lessonsOffered` field. */
+  lessonsOffered?: number | null | undefined;
+  personId?: EventTrainerPersonIdCondition | null | undefined;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: string | null | undefined;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: string | null | undefined;
+};
+
+/** Conditions for filtering by event_trainer's person_id */
+export type EventTrainerPersonIdCondition =
+  {   eq: string; eqIn?: never; }
+  |  { eq?: never;   eqIn: Array<string | null | undefined>; };
+
 export type EventType =
   | 'CAMP'
   | 'GROUP'
   | 'HOLIDAY'
   | 'LESSON'
   | 'RESERVATION';
+
+/** Conditions for filtering by event's type */
+export type EventTypeCondition =
+  {   eq: EventType; eqIn?: never; }
+  |  { eq?: never;   eqIn: Array<EventType | null | undefined>; };
 
 /** An input for mutations affecting `LocationDetailsInputRecord` */
 export type LocationDetailsInputRecordInput = {

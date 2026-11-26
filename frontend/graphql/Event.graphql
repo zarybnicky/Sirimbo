@@ -332,7 +332,7 @@ query EventRegistrations($id: BigInt!, $withSchedule: Boolean! = false) {
   event(id: $id) @_required {
     ...EventWithRegistrations
   }
-  eventsList(condition: { parentId: $id, type: LESSON }) @include(if: $withSchedule) @_required {
+  eventsList(condition: { parentId: $id, type: { eq: LESSON } }) @include(if: $withSchedule) @_required {
     ...Event
     approxPriceList {
       amount
@@ -365,7 +365,7 @@ query EventFormOptions(
   $withRegistrations: Boolean! = false
   $withParents: Boolean! = false
 ) {
-  parents: eventsList(condition: { type: CAMP }, orderBy: SINCE_DESC) @include(if: $withParents) {
+  parents: eventsList(condition: { type: { eq: CAMP } }, orderBy: SINCE_DESC) @include(if: $withParents) {
     id
     name
     since

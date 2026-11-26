@@ -348,7 +348,15 @@ function People(props: BrowserProps) {
   const result = usePaginatedQuery({
     query: FederationPeopleDocument,
     pause: searchPending,
-    variables: (offset) => ({ ...variables, offset }),
+    variables: (offset) => ({
+      federation,
+      search,
+      ageGroup: filters.ageGroup.length > 0 ? { eqIn: filters.ageGroup } : null,
+      gender: filters.gender.length > 0
+        ? { eqIn: filters.gender.map((value) => value.toUpperCase() as Gender) } : null,
+      nationality: filters.nationality.length > 0 ? { eqIn: filters.nationality } : null,
+      offset,
+    }),
     limit: 50,
     getTotal: (data) => data.federation?.people.totalCount,
   });
@@ -383,8 +391,6 @@ function People(props: BrowserProps) {
           );
           const values = [...new Set([...counts.keys(), ...filters[key]])].toSorted(
             (a, b) => {
-              if (a === 'unknown' || b === 'unknown')
-                return Number(a === 'unknown') - Number(b === 'unknown');
               if (key === 'ageGroup')
                 return compareAgeRanges(ageRanges.get(a), ageRanges.get(b));
               return (counts.get(b) ?? 0) - (counts.get(a) ?? 0);
@@ -400,7 +406,7 @@ function People(props: BrowserProps) {
               value={filters[key]}
               options={values.map((value) => ({
                 value,
-                label: value === 'unknown' ? 'Neuvedeno' : facetLabel(key, value),
+                label: facetLabel(key, value),
                 count: counts.get(value),
               }))}
               onChange={(value) => setFilters({ [key]: value, page: null })}
@@ -466,6 +472,7 @@ function Competitors(props: BrowserProps) {
     pause: searchPending,
     variables: (offset): FederationCompetitorsQueryVariables => ({
       ...filterVariables,
+      competitorType: filters.type.length > 0 ? { eqIn: filters.type } : null,
       competitorOrder:
         filters.sort === 'competitor'
           ? [filters.descending ? 'NAME_DESC' : 'NAME_ASC', 'EXTERNAL_ID_ASC']

@@ -91,7 +91,7 @@ const savedSearchPlugin = wrapPlans(
         if (['FederationEventCondition', 'CompetitionParticipationCondition', 'OfficialAssignmentCondition'].includes(conditionType)
           && (filter.withCompetitions === false || filter.canRegister)) participant.personIds = [];
         const person = {
-          ids: participant.personIds,
+          id: participant.personIds == null ? undefined : { eqIn: participant.personIds },
           coupleId: participant.coupleId,
           onlyMine: participant.onlyMine,
           membership: {
@@ -105,11 +105,11 @@ const savedSearchPlugin = wrapPlans(
           const eventTypes = (build.getInputTypeByName('EventType') as GraphQLEnumType)
             .getValues().map(({ value }) => value as string);
           mapped = {
-            types: filter.canRegister
-              ? (filter.types ?? eventTypes).filter((type: string) => type !== 'group')
-              : filter.types,
-            trainerIds: filter.trainerIds,
-            locationIds: filter.locationIds,
+            type: filter.canRegister
+              ? { eqIn: (filter.types ?? eventTypes).filter((type: string) => type !== 'group') }
+              : filter.types == null ? undefined : { eqIn: filter.types },
+            trainers: filter.trainerIds == null ? undefined : { personId: { eqIn: filter.trainerIds } },
+            locationId: filter.locationIds == null ? undefined : { eqIn: filter.locationIds },
             parentId: filter.parentId ?? undefined,
             participant: {
               personIds: filter.participantIds,
@@ -207,6 +207,19 @@ const plugins: GraphileConfig.Plugin[] = [
     `,
   }),
   addPgTableCondition(
+    { schemaName: 'public', tableName: 'event' },
+    'types',
+    (build) => ({
+      type: new build.graphql.GraphQLList(
+        new build.graphql.GraphQLNonNull(build.getInputTypeByName('EventType')),
+      ),
+      deprecationReason: 'Use type: { eqIn: [...] }.',
+    }),
+    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => value == null
+      ? null
+      : sql`${row}.type = any(${sqlValueWithCodec(value as string[], LIST_TYPES.text)}::public.event_type[])`,
+  ),
+  addPgTableCondition(
     { schemaName: 'public', tableName: 'event_registration' },
     'excludeCohortSource',
     (build) => ({
@@ -264,33 +277,6 @@ const plugins: GraphileConfig.Plugin[] = [
           ? sql`${row}.id in (${mine})`
           : sql`(${row}.parent_id is null
               or ${row}.id in (${mine}) or ${row}.parent_id in (${mine}))`;
-      },
-    ),
-  ),
-  ...(['types', 'trainerIds', 'locationIds'] as const).map((field) =>
-    addPgTableCondition(
-      { schemaName: 'public', tableName: 'event' },
-      field,
-      (build) => {
-        const type = build.getInputTypeByName(field === 'types' ? 'EventType' : 'BigInt');
-        return {
-          type: new build.graphql.GraphQLList(
-            field === 'types' ? new build.graphql.GraphQLNonNull(type) : type,
-          ),
-        };
-      },
-      (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
-        const values = value as (string | null)[] | null;
-        if (values == null) return null;
-        if (values.length === 0) return sql`false`;
-        if (field === 'types')
-          return sql`${row}.type = any(${sqlValueWithCodec(values, LIST_TYPES.text)}::public.event_type[])`;
-        const ids = sqlValueWithCodec(values, LIST_TYPES.bigint);
-        if (field === 'locationIds') return sql`${row}.location_id = any(${ids})`;
-        return sql`exists (
-          select 1 from public.event_trainer p
-          where p.event_id = ${row}.id and p.person_id = any(${ids})
-        )`;
       },
     ),
   ),

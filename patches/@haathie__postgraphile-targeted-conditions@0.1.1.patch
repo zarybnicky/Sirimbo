@@ -1,0 +1,52 @@
+diff --git a/lib/filter-implementations/plain-sql.js b/lib/filter-implementations/plain-sql.js
+index 3b655a310c08598a22f73fcbea68042a192abac3..2bd6c0957c43b5ca14edbbd42efb883e42e206ea 100644
+--- a/lib/filter-implementations/plain-sql.js
++++ b/lib/filter-implementations/plain-sql.js
+@@ -19,9 +19,7 @@ registerFilterMethod('plainSql', { supportedOnSubscription: true }, {
+         const codec = attr.codec.arrayOfCodec || attr.codec;
+         const whereClause = attr.codec.arrayOfCodec
+             ? sql `${id} && ${serialiseToSql()}::${codec.sqlType}[] -- TRUE`
+-            : sql `${id} IN (
+-					SELECT arr FROM unnest(${serialiseToSql()}::${codec.sqlType}[]) arr
+-				)`;
++            : sql `${id} = ANY(${serialiseToSql()}::${codec.sqlType}[])`;
+         const hasNull = Array.isArray(input) && input.includes(null);
+         if (!hasNull) {
+             return cond.where(whereClause);
+diff --git a/lib/schema-fields.js b/lib/schema-fields.js
+index bbc01b0d262afee9227b73e4bd500f92b21accb6..7f649df1734f6e8d22766f2386b04b84b3871ff4 100644
+--- a/lib/schema-fields.js
++++ b/lib/schema-fields.js
+@@ -1,4 +1,3 @@
+-import { getInputConditionForResource } from '@haathie/postgraphile-common-utils';
+ import { sql } from 'postgraphile/pg-sql2';
+ import { getFilterTypesForAttribute } from "./utils.js";
+ export const fields = (fieldMap, build, ctx) => {
+@@ -57,9 +56,9 @@ export const fields = (fieldMap, build, ctx) => {
+         }
+         const rmtRrsc = relation.remoteResource;
+         const rmtRrscFrom = rmtRrsc.from;
+-        const remoteResourceCond = getInputConditionForResource(
+-        // @ts-expect-error
+-        rmtRrsc, build);
++        const remoteResourceCond = build.getInputTypeByName(
++            inflection.conditionType(inflection.tableType(rmtRrsc.codec))
++        );
+         if (!remoteResourceCond) {
+             throw new Error('The remote resource does not have a condition type defined.');
+         }
+diff --git a/lib/schema-init.js b/lib/schema-init.js
+index 60a83b6de4b11f758f53aa084fed2df9f5400f6a..cb4b0af65b74f78cbc01374a378302032c52b13f 100644
+--- a/lib/schema-init.js
++++ b/lib/schema-init.js
+@@ -33,7 +33,9 @@ export const init = (_, build) => {
+                 registerInputObjectType(name, { conditionFilterType: filterType, pgCodec: attr.codec }, spec, `${attr.codec.name}_${filterType}_condition`);
+                 registeredTypes.add(name);
+             }
+-            registerConditionType(resource, attrName, info);
++            if (info.types.length > 0) {
++                registerConditionType(resource, attrName, info);
++            }
+         }
+     }
+     return _;

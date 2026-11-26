@@ -8,9 +8,9 @@ create or replace function federated.federation_people_facets(
 language sql stable as $$
   with candidates as (
     select
-      coalesce(p.age_group_code, nullif(p.age_group, ''), 'unknown') as age_group,
-      coalesce(p.gender::text, 'unknown') as gender,
-      coalesce(nullif(p.nationality, ''), 'unknown') as nationality
+      p.age_group_code as age_group,
+      p.gender::text as gender,
+      p.nationality as nationality
     from federated.person p
     where p.federation = federation.code
       and (nullif(trim(search), '') is null or p.external_id::text = trim(search) or p.id = trim(search)
@@ -30,7 +30,7 @@ language sql stable as $$
     ('gender', m.gender, m.age_matches and m.nationality_matches),
     ('nationality', m.nationality, m.age_matches and m.gender_matches)
   ) option(facet, value, matches)
-  where option.matches
+  where option.matches and option.value is not null
   group by option.facet, option.value
   order by option.facet, option.value;
 $$;

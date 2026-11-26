@@ -15,7 +15,7 @@ const getLocation = cache(async (id: string) => {
   const start = new Date().toISOString();
   const result = await executeGraphql(LocationDocument, {
     id,
-    eventsCondition: { overlaps: { start }, locationId: id },
+    eventsCondition: { overlaps: { start }, locationId: { eq: id } },
     withEvents: true,
   });
   return result.location && { data: result, start };

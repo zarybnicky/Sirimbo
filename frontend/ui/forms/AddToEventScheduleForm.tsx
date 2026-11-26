@@ -27,7 +27,7 @@ export function AddToEventScheduleForm({
   const [{ data, error, fetching }] = useQuery({
     query: EventListDocument,
     variables: {
-      condition: { type: 'CAMP', parentId: null },
+      condition: { type: { eq: 'CAMP' }, parentId: null },
       orderBy: ['SINCE_DESC'],
     },
   });

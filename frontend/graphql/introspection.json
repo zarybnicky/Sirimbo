@@ -10613,14 +10613,6 @@
             "args": []
           },
           {
-            "name": "isLocked",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "isPublic",
             "type": {
               "kind": "SCALAR",
@@ -21636,14 +21628,6 @@
             "args": []
           },
           {
-            "name": "isUnpaid",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "payment",
             "type": {
               "kind": "OBJECT",
@@ -22851,25 +22835,6 @@
           },
           {
             "name": "isAdmin",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "isExternal",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "isMember",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -26645,111 +26610,6 @@
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
-                }
-              }
-            ]
-          },
-          {
-            "name": "eventInstancesForRangeList",
-            "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "NON_NULL",
-                "ofType": {
-                  "name": "Event",
-                  "kind": "OBJECT",
-                  "ofType": null
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "endRange",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "locationIds",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "onlyType",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "onlyTypes",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              },
-              {
-                "name": "parentId",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "participantIds",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              },
-              {
-                "name": "scope",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "startRange",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "trainerIds",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
                 }
               }
             ]

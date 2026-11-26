@@ -1,4 +1,4 @@
-import { LIST_TYPES, TYPES, sql, sqlValueWithCodec } from 'postgraphile/@dataplan/pg';
+import { TYPES, sql, sqlValueWithCodec } from 'postgraphile/@dataplan/pg';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 
 type SQL = ReturnType<typeof sql>;
@@ -6,13 +6,6 @@ type DateCondition = {
   since?: string | null;
   until?: string | null;
 };
-
-export function postingAccountPredicate(row: SQL, ids: readonly string[] | null) {
-  if (ids == null) return null;
-  return ids.length
-    ? sql`${row}.account_id = any(${sqlValueWithCodec(ids, LIST_TYPES.bigint)})`
-    : sql`false`;
-}
 
 export function transactionDatePredicate(row: SQL, value: DateCondition | null) {
   if (value == null) return null;
@@ -47,44 +40,6 @@ const plugins: GraphileConfig.Plugin[] = [
       }
     `,
   }),
-  ...(['transaction', 'posting'] as const).map((tableName) =>
-    addPgTableCondition(
-      { schemaName: 'public', tableName },
-      'accountIds',
-      (build) => ({
-        type: new build.graphql.GraphQLList(
-          new build.graphql.GraphQLNonNull(build.getInputTypeByName('BigInt')),
-        ),
-      }),
-      (value, { sqlTableAlias: row }) => {
-        const predicate = postingAccountPredicate(
-          tableName === 'posting' ? row : sql`p`,
-          value as string[] | null,
-        );
-        return !predicate || tableName === 'posting'
-          ? predicate
-          : sql`exists (
-        select 1 from public.posting p where p.transaction_id = ${row}.id and ${predicate}
-      )`;
-      },
-    ),
-  ),
-  addPgTableCondition(
-    { schemaName: 'public', tableName: 'transaction' },
-    'sources',
-    (build) => ({
-      type: new build.graphql.GraphQLList(
-        new build.graphql.GraphQLNonNull(build.getInputTypeByName('TransactionSource')),
-      ),
-    }),
-    (value, { sqlTableAlias: row }) => {
-      const sources = value as string[] | null;
-      if (sources == null) return null;
-      return sources.length
-        ? sql`${row}.source = any(${sqlValueWithCodec(sources, LIST_TYPES.text)}::public.transaction_source[])`
-        : sql`false`;
-    },
-  ),
   addPgTableCondition(
     { schemaName: 'public', tableName: 'transaction' },
     'date',

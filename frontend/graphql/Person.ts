@@ -90,9 +90,7 @@ export type PersonCondition = {
   firstName?: string | null | undefined;
   /** Checks for equality with the object’s `gender` field. */
   gender?: GenderType | null | undefined;
-  /** Checks for equality with the object’s `id` field. */
-  id?: string | null | undefined;
-  ids?: Array<string> | null | undefined;
+  id?: PersonIdCondition | null | undefined;
   /** Checks for equality with the object’s `imageId` field. */
   imageId?: string | null | undefined;
   /** Checks for equality with the object’s `instagramUsername` field. */
@@ -127,6 +125,11 @@ export type PersonCondition = {
   /** Checks for equality with the object’s `websiteUrl` field. */
   websiteUrl?: string | null | undefined;
 };
+
+/** Conditions for filtering by person's id */
+export type PersonIdCondition =
+  {   eq: string; eqIn?: never; }
+  |  { eq?: never;   eqIn: Array<string | null | undefined>; };
 
 /** An input for mutations affecting `Person` */
 export type PersonInput = {

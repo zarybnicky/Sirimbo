@@ -91,19 +91,6 @@ const plugins: GraphileConfig.Plugin[] = [
   ),
   addPgTableCondition(
     { schemaName: 'public', tableName: 'person' },
-    'ids',
-    (build) => ({
-      type: new build.graphql.GraphQLList(
-        new build.graphql.GraphQLNonNull(build.getInputTypeByName('BigInt')),
-      ),
-    }),
-    (value, { sqlTableAlias: row }) =>
-      value == null
-        ? null
-        : sql`${row}.id = any(${sqlValueWithCodec(value, LIST_TYPES.bigint)})`,
-  ),
-  addPgTableCondition(
-    { schemaName: 'public', tableName: 'person' },
     'onlyMine',
     (build) => ({ type: build.graphql.GraphQLBoolean }),
     (value, { sqlTableAlias: row }) =>

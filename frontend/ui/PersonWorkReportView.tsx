@@ -73,7 +73,7 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({
           start: months.at(-1)?.since.toISOString() ?? month.toISOString(),
           end: now.toISOString(),
         },
-        trainerIds: [id],
+        trainers: { personId: { eqIn: [id] } },
       },
       orderBy: ['SINCE_ASC'],
     },

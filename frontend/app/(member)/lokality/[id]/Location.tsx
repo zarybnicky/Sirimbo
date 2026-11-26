@@ -47,7 +47,7 @@ export function Location({
       id: initialLocation.id,
       eventsCondition: {
         overlaps: { start: new Date(now).toISOString() },
-        locationId: initialLocation.id,
+        locationId: { eq: initialLocation.id },
       },
       withEvents: true,
     },

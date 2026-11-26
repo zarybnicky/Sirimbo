@@ -72,9 +72,10 @@ export function TransactionList() {
   const accountIds = filters.accountIds.length > 0 ? filters.accountIds : null;
   const period = { unit: filters.unit, date: filters.date ?? new Date() };
   const range = getPeriodRange(period.unit, period.date);
+  const sources = filters.sources.length === defaultSources.length ? null : filters.sources;
   const condition = {
-    accountIds,
-    sources: filters.sources.length === defaultSources.length ? null : filters.sources,
+    postings: accountIds == null ? null : { accountId: { eqIn: accountIds } },
+    source: sources == null ? null : { eqIn: sources },
     date: {
       since: range?.since.toISOString(),
       until: range?.until.toISOString(),
@@ -83,7 +84,7 @@ export function TransactionList() {
   };
   const [facets] = useQuery({
     query: TransactionFacetsDocument,
-    variables: { ...condition, ...condition.date },
+    variables: { ...condition, ...condition.date, sources, accountIds },
     pause: searchPending,
   });
   const counts: Record<string, Record<string, number>> = {};
@@ -95,7 +96,7 @@ export function TransactionList() {
     variables: (offset) => ({
       first: TRANSACTIONS_PAGE_SIZE,
       offset,
-      accountIds,
+      postingAccount: accountIds == null ? null : { eqIn: accountIds },
       condition,
     }),
     getTotal: (data) => data.transactions?.totalCount,

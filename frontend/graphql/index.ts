@@ -4666,8 +4666,6 @@ export type Event = {
   hasPublicDetails: Scalars['Boolean']['output'];
   id: Scalars['BigInt']['output'];
   isCancelled: Scalars['Boolean']['output'];
-  /** @deprecated Use registrationPeriod. */
-  isLocked: Maybe<Scalars['Boolean']['output']>;
   isPublic: Maybe<Scalars['Boolean']['output']>;
   isVisible: Maybe<Scalars['Boolean']['output']>;
   /** Reads a single `Location` that is related to this `Event`. */
@@ -4814,9 +4812,7 @@ export type EventCondition = {
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isVisible` field. */
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Checks for equality with the object’s `locationId` field. */
-  locationId?: InputMaybe<Scalars['BigInt']['input']>;
-  locationIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  locationId?: InputMaybe<EventLocationIdCondition>;
   /** Checks for equality with the object’s `locationText` field. */
   locationText?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `name` field. */
@@ -4837,9 +4833,9 @@ export type EventCondition = {
   summary?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  trainerIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
-  /** Checks for equality with the object’s `type` field. */
-  type?: InputMaybe<EventType>;
+  trainers?: InputMaybe<EventTrainerCondition>;
+  type?: InputMaybe<EventTypeCondition>;
+  /** @deprecated Use type: { eqIn: [...] }. */
   types?: InputMaybe<Array<EventType>>;
   /** Checks for equality with the object’s `until` field. */
   until?: InputMaybe<Scalars['Datetime']['input']>;
@@ -4909,11 +4905,6 @@ export type EventInputRecordInput = {
   until?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
-export type EventInstanceRangeScope =
-  | 'ALL'
-  | 'MINE'
-  | 'RELEVANT';
-
 export type EventLessonRequest = {
   __typename?: 'EventLessonRequest';
   createdAt: Scalars['Datetime']['output'];
@@ -4979,6 +4970,11 @@ export type EventLessonRequestsOrderBy =
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
 
+/** Conditions for filtering by event's location_id */
+export type EventLocationIdCondition =
+  { eq: Scalars['BigInt']['input']; eqIn?: never; }
+  |  { eq?: never; eqIn: Array<InputMaybe<Scalars['BigInt']['input']>>; };
+
 /** Represents an update to a `Event`. Fields that are set will be updated. */
 export type EventPatch = {
   capacity?: InputMaybe<Scalars['Int']['input']>;
@@ -4991,8 +4987,6 @@ export type EventPatch = {
   hasPublicDetails?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   isCancelled?: InputMaybe<Scalars['Boolean']['input']>;
-  /** @deprecated Use registrationPeriod. */
-  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -5508,8 +5502,7 @@ export type EventTrainerCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `lessonsOffered` field. */
   lessonsOffered?: InputMaybe<Scalars['Int']['input']>;
-  /** Checks for equality with the object’s `personId` field. */
-  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  personId?: InputMaybe<EventTrainerPersonIdCondition>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
@@ -5521,6 +5514,11 @@ export type EventTrainerInputRecordInput = {
   lessonsOffered?: InputMaybe<Scalars['Int']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
 };
+
+/** Conditions for filtering by event_trainer's person_id */
+export type EventTrainerPersonIdCondition =
+  { eq: Scalars['BigInt']['input']; eqIn?: never; }
+  |  { eq?: never; eqIn: Array<InputMaybe<Scalars['BigInt']['input']>>; };
 
 /** Methods to use when ordering `EventTrainer`. */
 export type EventTrainersOrderBy =
@@ -5548,6 +5546,11 @@ export type EventType =
   | 'HOLIDAY'
   | 'LESSON'
   | 'RESERVATION';
+
+/** Conditions for filtering by event's type */
+export type EventTypeCondition =
+  { eq: EventType; eqIn?: never; }
+  |  { eq?: never; eqIn: Array<InputMaybe<EventType>>; };
 
 /** Methods to use when ordering `Event`. */
 export type EventsOrderBy =
@@ -6134,6 +6137,11 @@ export type FederationCompetitorClubAffiliationsOrderBy =
   | 'VALID_TO_ASC'
   | 'VALID_TO_DESC';
 
+/** Conditions for filtering by federation_competitor's competitor_type */
+export type FederationCompetitorCompetitorTypeCondition =
+  { eq: CompetitorType; eqIn?: never; }
+  |  { eq?: never; eqIn: Array<InputMaybe<CompetitorType>>; };
+
 export type FederationCompetitorComponent = {
   __typename?: 'FederationCompetitorComponent';
   /** Reads a single `FederationCompetitor` that is related to this `FederationCompetitorComponent`. */
@@ -6203,9 +6211,7 @@ export type FederationCompetitorCondition = {
   ageGroup?: InputMaybe<Scalars['String']['input']>;
   categoryProgress?: InputMaybe<CompetitorCategoryProgressCondition>;
   competedSince?: InputMaybe<Scalars['Date']['input']>;
-  /** Checks for equality with the object’s `competitorType` field. */
-  competitorType?: InputMaybe<CompetitorType>;
-  competitorTypes?: InputMaybe<Array<CompetitorType>>;
+  competitorType?: InputMaybe<FederationCompetitorCompetitorTypeCondition>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
@@ -6829,6 +6835,11 @@ export type FederationPersonRoundJudgeAssignmentsArgs = {
   orderBy?: InputMaybe<Array<CompetitionRoundJudgesOrderBy>>;
 };
 
+/** Conditions for filtering by federation_person's age_group_code */
+export type FederationPersonAgeGroupCondition =
+  { eq: Scalars['String']['input']; eqIn?: never; }
+  |  { eq?: never; eqIn: Array<InputMaybe<Scalars['String']['input']>>; };
+
 export type FederationPersonClubMembership = {
   __typename?: 'FederationPersonClubMembership';
   /** Reads a single `FederationClub` that is related to this `FederationPersonClubMembership`. */
@@ -6897,9 +6908,7 @@ export type FederationPersonClubMembershipsOrderBy =
  * tested for equality and combined with a logical ‘and.’
  */
 export type FederationPersonCondition = {
-  /** Checks for equality with the object’s `ageGroup` field. */
-  ageGroup?: InputMaybe<Scalars['String']['input']>;
-  ageGroups?: InputMaybe<Array<Scalars['String']['input']>>;
+  ageGroup?: InputMaybe<FederationPersonAgeGroupCondition>;
   /** Checks for equality with the object’s `birthYear` field. */
   birthYear?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `canonicalName` field. */
@@ -6916,9 +6925,7 @@ export type FederationPersonCondition = {
   federation?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `firstName` field. */
   firstName?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `gender` field. */
-  gender?: InputMaybe<Gender>;
-  genders?: InputMaybe<Array<Scalars['String']['input']>>;
+  gender?: InputMaybe<FederationPersonGenderCondition>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `lastName` field. */
@@ -6927,9 +6934,7 @@ export type FederationPersonCondition = {
   medicalCheckupExpiration?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `medicalCheckupType` field. */
   medicalCheckupType?: InputMaybe<Scalars['String']['input']>;
-  nationalities?: InputMaybe<Array<Scalars['String']['input']>>;
-  /** Checks for equality with the object’s `nationality` field. */
-  nationality?: InputMaybe<Scalars['String']['input']>;
+  nationality?: InputMaybe<FederationPersonNationalityCondition>;
   search?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `searchName` field. */
   searchName?: InputMaybe<Scalars['String']['input']>;
@@ -6956,6 +6961,11 @@ export type FederationPersonEdge = {
   /** The `FederationPerson` at the end of the edge. */
   node: FederationPerson;
 };
+
+/** Conditions for filtering by federation_person's gender */
+export type FederationPersonGenderCondition =
+  { eq: Gender; eqIn?: never; }
+  |  { eq?: never; eqIn: Array<InputMaybe<Gender>>; };
 
 export type FederationPersonLicense = {
   __typename?: 'FederationPersonLicense';
@@ -7037,6 +7047,11 @@ export type FederationPersonLicensesOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'VALID_UNTIL_ASC'
   | 'VALID_UNTIL_DESC';
+
+/** Conditions for filtering by federation_person's nationality */
+export type FederationPersonNationalityCondition =
+  { eq: Scalars['String']['input']; eqIn?: never; }
+  |  { eq?: never; eqIn: Array<InputMaybe<Scalars['String']['input']>>; };
 
 /** Methods to use when ordering `Federation`. */
 export type FederationsOrderBy =
@@ -8694,6 +8709,7 @@ export type PaymentCondition = {
   cohortSubscriptionId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  debtors?: InputMaybe<PaymentDebtorCondition>;
   /** Checks for equality with the object’s `dueAt` field. */
   dueAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `eventId` field. */
@@ -8706,7 +8722,6 @@ export type PaymentCondition = {
   kind?: InputMaybe<PaymentKind>;
   /** Checks for equality with the object’s `paidAt` field. */
   paidAt?: InputMaybe<Scalars['Datetime']['input']>;
-  personIds?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   search?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `specificSymbol` field. */
   specificSymbol?: InputMaybe<Scalars['String']['input']>;
@@ -8736,8 +8751,6 @@ export type PaymentConnection = {
 export type PaymentDebtor = {
   __typename?: 'PaymentDebtor';
   id: Scalars['BigInt']['output'];
-  /** @deprecated Use payment.status. */
-  isUnpaid: Maybe<Scalars['Boolean']['output']>;
   /** Reads a single `Payment` that is related to this `PaymentDebtor`. */
   payment: Maybe<Payment>;
   paymentId: Scalars['BigInt']['output'];
@@ -8759,11 +8772,15 @@ export type PaymentDebtorCondition = {
   isUnpaid?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `paymentId` field. */
   paymentId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `personId` field. */
-  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  personId?: InputMaybe<PaymentDebtorPersonIdCondition>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
+
+/** Conditions for filtering by payment_debtor's person_id */
+export type PaymentDebtorPersonIdCondition =
+  { eq: Scalars['BigInt']['input']; eqIn?: never; }
+  |  { eq?: never; eqIn: Array<InputMaybe<Scalars['BigInt']['input']>>; };
 
 export type PaymentDebtorPriceRecord = {
   __typename?: 'PaymentDebtorPriceRecord';
@@ -9014,10 +9031,6 @@ export type Person = {
   instagramUsername: Maybe<Scalars['String']['output']>;
   /** @deprecated Use roles containing ADMINISTRATOR. */
   isAdmin: Maybe<Scalars['Boolean']['output']>;
-  /** @deprecated Use an empty roles array. */
-  isExternal: Scalars['Boolean']['output'];
-  /** @deprecated Use roles containing MEMBER. */
-  isMember: Maybe<Scalars['Boolean']['output']>;
   /** @deprecated Use roles containing TRAINER. */
   isTrainer: Maybe<Scalars['Boolean']['output']>;
   /** Reads a single `PersonLastActivity` that is related to this `Person`. */
@@ -9310,9 +9323,7 @@ export type PersonCondition = {
   firstName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `gender` field. */
   gender?: InputMaybe<GenderType>;
-  /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  ids?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  id?: InputMaybe<PersonIdCondition>;
   /** Checks for equality with the object’s `imageId` field. */
   imageId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `instagramUsername` field. */
@@ -9388,6 +9399,11 @@ export type PersonFederationCandidatesRecord = {
   similarity: Scalars['Float']['output'];
   wdsfId: Maybe<Scalars['Int']['output']>;
 };
+
+/** Conditions for filtering by person's id */
+export type PersonIdCondition =
+  { eq: Scalars['BigInt']['input']; eqIn?: never; }
+  |  { eq?: never; eqIn: Array<InputMaybe<Scalars['BigInt']['input']>>; };
 
 /** An input for mutations affecting `Person` */
 export type PersonInput = {
@@ -9620,11 +9636,14 @@ export type Posting = {
   updatedAt: Scalars['Datetime']['output'];
 };
 
+/** Conditions for filtering by posting's account_id */
+export type PostingAccountIdCondition =
+  { eq: Scalars['BigInt']['input']; eqIn?: never; }
+  |  { eq?: never; eqIn: Array<InputMaybe<Scalars['BigInt']['input']>>; };
+
 /** A condition to be used against `Posting` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type PostingCondition = {
-  /** Checks for equality with the object’s `accountId` field. */
-  accountId?: InputMaybe<Scalars['BigInt']['input']>;
-  accountIds?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  accountId?: InputMaybe<PostingAccountIdCondition>;
   /** Checks for equality with the object’s `amount` field. */
   amount?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
@@ -9810,8 +9829,6 @@ export type Query = {
   event: Maybe<Event>;
   eventConflictsList: Maybe<Array<EventConflict>>;
   eventFacetsList: Maybe<Array<EventFacetsRecord>>;
-  /** @deprecated Use eventsList with filters. */
-  eventInstancesForRangeList: Maybe<Array<Event>>;
   /** Get a single `EventRegistration`. */
   eventRegistration: Maybe<EventRegistration>;
   /** Reads and enables pagination through a set of `EventRegistration`. */
@@ -10413,22 +10430,6 @@ export type QueryEventFacetsListArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   savedSearch?: InputMaybe<Scalars['BigInt']['input']>;
   startRange?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryEventInstancesForRangeListArgs = {
-  endRange?: InputMaybe<Scalars['Datetime']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  locationIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  onlyType?: InputMaybe<EventType>;
-  onlyTypes?: InputMaybe<Array<InputMaybe<EventType>>>;
-  parentId?: InputMaybe<Scalars['BigInt']['input']>;
-  participantIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
-  scope?: InputMaybe<EventInstanceRangeScope>;
-  startRange?: InputMaybe<Scalars['Datetime']['input']>;
-  trainerIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
 };
 
 
@@ -12734,7 +12735,6 @@ export type TransactionPostingsListArgs = {
  * for equality and combined with a logical ‘and.’
  */
 export type TransactionCondition = {
-  accountIds?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   /** Checks for equality with the object’s `accountingPeriodId` field. */
   accountingPeriodId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
@@ -12748,10 +12748,9 @@ export type TransactionCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `paymentId` field. */
   paymentId?: InputMaybe<Scalars['BigInt']['input']>;
+  postings?: InputMaybe<PostingCondition>;
   search?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `source` field. */
-  source?: InputMaybe<TransactionSource>;
-  sources?: InputMaybe<Array<TransactionSource>>;
+  source?: InputMaybe<TransactionSourceCondition>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
@@ -12800,6 +12799,11 @@ export type TransactionSource =
   | 'MANUAL_BANK'
   | 'MANUAL_CASH'
   | 'MANUAL_CREDIT';
+
+/** Conditions for filtering by transaction's source */
+export type TransactionSourceCondition =
+  { eq: TransactionSource; eqIn?: never; }
+  |  { eq?: never; eqIn: Array<InputMaybe<TransactionSource>>; };
 
 /** Methods to use when ordering `Transaction`. */
 export type TransactionsOrderBy =
@@ -14115,7 +14119,6 @@ export type GraphCacheResolvers = {
     event?: GraphCacheResolver<WithTypename<Query>, QueryEventArgs, WithTypename<Event> | string>,
     eventConflictsList?: GraphCacheResolver<WithTypename<Query>, QueryEventConflictsListArgs, Array<WithTypename<EventConflict> | string>>,
     eventFacetsList?: GraphCacheResolver<WithTypename<Query>, QueryEventFacetsListArgs, Array<WithTypename<EventFacetsRecord> | string>>,
-    eventInstancesForRangeList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstancesForRangeListArgs, Array<WithTypename<Event> | string>>,
     eventRegistration?: GraphCacheResolver<WithTypename<Query>, QueryEventRegistrationArgs, WithTypename<EventRegistration> | string>,
     eventRegistrations?: GraphCacheResolver<WithTypename<Query>, QueryEventRegistrationsArgs, WithTypename<EventRegistrationConnection> | string>,
     eventRegistrationsList?: GraphCacheResolver<WithTypename<Query>, QueryEventRegistrationsListArgs, Array<WithTypename<EventRegistration> | string>>,
@@ -15104,7 +15107,6 @@ export type GraphCacheResolvers = {
     hasPublicDetails?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     isCancelled?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean']['output'] | string>,
-    isLocked?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     isPublic?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     isVisible?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     location?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<Location> | string>,
@@ -15814,7 +15816,6 @@ export type GraphCacheResolvers = {
   },
   PaymentDebtor?: {
     id?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    isUnpaid?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     payment?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Payment> | string>,
     paymentId?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     person?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Person> | string>,
@@ -15878,8 +15879,6 @@ export type GraphCacheResolvers = {
     imageId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     instagramUsername?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     isAdmin?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
-    isExternal?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
-    isMember?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     isTrainer?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     lastActivity?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, WithTypename<PersonLastActivity> | string>,
     lastName?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -16624,7 +16623,6 @@ export type GraphCacheUpdaters = {
     event?: GraphCacheUpdateResolver<{ event: Maybe<WithTypename<Event>> }, QueryEventArgs>,
     eventConflictsList?: GraphCacheUpdateResolver<{ eventConflictsList: Maybe<Array<WithTypename<EventConflict>>> }, QueryEventConflictsListArgs>,
     eventFacetsList?: GraphCacheUpdateResolver<{ eventFacetsList: Maybe<Array<WithTypename<EventFacetsRecord>>> }, QueryEventFacetsListArgs>,
-    eventInstancesForRangeList?: GraphCacheUpdateResolver<{ eventInstancesForRangeList: Maybe<Array<WithTypename<Event>>> }, QueryEventInstancesForRangeListArgs>,
     eventRegistration?: GraphCacheUpdateResolver<{ eventRegistration: Maybe<WithTypename<EventRegistration>> }, QueryEventRegistrationArgs>,
     eventRegistrations?: GraphCacheUpdateResolver<{ eventRegistrations: Maybe<WithTypename<EventRegistrationConnection>> }, QueryEventRegistrationsArgs>,
     eventRegistrationsList?: GraphCacheUpdateResolver<{ eventRegistrationsList: Maybe<Array<WithTypename<EventRegistration>>> }, QueryEventRegistrationsListArgs>,
@@ -17696,7 +17694,6 @@ export type GraphCacheUpdaters = {
     hasPublicDetails?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     isCancelled?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
-    isLocked?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     isPublic?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     location?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
@@ -18406,7 +18403,6 @@ export type GraphCacheUpdaters = {
   },
   PaymentDebtor?: {
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
-    isUnpaid?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     payment?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     paymentId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
@@ -18470,8 +18466,6 @@ export type GraphCacheUpdaters = {
     imageId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     instagramUsername?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     isAdmin?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
-    isExternal?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
-    isMember?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     isTrainer?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     lastActivity?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     lastName?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,

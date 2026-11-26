@@ -12,6 +12,9 @@ overrides:
   zod: 4.4.3
 
 patchedDependencies:
+  '@haathie/postgraphile-targeted-conditions@0.1.1':
+    hash: 741e411a3f1ba1c467c60098c269ebbadf0f9a322baa4adc7086a5d66471f07d
+    path: patches/@haathie__postgraphile-targeted-conditions@0.1.1.patch
   '@radix-ui/react-dropdown-menu@2.1.20':
     hash: 879575068f0d3746a5162317bfbbee4ea661c284e4d2b60db0fbd01d130d7b48
     path: patches/@radix-ui__react-dropdown-menu@2.1.20.patch
@@ -414,6 +417,9 @@ importers:
       '@graphile/simplify-inflection':
         specifier: ~9.0.0
         version: 9.0.0
+      '@haathie/postgraphile-targeted-conditions':
+        specifier: 0.1.1
+        version: 0.1.1(patch_hash=741e411a3f1ba1c467c60098c269ebbadf0f9a322baa4adc7086a5d66471f07d)(postgraphile@5.1.5(f33d5a701ac87531aaf603a87fbd8c54))
       '@opentelemetry/api':
         specifier: ^1.9.1
         version: 1.9.1
@@ -1764,6 +1770,16 @@ packages:
     resolution: {integrity: sha512-rc1hOQtjIWGxcxpb9aHAfLpIctjEnsDehj0DAiVfBlmT84uvR0uUtN2hEi/ecvWVjXUGf5qPF4qEgiLOx1YIMQ==}
     engines: {node: '>=6'}
     hasBin: true
+
+  '@haathie/postgraphile-common-utils@0.1.2':
+    resolution: {integrity: sha512-WnuI1uuhgEQZ7+/VjaZm2QYhdVsUQzWVmwTcKZB/wLs3BfxvriGPeBxGdujCoOBhbp+2xie7CO53vaT/3FOMxQ==}
+    peerDependencies:
+      postgraphile: '*'
+
+  '@haathie/postgraphile-targeted-conditions@0.1.1':
+    resolution: {integrity: sha512-/gz3F2Do6vRCq+dkKqZOm1UUBT1i3dLq/HDMRu6KsAUdCuUB9tpmWqAYgQSSXQg4dZLReE+zANTrFzwTHGBVCA==}
+    peerDependencies:
+      postgraphile: '*'
 
   '@headlessui/react@2.2.10':
     resolution: {integrity: sha512-5pVLNK9wlpxTUTy9GpgbX/SdcRh+HBnPktjM2wbiLTH4p+2EPHBO1aoSryUCuKUIItdDWO9ITlhUL8UnUN/oIA==}
@@ -10903,8 +10919,6 @@ snapshots:
       '@ckeditor/ckeditor5-icons': 47.6.2
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-paste-from-office@47.6.2':
     dependencies:
@@ -12176,6 +12190,15 @@ snapshots:
       long: 5.3.2
       protobufjs: 7.5.4
       yargs: 17.7.2
+
+  '@haathie/postgraphile-common-utils@0.1.2(postgraphile@5.1.5(f33d5a701ac87531aaf603a87fbd8c54))':
+    dependencies:
+      postgraphile: 5.1.5(f33d5a701ac87531aaf603a87fbd8c54)
+
+  '@haathie/postgraphile-targeted-conditions@0.1.1(patch_hash=741e411a3f1ba1c467c60098c269ebbadf0f9a322baa4adc7086a5d66471f07d)(postgraphile@5.1.5(f33d5a701ac87531aaf603a87fbd8c54))':
+    dependencies:
+      '@haathie/postgraphile-common-utils': 0.1.2(postgraphile@5.1.5(f33d5a701ac87531aaf603a87fbd8c54))
+      postgraphile: 5.1.5(f33d5a701ac87531aaf603a87fbd8c54)
 
   '@headlessui/react@2.2.10(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:

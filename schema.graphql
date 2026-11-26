@@ -5779,7 +5779,6 @@ type Event {
   hasPublicDetails: Boolean!
   id: BigInt!
   isCancelled: Boolean!
-  isLocked: Boolean @deprecated(reason: "Use registrationPeriod.")
   isPublic: Boolean
   isVisible: Boolean
 
@@ -5980,10 +5979,7 @@ input EventCondition {
 
   """Checks for equality with the object’s `isVisible` field."""
   isVisible: Boolean
-
-  """Checks for equality with the object’s `locationId` field."""
-  locationId: BigInt
-  locationIds: [BigInt]
+  locationId: EventLocationIdCondition
 
   """Checks for equality with the object’s `locationText` field."""
   locationText: String
@@ -6017,11 +6013,9 @@ input EventCondition {
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
-  trainerIds: [BigInt]
-
-  """Checks for equality with the object’s `type` field."""
-  type: EventType
-  types: [EventType!]
+  trainers: EventTrainerCondition
+  type: EventTypeCondition
+  types: [EventType!] @deprecated(reason: "Use type: { eqIn: [...] }.")
 
   """Checks for equality with the object’s `until` field."""
   until: Datetime
@@ -6090,12 +6084,6 @@ input EventInputRecordInput {
   registrations: [EventRegistrationInputRecordInput]
   since: Datetime
   until: Datetime
-}
-
-enum EventInstanceRangeScope {
-  ALL
-  MINE
-  RELEVANT
 }
 
 type EventLessonRequest {
@@ -6175,6 +6163,12 @@ enum EventLessonRequestsOrderBy {
   UPDATED_AT_DESC
 }
 
+"""Conditions for filtering by event's location_id"""
+input EventLocationIdCondition @oneOf {
+  eq: BigInt
+  eqIn: [BigInt]
+}
+
 """
 Represents an update to a `Event`. Fields that are set will be updated.
 """
@@ -6189,7 +6183,6 @@ input EventPatch {
   hasPublicDetails: Boolean
   id: BigInt
   isCancelled: Boolean
-  isLocked: Boolean @deprecated(reason: "Use registrationPeriod.")
   isPublic: Boolean
   isVisible: Boolean
   locationId: BigInt
@@ -6807,9 +6800,7 @@ input EventTrainerCondition {
 
   """Checks for equality with the object’s `lessonsOffered` field."""
   lessonsOffered: Int
-
-  """Checks for equality with the object’s `personId` field."""
-  personId: BigInt
+  personId: EventTrainerPersonIdCondition
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
@@ -6822,6 +6813,12 @@ input EventTrainerCondition {
 input EventTrainerInputRecordInput {
   lessonsOffered: Int
   personId: BigInt
+}
+
+"""Conditions for filtering by event_trainer's person_id"""
+input EventTrainerPersonIdCondition @oneOf {
+  eq: BigInt
+  eqIn: [BigInt]
 }
 
 """Methods to use when ordering `EventTrainer`."""
@@ -6851,6 +6848,12 @@ enum EventType {
   HOLIDAY
   LESSON
   RESERVATION
+}
+
+"""Conditions for filtering by event's type"""
+input EventTypeCondition @oneOf {
+  eq: EventType
+  eqIn: [EventType]
 }
 
 """Methods to use when ordering `Event`."""
@@ -7808,6 +7811,12 @@ enum FederationCompetitorClubAffiliationsOrderBy {
   VALID_TO_DESC
 }
 
+"""Conditions for filtering by federation_competitor's competitor_type"""
+input FederationCompetitorCompetitorTypeCondition @oneOf {
+  eq: CompetitorType
+  eqIn: [CompetitorType]
+}
+
 type FederationCompetitorComponent {
   """
   Reads a single `FederationCompetitor` that is related to this `FederationCompetitorComponent`.
@@ -7891,10 +7900,7 @@ input FederationCompetitorCondition {
   ageGroup: String
   categoryProgress: CompetitorCategoryProgressCondition
   competedSince: Date
-
-  """Checks for equality with the object’s `competitorType` field."""
-  competitorType: CompetitorType
-  competitorTypes: [CompetitorType!]
+  competitorType: FederationCompetitorCompetitorTypeCondition
 
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
@@ -8790,6 +8796,12 @@ type FederationPerson {
   searchName: String
 }
 
+"""Conditions for filtering by federation_person's age_group_code"""
+input FederationPersonAgeGroupCondition @oneOf {
+  eq: String
+  eqIn: [String]
+}
+
 type FederationPersonClubMembership {
   """
   Reads a single `FederationClub` that is related to this `FederationPersonClubMembership`.
@@ -8872,9 +8884,7 @@ A condition to be used against `FederationPerson` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input FederationPersonCondition {
-  """Checks for equality with the object’s `ageGroup` field."""
-  ageGroup: String
-  ageGroups: [String!]
+  ageGroup: FederationPersonAgeGroupCondition
 
   """Checks for equality with the object’s `birthYear` field."""
   birthYear: Int
@@ -8899,10 +8909,7 @@ input FederationPersonCondition {
 
   """Checks for equality with the object’s `firstName` field."""
   firstName: String
-
-  """Checks for equality with the object’s `gender` field."""
-  gender: Gender
-  genders: [String!]
+  gender: FederationPersonGenderCondition
 
   """Checks for equality with the object’s `id` field."""
   id: String
@@ -8917,10 +8924,7 @@ input FederationPersonCondition {
 
   """Checks for equality with the object’s `medicalCheckupType` field."""
   medicalCheckupType: String
-  nationalities: [String!]
-
-  """Checks for equality with the object’s `nationality` field."""
-  nationality: String
+  nationality: FederationPersonNationalityCondition
   search: String
 
   """Checks for equality with the object’s `searchName` field."""
@@ -8953,6 +8957,12 @@ type FederationPersonEdge {
 
   """The `FederationPerson` at the end of the edge."""
   node: FederationPerson!
+}
+
+"""Conditions for filtering by federation_person's gender"""
+input FederationPersonGenderCondition @oneOf {
+  eq: Gender
+  eqIn: [Gender]
 }
 
 type FederationPersonLicense {
@@ -9053,6 +9063,12 @@ enum FederationPersonLicensesOrderBy {
   PRIMARY_KEY_DESC
   VALID_UNTIL_ASC
   VALID_UNTIL_DESC
+}
+
+"""Conditions for filtering by federation_person's nationality"""
+input FederationPersonNationalityCondition @oneOf {
+  eq: String
+  eqIn: [String]
 }
 
 """Methods to use when ordering `Federation`."""
@@ -10944,6 +10960,7 @@ input PaymentCondition {
 
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
+  debtors: PaymentDebtorCondition
 
   """Checks for equality with the object’s `dueAt` field."""
   dueAt: Datetime
@@ -10962,7 +10979,6 @@ input PaymentCondition {
 
   """Checks for equality with the object’s `paidAt` field."""
   paidAt: Datetime
-  personIds: [BigInt!]
   search: String
 
   """Checks for equality with the object’s `specificSymbol` field."""
@@ -11000,7 +11016,6 @@ type PaymentConnection {
 
 type PaymentDebtor {
   id: BigInt!
-  isUnpaid: Boolean @deprecated(reason: "Use payment.status.")
 
   """Reads a single `Payment` that is related to this `PaymentDebtor`."""
   payment: Payment
@@ -11028,12 +11043,16 @@ input PaymentDebtorCondition {
 
   """Checks for equality with the object’s `paymentId` field."""
   paymentId: BigInt
-
-  """Checks for equality with the object’s `personId` field."""
-  personId: BigInt
+  personId: PaymentDebtorPersonIdCondition
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
+}
+
+"""Conditions for filtering by payment_debtor's person_id"""
+input PaymentDebtorPersonIdCondition @oneOf {
+  eq: BigInt
+  eqIn: [BigInt]
 }
 
 type PaymentDebtorPriceRecord {
@@ -11550,8 +11569,6 @@ type Person {
   imageId: BigInt
   instagramUsername: String
   isAdmin: Boolean @deprecated(reason: "Use roles containing ADMINISTRATOR.")
-  isExternal: Boolean! @deprecated(reason: "Use an empty roles array.")
-  isMember: Boolean @deprecated(reason: "Use roles containing MEMBER.")
   isTrainer: Boolean @deprecated(reason: "Use roles containing TRAINER.")
 
   """Reads a single `PersonLastActivity` that is related to this `Person`."""
@@ -11831,10 +11848,7 @@ input PersonCondition {
 
   """Checks for equality with the object’s `gender` field."""
   gender: GenderType
-
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-  ids: [BigInt!]
+  id: PersonIdCondition
 
   """Checks for equality with the object’s `imageId` field."""
   imageId: BigInt
@@ -11929,6 +11943,12 @@ type PersonFederationCandidatesRecord {
   name: String
   similarity: Float!
   wdsfId: Int
+}
+
+"""Conditions for filtering by person's id"""
+input PersonIdCondition @oneOf {
+  eq: BigInt
+  eqIn: [BigInt]
 }
 
 """An input for mutations affecting `Person`"""
@@ -12188,13 +12208,17 @@ type Posting {
   updatedAt: Datetime!
 }
 
+"""Conditions for filtering by posting's account_id"""
+input PostingAccountIdCondition @oneOf {
+  eq: BigInt
+  eqIn: [BigInt]
+}
+
 """
 A condition to be used against `Posting` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input PostingCondition {
-  """Checks for equality with the object’s `accountId` field."""
-  accountId: BigInt
-  accountIds: [BigInt!]
+  accountId: PostingAccountIdCondition
 
   """Checks for equality with the object’s `amount` field."""
   amount: BigFloat
@@ -12987,7 +13011,6 @@ type Query {
     savedSearch: BigInt
     startRange: Datetime
   ): [EventFacetsRecord!]
-  eventInstancesForRangeList(endRange: Datetime, first: Int, locationIds: [BigInt], offset: Int, onlyType: EventType, onlyTypes: [EventType], parentId: BigInt, participantIds: [BigInt], scope: EventInstanceRangeScope = ALL, startRange: Datetime, trainerIds: [BigInt]): [Event!] @deprecated(reason: "Use eventsList with filters.")
 
   """Get a single `EventRegistration`."""
   eventRegistration(id: BigInt!): EventRegistration
@@ -16027,8 +16050,6 @@ A condition to be used against `Transaction` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input TransactionCondition {
-  accountIds: [BigInt!]
-
   """Checks for equality with the object’s `accountingPeriodId` field."""
   accountingPeriodId: BigInt
 
@@ -16047,11 +16068,9 @@ input TransactionCondition {
 
   """Checks for equality with the object’s `paymentId` field."""
   paymentId: BigInt
+  postings: PostingCondition
   search: String
-
-  """Checks for equality with the object’s `source` field."""
-  source: TransactionSource
-  sources: [TransactionSource!]
+  source: TransactionSourceCondition
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
@@ -16106,6 +16125,12 @@ enum TransactionSource {
   MANUAL_BANK
   MANUAL_CASH
   MANUAL_CREDIT
+}
+
+"""Conditions for filtering by transaction's source"""
+input TransactionSourceCondition @oneOf {
+  eq: TransactionSource
+  eqIn: [TransactionSource]
 }
 
 """Methods to use when ordering `Transaction`."""
