@@ -35,7 +35,7 @@
     "@urql/exchange-graphcache": "^9.0.2",
     "@urql/exchange-retry": "^2.0.0",
     "@whatwg-node/server": "^0.9.64",
-    "ckeditor5": "47.6.2",
+    "ckeditor5": "47.7.4",
     "classnames": "~2.5.1",
     "cmdk": "~1.1.1",
     "cookies-next": "~6.1.1",
