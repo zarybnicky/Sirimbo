@@ -221,7 +221,7 @@ export function Calendar({
     setDragListeners,
   ]);
 
-  const viewElement = (
+  const viewElement = (fetching && !events) ? null : (
     <view.component
       range={range}
       events={calendarEvents}

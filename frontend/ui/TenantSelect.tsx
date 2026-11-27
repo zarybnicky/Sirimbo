@@ -4,6 +4,7 @@ import { getDevelopmentUsers, pickDevelopmentUser } from '@/lib/development-iden
 import { logInAsAction } from '@/lib/auth-actions';
 import { DevelopmentUsersDocument } from '@/graphql/CurrentUser';
 import React from 'react';
+import * as Collapsible from '@radix-ui/react-collapsible';
 import { tenantCatalog } from '@/tenant/catalog';
 import { SelectField } from '@/ui/fields/select';
 import { useAsyncCallback } from 'react-async-hook';
@@ -69,7 +70,22 @@ export function TenantSelect() {
           options={options}
         />
       )}
-      {isElevated && <DevelopmentIdentity />}
+      {isElevated && (
+        <Collapsible.Root>
+          <Collapsible.Trigger
+            className={buttonCls({
+              variant: 'outline',
+              className: 'group w-full cursor-pointer justify-between',
+            })}
+          >
+            Přihlásit jako
+            <ChevronDown className="transition-transform group-data-[state=open]:rotate-180" />
+          </Collapsible.Trigger>
+          <Collapsible.Content>
+            <DevelopmentIdentity />
+          </Collapsible.Content>
+        </Collapsible.Root>
+      )}
     </>
   );
 }
@@ -106,57 +122,46 @@ function DevelopmentIdentity() {
   });
 
   return (
-    <details className="group">
-      <summary
-        className={buttonCls({
-          variant: 'outline',
-          className: 'w-full cursor-pointer justify-between',
-        })}
-      >
-        Přihlásit jako
-        <ChevronDown className="transition-transform group-open:rotate-180" />
-      </summary>
-      <div className="grid gap-1 pt-1">
-        {roles.map(({ label, role }) => {
-          const users = eligibleUsers.filter((u) => u.role === role);
-          return (
-            <div key={role} className={buttonGroupCls()}>
-              <button
-                type="button"
-                disabled={users.length === 0}
-                aria-pressed={auth.role === role}
-                className={buttonCls({ variant: 'outline', className: 'grow' })}
-                onClick={() => {
-                  const user = pickDevelopmentUser(users, auth.userId);
-                  if (user) login.execute(user.id);
-                }}
-              >
-                {label}
-              </button>
-              {users.length > 1 && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button type="button" className={buttonCls({ variant: 'outline' })}>
-                      <ChevronDown />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    {users.map((user) => (
-                      <DropdownMenuButton key={user.id} onSelect={() => login.execute(user.id)}>
-                        <span>
-                          {user.name}
-                          <span className="block text-xs opacity-70">{user.email}</span>
-                        </span>
-                      </DropdownMenuButton>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-            </div>
-          );
-        })}
-        <FormError error={candidates.error || login.error} />
-      </div>
-    </details>
+    <div className="grid gap-1 pt-1">
+      {roles.map(({ label, role }) => {
+        const users = eligibleUsers.filter((u) => u.role === role);
+        return (
+          <div key={role} className={buttonGroupCls()}>
+            <button
+              type="button"
+              disabled={users.length === 0}
+              aria-pressed={auth.role === role}
+              className={buttonCls({ variant: 'outline', className: 'grow' })}
+              onClick={() => {
+                const user = pickDevelopmentUser(users, auth.userId);
+                if (user) login.execute(user.id);
+              }}
+            >
+              {label}
+            </button>
+            {users.length > 1 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button type="button" className={buttonCls({ variant: 'outline' })}>
+                    <ChevronDown />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {users.map((user) => (
+                    <DropdownMenuButton key={user.id} onSelect={() => login.execute(user.id)}>
+                      <span>
+                        {user.name}
+                        <span className="block text-xs opacity-70">{user.email}</span>
+                      </span>
+                    </DropdownMenuButton>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
+        );
+      })}
+      <FormError error={candidates.error || login.error} />
+    </div>
   );
 }
