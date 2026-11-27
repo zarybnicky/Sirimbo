@@ -34,7 +34,7 @@
     "pg-cursor": "^2.22.0",
     "proj4": "^2.23.0",
     "uglify-js": "^3.19.3",
-    "zod": "~4.4.3"
+    "zod": "~4.6.6"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
