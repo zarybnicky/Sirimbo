@@ -27,10 +27,7 @@ export default async function ResponsePage({
   });
   if (!response?.frontier) notFound();
   const { frontier } = response;
-  if (
-    decodeURIComponent(identifier) !==
-    `${frontier.federation}:${frontier.kind}:${frontier.key}`
-  )
+  if (identifier !== `${frontier.federation}:${frontier.kind}:${frontier.key}`)
     notFound();
   const rawContent = response.crawlerResponseCache?.content;
   let content = rawContent;

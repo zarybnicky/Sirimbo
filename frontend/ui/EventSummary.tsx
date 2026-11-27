@@ -45,7 +45,7 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
         {event.parent && (
           <EntityLink type="event" entity={event.parent} className="text-xs" />
         )}
-        {seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
+        {seriesInfo && seriesInfo.length > 1 && (
           <Link
             href={`/terminy/${seriesInfo.id}`}
             className="text-xs hover:text-accent-11 underline"

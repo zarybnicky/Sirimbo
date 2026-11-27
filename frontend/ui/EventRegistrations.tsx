@@ -85,7 +85,7 @@ export const EventRegistrations = memo(function EventRegistrations({
                     Externí
                   </span>
                 )}
-                {canEditAttendance && (event.seriesInfo?.length ?? 0) > 1 && (
+                {canEditAttendance && event.seriesInfo && event.seriesInfo.length > 1 && (
                   <div className="text-xs text-neutral-9">
                     Poslední účast:{' '}
                     {formatDateOnly(x.lastAttended) || '-'}

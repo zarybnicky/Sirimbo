@@ -243,6 +243,11 @@ comment on column federated.person.nationality is '@behavior filterType:eq filte
 --!include functions/federation_people_facets.sql
 
 comment on column public.event.type is '@behavior filterType:eq filterType:eqIn';
+comment on column public.series_info.id is '@notNull';
+comment on column public.series_info.position is '@notNull';
+comment on column public.series_info.length is '@notNull';
+comment on column public.series_info.since is '@notNull';
+comment on column public.series_info.until is '@notNull';
 comment on column public.event.location_id is '@behavior filterType:eq filterType:eqIn';
 comment on column public.event_trainer.person_id is '@behavior filterType:eq filterType:eqIn';
 comment on column public.payment_debtor.person_id is '@behavior filterType:eq filterType:eqIn';

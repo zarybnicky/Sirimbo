@@ -35,7 +35,7 @@ type GroupingBucket = {
 type GroupingMode = 'location' | 'trainer';
 
 function trainerGroups(event: Event) {
-  const groups = (event.eventTrainersList ?? []).map((x) => ({
+  const groups = event.eventTrainersList.map((x) => ({
     key: x.personId,
     label: x.person?.name.trim() ?? 'Neznámý trenér',
   }));
@@ -44,17 +44,7 @@ function trainerGroups(event: Event) {
     return [{ key: 'trainer:none', label: 'Bez trenéra' }];
   }
 
-  const seen = new Set<string>();
-  const uniqueGroups = [] as { key: string; label: string }[];
-
-  for (const group of groups) {
-    if (!seen.has(group.key)) {
-      seen.add(group.key);
-      uniqueGroups.push(group);
-    }
-  }
-
-  return uniqueGroups;
+  return groups;
 }
 
 function gatherBuckets(
@@ -65,7 +55,7 @@ function gatherBuckets(
   const buckets = new Map<string, GroupingBucket>();
 
   for (const event of data?.eventsList ?? []) {
-    if (!event || event.isCancelled || !event.isVisible) continue;
+    if (event.isCancelled || !event.isVisible) continue;
 
     const since = new Date(event.since);
     const until = new Date(event.until);
@@ -104,17 +94,12 @@ function gatherBuckets(
   }
 
   return [...buckets.values()]
-    .map((bucket) => ({
-      ...bucket,
-      current: bucket.current.toSorted((a, b) => a.since.getTime() - b.since.getTime()),
-      upcoming: bucket.upcoming.toSorted((a, b) => a.since.getTime() - b.since.getTime()),
-    }))
     .filter((bucket) => bucket.current.length > 0 || bucket.upcoming.length > 0)
     .toSorted((a, b) => compareText(a.label, b.label));
 }
 
 function formatTrainers(event: Event) {
-  return event.eventTrainersList?.flatMap((x) => x.person?.name ?? []).join(', ');
+  return event.eventTrainersList.flatMap((x) => x.person?.name ?? []).join(', ');
 }
 
 export default function NowPage() {

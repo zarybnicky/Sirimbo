@@ -29,7 +29,7 @@ export default async function FrontierPage({
   if (!auth.isSystemAdmin) return <Layout requireSystemAdmin />;
 
   const [{ id: identifier }, search] = await Promise.all([params, searchParams]);
-  const [federation, kind, ...keyParts] = decodeURIComponent(identifier).split(':');
+  const [federation, kind, ...keyParts] = identifier.split(':');
   if (!federation || !kind) notFound();
   if (keyParts.length === 0) {
     return (

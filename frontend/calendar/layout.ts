@@ -13,10 +13,6 @@ type Item = {
   lane: number;
 };
 
-function overlaps(a: Item, b: Item, epsMs: number) {
-  return a.since < b.until - epsMs && b.since < a.until - epsMs;
-}
-
 function trainerKeyOf(it: Item): string {
   if (it.event.kind !== 'event') return '';
   const trainers = it.event.instance.eventTrainersList;
@@ -133,18 +129,8 @@ export function layoutEvents(
     const laneCount = Math.max(1, lanes.length);
     const baseWidth = 100 / laneCount;
 
-    // Helper: does item temporally overlap any event assigned to lane l?
-    // (Lanes are in temporal order, so we can stop early.)
-    const laneAssignedFree = (l: number, it: Item): boolean => {
-      for (const other of lanes[l]!) {
-        if (other.since >= it.until - epsMs) break;
-        if (overlaps(it, other, epsMs)) return false;
-      }
-      return true;
-    };
-
-    // Track expansion claims per lane so two events can't both expand
-    // into the same lane during overlapping time spans.
+    // Track assigned events and expansions together so overlapping time spans
+    // cannot occupy the same lane.
     const claims: { since: number; until: number }[][] = Array.from(
       { length: laneCount },
       () => [],
@@ -161,7 +147,7 @@ export function layoutEvents(
     };
 
     const canExpand = (l: number, it: Item): boolean =>
-      l >= 0 && l < laneCount && laneAssignedFree(l, it) && !isClaimed(l, it);
+      l >= 0 && l < laneCount && !isClaimed(l, it);
 
     const claimLane = (l: number, it: Item) => {
       claims[l]!.push({ since: it.since, until: it.until });

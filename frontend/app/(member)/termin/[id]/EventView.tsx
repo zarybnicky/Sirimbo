@@ -30,21 +30,19 @@ import { EntityLink, getEntityLink } from '@/ui/EntityLink';
 import { DotSeparated } from '@/ui/DotSeparated';
 
 export function EventView({
-  id,
   initialEvent,
   hasShareToken,
 }: {
-  id: string;
   initialEvent: NonNullable<EventWithAttendanceQuery['event']>;
   hasShareToken: boolean;
 }) {
+  const { id } = initialEvent;
   const auth = useAuth();
   const [editingImage, setEditingImage] = React.useState(false);
   const [, updateImage] = useMutation(UpdateEventDocument);
   const [{ data }] = useQuery({
     query: EventWithAttendanceDocument,
     variables: { id },
-    pause: !/^\d{1,18}$/.test(id),
   });
   const event = data?.event ?? initialEvent;
   const actions = useActions(eventActions, event);
@@ -119,7 +117,7 @@ export function EventView({
           }
           title={formatEventName(event)}
           breadcrumbLabel={
-            seriesInfo && (seriesInfo.length ?? 0) > 1
+            seriesInfo && seriesInfo.length > 1
               ? `${seriesInfo.position}. ${formatEventType(event.type).toLowerCase()} z ${seriesInfo.length}`
               : formatEventType(event.type)
           }

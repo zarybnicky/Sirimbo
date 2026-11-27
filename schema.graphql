@@ -14384,12 +14384,12 @@ enum SecurityEventsOrderBy {
 }
 
 type SeriesInfo {
-  id: BigInt
-  length: Int
+  id: BigInt!
+  length: Int!
   name: String
-  position: Int
-  since: Datetime
-  until: Datetime
+  position: Int!
+  since: Datetime!
+  until: Datetime!
 }
 
 """All input for the `setEventRegistration` mutation."""

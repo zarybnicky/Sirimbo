@@ -47,7 +47,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 }
 
 export default async function EventPage(props: PageProps) {
-  const { id, hasShareToken, event } = await resolvePage(props);
+  const { hasShareToken, event } = await resolvePage(props);
   if (!event) notFound();
-  return <EventView id={id} initialEvent={event} hasShareToken={hasShareToken} />;
+  return <EventView initialEvent={event} hasShareToken={hasShareToken} />;
 }

@@ -11,6 +11,7 @@ export type CreateEventDefaults = {
   type?: EventFormType['type'];
   since?: Date;
   until?: Date;
+  trainerPersonId?: string;
   locationId?: string | null;
   locationText?: string;
 };
@@ -32,19 +33,14 @@ export function defaultsFromSlot(slot: {
   end: Date;
   action: 'select' | 'click' | 'day';
   resource?: Resource;
-}) {
+}): CreateEventDefaults {
   if (slot.action === 'day') return { date: slot.start };
 
   const { resource } = slot;
   return {
     since: slot.start,
     until: slot.action === 'select' ? slot.end : undefined,
-    trainerPersonIds:
-      resource?.type === 'person'
-        ? [resource.id]
-        : resource?.type === 'unassigned'
-          ? []
-          : undefined,
+    trainerPersonId: resource?.type === 'person' ? resource.id : undefined,
     locationId: resource?.type === 'location' ? resource.id : undefined,
     locationText: resource?.type === 'locationText' ? resource.id : undefined,
   };
@@ -62,9 +58,10 @@ export function createEventDefaults(
   const since = new Date(input.since ?? after?.until ?? input.date ?? new Date());
   if (!input.since && !after) since.setHours(type === 'CAMP' ? 9 : 15, 0, 0, 0);
   const until = input.until ?? addMinutes(since, type === 'CAMP' ? 480 : 45);
-  const prefilledTrainerIds =
-    after?.eventTrainersList.map((x) => x.personId) ??
-    (fallback.trainerId ? [fallback.trainerId] : []);
+  const prefilledTrainerIds = input.trainerPersonId
+    ? [input.trainerPersonId]
+    : (after?.eventTrainersList.map((x) => x.personId) ??
+      (fallback.trainerId ? [fallback.trainerId] : []));
   const trainerPersonIds = prefilledTrainerIds.filter((id) =>
     fallback.allowedTrainerIds.includes(id),
   );

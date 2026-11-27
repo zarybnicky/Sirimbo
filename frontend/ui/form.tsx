@@ -58,15 +58,7 @@ export function FormError({
   error: React.ReactNode | Error;
   default?: React.ReactNode;
 }) {
-  if (!e || (typeof e === 'object' && Object.keys(e).length === 0)) {
-    return null;
-  }
-  let error: React.ReactNode | null;
-  if (e instanceof Error || (typeof e === 'object' && 'message' in e)) {
-    error = (e as any).message;
-  } else {
-    error = e;
-  }
+  const error = e instanceof Error ? e.message : e;
   if (!error) {
     return null;
   }

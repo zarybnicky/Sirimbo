@@ -11563,12 +11563,12 @@ export type SecurityEventsOrderBy =
 
 export type SeriesInfo = {
   __typename?: 'SeriesInfo';
-  id: Maybe<Scalars['BigInt']['output']>;
-  length: Maybe<Scalars['Int']['output']>;
+  id: Scalars['BigInt']['output'];
+  length: Scalars['Int']['output'];
   name: Maybe<Scalars['String']['output']>;
-  position: Maybe<Scalars['Int']['output']>;
-  since: Maybe<Scalars['Datetime']['output']>;
-  until: Maybe<Scalars['Datetime']['output']>;
+  position: Scalars['Int']['output'];
+  since: Scalars['Datetime']['output'];
+  until: Scalars['Datetime']['output'];
 };
 
 /** All input for the `setEventRegistration` mutation. */

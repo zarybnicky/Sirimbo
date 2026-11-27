@@ -168,24 +168,12 @@ export function EventForm(input: EventFormProps) {
         },
       })),
       registrations: {
-        nodes: (registrations ?? []).flatMap(({ personId, coupleId, isCancelled }) => {
-          const participant = participants.get(
-            personId ? `person:${personId}` : `couple:${coupleId}`,
-          );
-          return !isCancelled && participant
-            ? {
-                id: participant.id,
-                person:
-                  participant.person && personId
-                    ? { ...participant.person, id: personId }
-                    : null,
-                couple:
-                  participant.couple && coupleId
-                    ? { ...participant.couple, id: coupleId }
-                    : null,
-              }
-            : [];
-        }),
+        nodes: (registrations ?? []).flatMap(
+          ({ personId, coupleId, isCancelled }) =>
+            (!isCancelled &&
+              participants.get(personId ? `person:${personId}` : `couple:${coupleId}`)) ||
+            [],
+        ),
       },
     }),
     [
