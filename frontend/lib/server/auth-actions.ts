@@ -1,19 +1,26 @@
 'use server';
 
-import type { RegisterUsingInvitationInput, RegisterWithoutInvitationInput } from '@/graphql';
+import type {
+  RegisterUsingInvitationInput,
+  RegisterWithoutInvitationInput,
+} from '@/graphql';
 import {
-  LoginDocument,
   LogInAsDocument,
+  LoginDocument,
+  type LoginMutationVariables,
   RegisterUsingInvitationDocument,
   RegisterWithoutInvitationDocument,
-  type LoginMutationVariables,
-} from '@/graphql/CurrentUser';
-import type { RequestAuthState } from '@/lib/auth';
-import { normalizeClaims } from '@/lib/auth-claims';
-import { executeGraphql } from '@/lib/server/graphql';
-import { sanitizeReturnURL } from '@/lib/sanitize';
-import { clearSessionCookie, loadCurrentUser, setSessionCookie } from '@/lib/server/session';
-import { getRequestContext } from '@/lib/server/tenant';
+} from '@/graphql/CurrentUser.ts';
+import type { RequestAuthState } from '@/lib/auth.ts';
+import { normalizeClaims } from '@/lib/auth-claims.ts';
+import { executeGraphql } from '@/lib/server/graphql.ts';
+import { sanitizeReturnURL } from '@/lib/sanitize.ts';
+import {
+  clearSessionCookie,
+  loadCurrentUser,
+  setSessionCookie,
+} from '@/lib/server/session.ts';
+import { getRequestContext } from '@/lib/server/tenant.ts';
 
 type AuthActionResult = { error: string } | { redirectTo: string };
 

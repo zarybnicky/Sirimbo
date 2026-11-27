@@ -1,13 +1,11 @@
 'use client';
 
 import { DotSeparated } from '@/ui/DotSeparated';
-
 import { AccessEventOverviewDocument } from '@/graphql/AccessCredential';
-import { mifareCodeToLabel } from '@/lib/access-credentials';
 import { useAuth } from '@/lib/auth';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import { numericFullFormatter } from '@/ui/format';
-import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
+import { AccessCredentialForm, mifareCodeToLabel } from '@/ui/forms/AccessCredentialForm';
 import { PowerIcon } from 'lucide-react';
 import * as React from 'react';
 import { useQuery } from 'urql';
@@ -17,10 +15,7 @@ export function AccessEventList({ locationId }: { locationId?: string }) {
   const auth = useAuth();
   const [{ data, error }] = useQuery({
     query: AccessEventOverviewDocument,
-    variables: {
-      condition: locationId ? { locationId } : undefined,
-      first: locationId ? 20 : 100,
-    },
+    variables: { locationId, first: locationId ? 20 : 100 },
   });
   const credentials = React.useMemo(
     () => data?.accessCredentialsList ?? [],
@@ -70,12 +65,7 @@ export function AccessEventList({ locationId }: { locationId?: string }) {
                 <DialogTrigger size="xs" text="Přidat" />
                 <DialogContent>
                   <DialogTitle>Přiřadit kartu</DialogTitle>
-                  <AccessCredentialForm
-                    initialValue={{
-                      label: mifareCodeToLabel(event.code),
-                      code: event.code,
-                    }}
-                  />
+                  <AccessCredentialForm initialCode={event.code} />
                 </DialogContent>
               </Dialog>
             )}

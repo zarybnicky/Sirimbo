@@ -66,15 +66,16 @@ export function useEventFormOptions(variables: EventFormOptionsQueryVariables) {
   const facets = React.useMemo(
     () => ({
       locations:
-        query.data?.tenant?.locationsList?.map((location) => ({
-          id: location.id,
-          label: location.name,
+        query.data?.tenant?.locationsList?.map((x) => ({
+          id: x.id,
+          label: x.name,
         })) ?? [],
       cohorts:
-        query.data?.tenant?.cohortsList
-          ?.map((cohort) => ({
-            id: cohort.id, label: cohort.name, hidden: cohort.isArchived,
-          })) ?? [],
+        query.data?.tenant?.cohortsList?.map((x) => ({
+          id: x.id,
+          label: x.name,
+          hidden: x.isArchived,
+        })) ?? [],
       parents:
         query.data?.parents?.map((event) => ({
           id: event.id,

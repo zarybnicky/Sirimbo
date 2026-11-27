@@ -1,7 +1,7 @@
 import { useAtom, useAtomValue } from 'jotai';
-import { authAtom, storeRef, useAuth, tenantAtom, tenantIdAtom } from '@/lib/auth';
+import { authAtom, storeRef, tenantAtom, tenantIdAtom, useAuth } from '@/lib/auth';
 import { getDevelopmentUsers, pickDevelopmentUser } from '@/lib/development-identity';
-import { logInAsAction } from '@/lib/auth-actions';
+import { logInAsAction } from '@/lib/server/auth-actions.ts';
 import { DevelopmentUsersDocument } from '@/graphql/CurrentUser';
 import React from 'react';
 import * as Collapsible from '@radix-ui/react-collapsible';

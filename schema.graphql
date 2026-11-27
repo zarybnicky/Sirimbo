@@ -5786,7 +5786,7 @@ type Event {
   location: Location
   locationId: BigInt
   locationText: String
-  managerPersonIds: [BigInt]!
+  managerPersonIds: [BigInt!]!
   name: String
 
   """Reads a single `Event` that is related to this `Event`."""
@@ -11321,7 +11321,7 @@ type Person {
   bio: String!
   birthDate: Date
   birthday(since: Date): Date
-  cohortIds: [BigInt]
+  cohortIds: [BigInt!]!
 
   """Reads and enables pagination through a set of `CohortMembership`."""
   cohortMembershipsList(
@@ -11701,7 +11701,7 @@ type Person {
     """The method to use when ordering `TenantAdministrator`."""
     orderBy: [TenantAdministratorsOrderBy!]
   ): [TenantAdministrator!]!
-  tenantIds: [BigInt]
+  tenantIds: [BigInt!]!
 
   """Reads and enables pagination through a set of `TenantMembership`."""
   tenantMemberships(

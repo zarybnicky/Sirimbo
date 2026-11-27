@@ -4,33 +4,33 @@ import {
   type MembershipApplicationFragment,
   MembershipApplicationsDocument,
 } from '@/graphql/MembershipApplication';
-import { PageHeader } from '@/ui/PageHeader';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { formatAddress, moneyFormatter, numericFullFormatter } from '@/ui/format';
-import { MembershipApplicationForm } from '@/ui/forms/MembershipApplicationForm.tsx';
-import { LocationForm } from '@/ui/forms/LocationForm';
-import { useAuth } from '@/lib/auth';
-import { ChevronLeft, PinIcon } from 'lucide-react';
-import * as Collapsible from '@radix-ui/react-collapsible';
-import Link from 'next/link';
-import Image from '@/ui/Image';
-import { useQuery } from 'urql';
 import { ClubDocument, type ClubQuery } from '@/graphql/Tenant';
 import { useActionMap, useActions } from '@/lib/actions';
+import { locationActions } from '@/lib/actions/location';
 import { tenantActions } from '@/lib/actions/tenant';
 import { tenantAdministratorActions } from '@/lib/actions/tenantAdministrator';
-import { locationActions } from '@/lib/actions/location';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
+import { useAuth } from '@/lib/auth';
+import { keyIsNonNull } from '@/lib/truthyFilter.ts';
 import { ActionRow } from '@/ui/ActionRow';
-import { FederationIdWidget } from './FederationIdWidget.tsx';
+import { DefinitionList } from '@/ui/DefinitionList';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { EntityLink } from '@/ui/EntityLink.tsx';
+import { formatAddress, moneyFormatter, numericFullFormatter } from '@/ui/format';
+import { LocationForm } from '@/ui/forms/LocationForm';
+import { MembershipApplicationForm } from '@/ui/forms/MembershipApplicationForm';
+import Image from '@/ui/Image';
+import { PageHeader } from '@/ui/PageHeader';
+import { RichTextView } from '@/ui/RichTextView';
 import { badgeCls } from '@/ui/style';
 import { Tab, TabMenu } from '@/ui/TabMenu';
+import * as Collapsible from '@radix-ui/react-collapsible';
+import { ChevronLeft, PinIcon } from 'lucide-react';
+import Link from 'next/link';
 import { parseAsString, useQueryState } from 'nuqs';
 import React from 'react';
-import { EntityLink } from '@/ui/EntityLink.tsx';
-import { keyIsNonNull } from '@/lib/truthyFilter.ts';
-import { DefinitionList } from '@/ui/DefinitionList';
-import { RichTextView } from '@/ui/RichTextView';
+import { useQuery } from 'urql';
+import { FederationIdWidget } from './FederationIdWidget.tsx';
 
 type ClubData = NonNullable<ClubQuery['tenant']>;
 

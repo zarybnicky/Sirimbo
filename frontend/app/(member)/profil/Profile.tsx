@@ -1,17 +1,17 @@
 'use client';
 
 import { MembershipApplicationsDocument } from '@/graphql/MembershipApplication';
-import { MembershipApplicationForm } from '@/ui/forms/MembershipApplicationForm.tsx';
-import { PersonView } from '@/ui/PersonView';
-import { PageHeader } from '@/ui/PageHeader';
-import { Tab, TabMenu } from '@/ui/TabMenu';
+import { useAuth, useTenantConfig } from '@/lib/auth';
 import {
   DropdownMenu,
   DropdownMenuButton,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
-import { useAuth, useTenantConfig } from '@/lib/auth';
+import { MembershipApplicationForm } from '@/ui/forms/MembershipApplicationForm';
+import { PageHeader } from '@/ui/PageHeader';
+import { PersonView } from '@/ui/PersonView';
+import { Tab, TabMenu } from '@/ui/TabMenu';
 import { Check, ChevronDown } from 'lucide-react';
 import { parseAsString, useQueryState } from 'nuqs';
 import { useCallback } from 'react';

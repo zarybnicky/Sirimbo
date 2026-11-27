@@ -27,15 +27,13 @@ export function CohortComparison({ data }: { data: CohortListQuery | undefined }
           id: null,
           name: 'Bez skupiny',
           color: null,
-          people: (data.people?.nodes ?? []).filter((x) => !x.cohortIds?.length),
+          people: (data.people?.nodes ?? []).filter((x) => x.cohortIds.length === 0),
         },
         ...(data.cohortsList ?? []).map((cohort) => ({
           id: cohort.id,
           name: cohort.name,
           color: cohort.colorRgb,
-          people: (cohort.cohortMembershipsList ?? []).flatMap(({ person }) =>
-            person ? [person] : [],
-          ),
+          people: cohort.cohortMembershipsList?.flatMap((x) => x.person ?? []) || [],
         })),
       ]
     : [];

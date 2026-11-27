@@ -2,6 +2,7 @@ import { TargetedConditionsPlugin } from '@haathie/postgraphile-targeted-conditi
 import { PgSimplifyInflectionPreset } from '@graphile/simplify-inflection';
 import 'graphile-config';
 import { PostGraphileAmberPreset } from 'postgraphile/presets/amber';
+import { changeNullability } from 'postgraphile/utils';
 import { QueryControlsPlugin } from './plugins/query-controls.ts';
 
 import currentUserPlugin from './plugins/current-user.ts';
@@ -43,6 +44,7 @@ const preset: GraphileConfig.Preset = {
     ...paymentConditionPlugins,
     EventDetailsPlugin,
     EventFieldsPlugin,
+    changeNullability({ Event: { managerPersonIds: '[!]!' } }),
     ...federationConditionPlugins,
     ...competitionParticipantConditionPlugins,
     ...competitionSuggestionConditionPlugins,

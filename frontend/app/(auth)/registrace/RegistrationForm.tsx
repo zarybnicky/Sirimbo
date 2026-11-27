@@ -1,6 +1,6 @@
 'use client';
 
-import { registerAction } from '@/lib/auth-actions';
+import { registerAction } from '@/lib/server/auth-actions.ts';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { cardCls } from '@/ui/style';

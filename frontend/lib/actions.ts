@@ -1,5 +1,5 @@
 import React, { type ComponentType, useMemo } from 'react';
-import { useAuth, useTenantId, type AuthState } from '@/lib/auth';
+import { type AuthState, useAuth } from '@/lib/auth';
 import type { AccessRequirements } from '@/lib/auth-claims';
 import { Client, TypedDocumentNode, useClient } from 'urql';
 import { usePathname, useRouter } from 'next/navigation';
@@ -10,7 +10,6 @@ import type { buttonCls } from '@/ui/style';
 
 export type ActionContext<T> = {
   auth: AuthState;
-  tenantId: string;
   client: Client;
   router: {
     pathname: string | null;
@@ -43,24 +42,24 @@ export type Action<T, Id extends string = string> = AccessRequirements & {
   variant?: Resolvable<T, ActionVariant>;
   group?: 'primary' | 'add';
 } & (
-  | {
-      confirm?: Resolvable<T, string | Partial<ConfirmOptions>>;
-      execute: (ctx: ActionContext<T>) => Promise<void>;
-    }
-  | {
-      render: DialogBody<T>;
-      modal?: boolean;
-      dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
-    }
-  | {
-      load: () => Promise<{ default: DialogBody<T> }>;
-      modal?: boolean;
-      dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
-    }
-  | {
-      href: Resolvable<T, Href>;
-    }
-);
+    | {
+        confirm?: Resolvable<T, string | Partial<ConfirmOptions>>;
+        execute: (ctx: ActionContext<T>) => Promise<void>;
+      }
+    | {
+        render: DialogBody<T>;
+        modal?: boolean;
+        dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
+      }
+    | {
+        load: () => Promise<{ default: DialogBody<T> }>;
+        modal?: boolean;
+        dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
+      }
+    | {
+        href: Resolvable<T, Href>;
+      }
+  );
 
 export type ResolvedAction<Id extends string = string> = {
   id: Id;
@@ -152,7 +151,6 @@ function useBase() {
   const client = useClient();
   const router = useRouter();
   const pathname = usePathname();
-  const tenantId = useTenantId();
 
   return useMemo(() => {
     async function mutate<D, V extends Record<string, unknown>>(
@@ -167,10 +165,9 @@ function useBase() {
       auth,
       client,
       mutate,
-      tenantId,
       router: { pathname, push: router.push, replace: router.replace },
     };
-  }, [auth, client, router, pathname, tenantId]);
+  }, [auth, client, router, pathname]);
 }
 
 export function useActions<T extends object, Ids extends string>(
@@ -194,10 +191,7 @@ export function useActionMap<T extends { id: string }, Ids extends string>(
   return useMemo(
     () =>
       new Map(
-        items.map((item) => [
-          item.id,
-          forItem(actions, { ...base, item }, item.id),
-        ]),
+        items.map((item) => [item.id, forItem(actions, { ...base, item }, item.id)]),
       ),
     [actions, base, items],
   );

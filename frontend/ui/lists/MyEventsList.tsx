@@ -14,7 +14,7 @@ import { startOfDay, startOfWeek } from 'date-fns';
 import * as React from 'react';
 import { buttonCls, cardCls, typographyCls } from '@/ui/style';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { EventForm } from '@/ui/event-form/EventForms';
+import { EventForm } from '@/ui/event-form/EventForm';
 import { CalendarDays, List, Plus, Search } from 'lucide-react';
 import { FormError } from '@/ui/form';
 import Link from 'next/link';
@@ -37,7 +37,9 @@ const myEventsFilters: CalendarFilters = {
 
 export const MyEventsList = React.memo(function MyEventsList() {
   const auth = useAuth();
-  const [startDate, setStartDate] = React.useState(() => startOfWeek(new Date(), { weekStartsOn: 1 }));
+  const [startDate, setStartDate] = React.useState(() =>
+    startOfWeek(new Date(), { weekStartsOn: 1 }),
+  );
   const [savedSearch, setSavedSearch] = useAtom(savedSearchAtom);
 
   const { calendarEvents, savedSearches, fetching, error } = useCalendarData({
@@ -81,7 +83,9 @@ export const MyEventsList = React.memo(function MyEventsList() {
                   setSavedSearch(savedSearches.find((x) => x.id === id) ?? null)
                 }
               />
-            ) : 'Moje události'}
+            ) : (
+              'Moje události'
+            )}
           </h4>
           <DateNavigator
             variant="subtle"

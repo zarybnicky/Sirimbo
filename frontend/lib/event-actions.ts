@@ -1,6 +1,12 @@
 'use server';
 
-import { campCloneEvents, cloneCampEvent, copyEventMetadata, deleteEventRecursive, populateEventCohorts } from './event-actions.queries';
+import {
+  campCloneEvents,
+  cloneCampEvent,
+  copyEventMetadata,
+  deleteEventRecursive,
+  populateEventCohorts,
+} from './event-actions.queries';
 import { withRequestPgClient } from '@/lib/server/postgresql';
 import { getRequestContext } from '@/lib/server/tenant';
 import { redirect } from 'next/navigation';
@@ -10,7 +16,7 @@ export async function cloneCampAction(
   values: { since: string; copyCohorts: boolean; copyTrainers: boolean },
 ) {
   const { auth } = await getRequestContext();
-  if (!auth.isSystemAdmin) return { error: 'Přístup odepřen.' };
+  if (!auth.isAdmin) return { error: 'Přístup odepřen.' };
 
   let campId: string;
   try {
@@ -20,20 +26,26 @@ export async function cloneCampAction(
 
       const ids = new Map<string, string>();
       for (const event of events) {
-        const [saved] = await cloneCampEvent.run({
-          sourceId: event.id,
-          parentId: event.parent_id ? ids.get(event.parent_id) ?? null : null,
-          shift: event.shift,
-          copyTrainers: values.copyTrainers,
-          copyCohorts: values.copyCohorts,
-        }, client);
+        const [saved] = await cloneCampEvent.run(
+          {
+            sourceId: event.id,
+            parentId: event.parent_id ? (ids.get(event.parent_id) ?? null) : null,
+            shift: event.shift,
+            copyTrainers: values.copyTrainers,
+            copyCohorts: values.copyCohorts,
+          },
+          client,
+        );
         ids.set(event.id, saved!.id);
       }
 
-      await copyEventMetadata.run({
-        sourceIds: [...ids.keys()],
-        copyIds: [...ids.values()],
-      }, client);
+      await copyEventMetadata.run(
+        {
+          sourceIds: [...ids.keys()],
+          copyIds: [...ids.values()],
+        },
+        client,
+      );
 
       if (values.copyCohorts) {
         await populateEventCohorts.run({ ids: [...ids.values()] }, client);

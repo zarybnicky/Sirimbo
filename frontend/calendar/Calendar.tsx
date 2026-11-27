@@ -10,8 +10,8 @@ import { ViewPicker } from '@/calendar/ViewPicker';
 import { type CreateEventDefaults } from '@/calendar/eventDefaults';
 import {
   calendarGroupBy,
-  calendarGroupByOptions,
   type CalendarGroupBy,
+  calendarGroupByOptions,
   calendarTypes,
   useCalendarData,
 } from '@/calendar/useCalendarData';
@@ -19,7 +19,7 @@ import { MoveEventDocument } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
 import { Spinner } from '@/ui/Spinner';
 import { Dialog, DialogContent } from '@/ui/dialog';
-import { EventForm } from '@/ui/event-form/EventForms';
+import { EventForm } from '@/ui/event-form/EventForm';
 import { buttonCls } from '@/ui/style';
 import { FacetFilter } from '@/ui/FacetFilter';
 import {
@@ -221,16 +221,17 @@ export function Calendar({
     setDragListeners,
   ]);
 
-  const viewElement = (fetching && !events) ? null : (
-    <view.component
-      range={range}
-      events={calendarEvents}
-      backgroundEvents={emptyArray}
-      resources={resources}
-      primary={filters.groupBy.startsWith('day-') ? 'day' : 'resource'}
-      showAllResources={filters.columns === 'all'}
-    />
-  );
+  const viewElement =
+    fetching && !events ? null : (
+      <view.component
+        range={range}
+        events={calendarEvents}
+        backgroundEvents={emptyArray}
+        resources={resources}
+        primary={filters.groupBy.startsWith('day-') ? 'day' : 'resource'}
+        showAllResources={filters.columns === 'all'}
+      />
+    );
 
   return (
     <>
@@ -313,7 +314,9 @@ export function Calendar({
               variant: filters.canRegister ? 'primary' : 'outline',
               size: 'sm',
             })}
-            onClick={() => void setFilters((previous) => ({ canRegister: !previous.canRegister }))}
+            onClick={() =>
+              void setFilters((previous) => ({ canRegister: !previous.canRegister }))
+            }
           >
             Pouze volné
           </button>
@@ -321,8 +324,13 @@ export function Calendar({
             <button
               type="button"
               aria-pressed={filters.conflicts}
-              className={buttonCls({ variant: filters.conflicts ? 'primary' : 'outline', size: 'sm' })}
-              onClick={() => void setFilters((previous) => ({ conflicts: !previous.conflicts }))}
+              className={buttonCls({
+                variant: filters.conflicts ? 'primary' : 'outline',
+                size: 'sm',
+              })}
+              onClick={() =>
+                void setFilters((previous) => ({ conflicts: !previous.conflicts }))
+              }
             >
               Pouze konfliktní
             </button>
@@ -374,7 +382,9 @@ export function Calendar({
         viewElement
       )}
 
-      {auth.isLoggedIn && <CalendarConflictsIndicator conflicts={conflicts} fetching={fetching} />}
+      {auth.isLoggedIn && (
+        <CalendarConflictsIndicator conflicts={conflicts} fetching={fetching} />
+      )}
 
       {auth.canCreateEvent && (
         <Dialog

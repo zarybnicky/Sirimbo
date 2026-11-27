@@ -5,21 +5,21 @@ import {
   type EventWithRegistrationsFragment,
   SetEventRegistrationDocument,
 } from '@/graphql/Event';
+import { useAuth } from '@/lib/auth';
+import { compareText } from '@/lib/compare';
 import { DialogTitle } from '@/ui/dialog';
 import { EventLoginPrompt } from '@/ui/EventLoginPrompt';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { FormError, useFormResult } from '@/ui/form';
 import { formatParticipant } from '@/ui/format';
 import { EventRegistrationForm } from '@/ui/forms/EventRegistrationForm';
+import { EventSignupForm } from '@/ui/forms/EventSignupForm';
 import { Spinner } from '@/ui/Spinner';
 import { buttonCls } from '@/ui/style';
-import { useAuth } from '@/lib/auth';
-import { compareText } from '@/lib/compare';
 import { ChevronLeft, ChevronRight, List, Plus } from 'lucide-react';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
-import { EventSignupForm } from '@/ui/forms/EventSignupForm.tsx';
 
 type Registrant = {
   id: string;

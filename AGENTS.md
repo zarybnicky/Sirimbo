@@ -60,7 +60,7 @@
 - When adding claims, update the `jwt_token` composite type, `create_jwt_token`, frontend claim types, and any required anonymous defaults. Check the frontend database-context builder; it maps claim arrays to PostgreSQL array literals.
 
 ## Session refresh and RLS patterns
-- Web login and refresh actions in `frontend/lib/auth-actions.ts` set an HttpOnly session cookie. `current_claims()` and `refresh_jwt()` rebuild claims from the database; `SessionRefresher` checks for changes every 30 seconds while the page is visible.
+- Web login and refresh actions in `frontend/lib/server/auth-actions.ts` set an HttpOnly session cookie. `current_claims()` and `refresh_jwt()` rebuild claims from the database; `SessionRefresher` checks for changes every 30 seconds while the page is visible.
 - `current_person_ids()` and related helpers read session claims. `app_private.visible_person_ids()` combines tenant relations, own people, event relationships, and couple visibility. Person and couple policies use uncorrelated `IN (SELECT ...)` lookups against that set. Its fixture is `migrations/fixtures/functions/visible_person_ids.sql`.
 
 ## Database entities worth knowing

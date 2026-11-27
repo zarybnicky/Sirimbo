@@ -1,6 +1,6 @@
 import { atom, createStore, useAtomValue } from 'jotai';
 import { type JwtClaims, resolveAuth, type ResolvedAuth } from '@/lib/auth-claims';
-import { logoutAction } from '@/lib/auth-actions';
+import { logoutAction } from '@/lib/server/auth-actions.ts';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
 import { defaultTenant, getTenant, TenantCatalogEntry } from '@/tenant/catalog';

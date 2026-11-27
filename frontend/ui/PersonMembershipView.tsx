@@ -1,15 +1,14 @@
 import { DotSeparated } from '@/ui/DotSeparated';
-import type { CoupleFragment } from '@/graphql/Memberships';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import type { PersonMembershipsQuery } from '@/graphql/Person';
 import {
+  dateTimeFormatter,
   formatOpenDateRange,
   fullDateFormatter,
-  dateTimeFormatter,
   moneyFormatter,
   numericFullFormatter,
 } from '@/ui/format';
-import { useAuth, useTenantId, useTenantConfig } from '@/lib/auth';
+import { useAuth, useTenantConfig } from '@/lib/auth';
 import Link from 'next/link';
 import { keyIsNonNull } from '@/lib/truthyFilter';
 import { useActionMap, useActions } from '@/lib/actions';
@@ -33,18 +32,21 @@ export const PersonMembershipView = memo(function PersonMembershipView({
 }) {
   const auth = useAuth();
   const { enableStarletImport } = useTenantConfig();
-  const tenantId = useTenantId();
   const showClubs =
-    auth.isSystemAdmin || (auth.isAdmin && auth.adminTenantIds.length > 1);
-  const visibleMembership = (membership: { tenantId: string }) =>
-    membership.tenantId === tenantId ||
     auth.isSystemAdmin ||
-    (auth.isAdmin && auth.adminTenantIds.includes(membership.tenantId));
+    auth.adminTenantIds.some((id) => id !== auth.currentTenantId);
+  const visibleMembership = (x: { tenantId: string }) =>
+    x.tenantId === auth.currentTenantId || auth.canManageTenant(x);
   const actions = useActions(personActions, item);
-  const cohortMembershipActionMap = useActionMap(
-    cohortMembershipActions,
-    item.cohortMembershipsList,
-  );
+
+  const cohorts = useMemo(() => {
+    return item.cohortMembershipsList
+      .filter(keyIsNonNull('cohort'))
+      .toSorted((x, y) => x.since.localeCompare(y.since))
+      .map((x) => ({ ...x, person: item }));
+  }, [item]);
+
+  const cohortMembershipActionMap = useActionMap(cohortMembershipActions, cohorts);
   const tenantMembershipActionMap = useActionMap(
     tenantMembershipActions,
     item.tenantMembershipsList,
@@ -66,6 +68,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
     personInvitationActions,
     item.personInvitationsList ?? [],
   );
+  const coupleActionMap = useActionMap(coupleActions, item.couplesList ?? []);
 
   return (
     <div key="info" className="mb-2">
@@ -84,11 +87,16 @@ export const PersonMembershipView = memo(function PersonMembershipView({
 
       {item.couplesList
         ?.toSorted((a, b) => a.since.localeCompare(b.since))
-        ?.map((couple) => (
-          <CoupleRow key={couple.id} item={couple} />
+        ?.map((item) => (
+          <ActionRow key={item.id} actions={coupleActionMap.get(item.id)!}>
+            <div className="grow gap-x-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+              <EntityLink type="couple" entity={item} className="font-bold" />
+              <span>{formatOpenDateRange(item)}</span>
+            </div>
+          </ActionRow>
         ))}
 
-      {(item.cohortMembershipsList.some(keyIsNonNull('cohort')) ||
+      {(cohorts.some(keyIsNonNull('cohort')) ||
         actions.some((x) => x.id === 'person.addToCohort')) && (
         <div className="flex justify-between items-baseline flex-wrap gap-x-2">
           <h3 className="text-lg font-semibold mt-4 mb-2">Tréninkové skupiny</h3>
@@ -100,17 +108,14 @@ export const PersonMembershipView = memo(function PersonMembershipView({
           />
         </div>
       )}
-      {item.cohortMembershipsList
-        .filter(keyIsNonNull('cohort'))
-        .toSorted((x, y) => x.since.localeCompare(y.since))
-        .map((item) => (
-          <ActionRow key={item.id} actions={cohortMembershipActionMap.get(item.id)!}>
-            <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-              <EntityLink type="cohort" entity={item.cohort} className="font-bold" />
-              <span>{formatOpenDateRange(item)}</span>
-            </div>
-          </ActionRow>
-        ))}
+      {cohorts.map((item) => (
+        <ActionRow key={item.id} actions={cohortMembershipActionMap.get(item.id)!}>
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+            <EntityLink type="cohort" entity={item.cohort} className="font-bold" />
+            <span>{formatOpenDateRange(item)}</span>
+          </div>
+        </ActionRow>
+      ))}
 
       {(item.tenantMembershipsList.some(visibleMembership) ||
         item.tenantAdministratorsList.some(visibleMembership) ||
@@ -202,7 +207,8 @@ export const PersonMembershipView = memo(function PersonMembershipView({
             <b className="wrap-break-word">({invitation.email})</b>
             {invitation.lastSentAt && (
               <span>
-                pozvánka odeslána {fullDateFormatter.format(new Date(invitation.lastSentAt))}
+                pozvánka odeslána{' '}
+                {fullDateFormatter.format(new Date(invitation.lastSentAt))}
               </span>
             )}
           </div>
@@ -230,9 +236,10 @@ export const PersonMembershipView = memo(function PersonMembershipView({
                   <code className="ml-2 text-neutral-11">{card.code}</code>
                 </span>
                 <span className="text-right text-neutral-11">
+                  Poslední vstup:{' '}
                   {card.lastUsed
-                    ? `Naposledy použita ${dateTimeFormatter.format(new Date(card.lastUsed))}`
-                    : 'Nikdy nepoužita'}
+                    ? `${dateTimeFormatter.format(new Date(card.lastUsed))}`
+                    : '-'}
                 </span>
               </div>
             </ActionRow>
@@ -266,17 +273,3 @@ export const PersonMembershipView = memo(function PersonMembershipView({
     </div>
   );
 });
-
-function CoupleRow({ item }: { item: CoupleFragment }) {
-  const actions = useActions(coupleActions, item);
-  return (
-    <div>
-      <ActionRow actions={actions}>
-        <div className="grow gap-x-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-          <EntityLink type="couple" entity={item} className="font-bold" />
-          <span>{formatOpenDateRange(item)}</span>
-        </div>
-      </ActionRow>
-    </div>
-  );
-}

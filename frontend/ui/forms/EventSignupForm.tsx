@@ -39,11 +39,7 @@ const Form = z.object({
   lessonCounts: z.array(z.number().int().min(0)),
 });
 
-export function EventSignupForm({
-  event,
-}: {
-  event: EventWithRegistrationsFragment;
-}) {
+export function EventSignupForm({ event }: { event: EventWithRegistrationsFragment }) {
   const auth = useAuth();
   const { onSuccess } = useFormResult();
   const [result, register] = useMutation(SetEventRegistrationDocument);

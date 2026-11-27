@@ -1,5 +1,4 @@
 import { DotSeparated } from '@/ui/DotSeparated';
-/* eslint-disable react-hooks/refs -- Keep lookup history and automatic-selection metadata alongside the RHF value. */
 import { FederationPersonLookupDocument } from '@/graphql/Federation';
 import { formatAgeGroup } from '@/ui/csts';
 import { EntityLink } from '@/ui/EntityLink';
@@ -30,12 +29,10 @@ export function FederationIdFieldElement<T extends FieldValues>({
   });
   const firstName = typeof first === 'string' ? first.trim() : '';
   const lastName = typeof last === 'string' ? last.trim() : '';
-  const gender = sex === 'MAN' || sex === 'WOMAN' ? sex : null;
-  const birthDate =
-    typeof dob === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dob) ? dob : null;
   const id = Number(field.value);
   const externalId = Number.isSafeInteger(id) && id > 0 ? String(id) : '';
   const selection = React.useRef({ automaticId: null as number | null, manual: false });
+  // eslint-disable-next-line react-hooks/refs
   const byId = !!externalId && id !== selection.current.automaticId;
   const variables = byId
     ? { federation, externalId, byId: true }
@@ -45,8 +42,9 @@ export function FederationIdFieldElement<T extends FieldValues>({
         byId: false,
         firstName,
         lastName,
-        gender,
-        birthDate,
+        gender: sex === 'MAN' || sex === 'WOMAN' ? sex : null,
+        birthDate:
+          typeof dob === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dob) ? dob : null,
       };
   const input = JSON.stringify(variables);
   const [settledInput, setSettledInput] = React.useState(input);
@@ -68,6 +66,7 @@ export function FederationIdFieldElement<T extends FieldValues>({
   React.useEffect(() => {
     if (currentData) previousData.current = currentData;
   }, [currentData]);
+  // eslint-disable-next-line react-hooks/refs
   const data = currentData ?? previousData.current;
   const candidate = data?.candidates?.[0];
   const person = data?.person;

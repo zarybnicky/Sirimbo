@@ -103,6 +103,10 @@ from (
 --!include functions/event_conflicts.sql
 --!include functions/visible_file_ids.sql
 --!include policies/file.sql
+--!include policies/tenant.sql
+--!include policies/tenant_membership.sql
+--!include policies/tenant_trainer.sql
+--!include policies/tenant_administrator.sql
 
 drop type if exists announcement_audience_role;
 drop view if exists current_tenant_membership;

@@ -77,7 +77,7 @@ export function usePersonData({
             cohortNames: active.flatMap((x) => x.cohort?.name ?? []).join(', '),
             cohortColors: active.flatMap((x) => (x.cohort ? [x.cohort.colorRgb] : [])),
             cohortMembership: cohortMembership
-              ? { ...cohortMembership, person: { name: person.name } }
+              ? { ...cohortMembership, person }
               : undefined,
           };
         }),

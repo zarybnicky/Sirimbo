@@ -10,9 +10,7 @@ export const tenantActions = defineActions<{ id: string }>()([
     group: 'primary',
     label: 'Upravit',
     icon: Pencil,
-    requireAdmin: true,
-    visible: ({ auth, tenantId, item }) =>
-      auth.isSystemAdmin || item.id === tenantId,
+    visible: ({ auth, item }) => auth.canManageTenant({ tenantId: item.id }),
     render: ({ item }) => createElement(TenantForm, { tenantId: item.id }),
   },
   {

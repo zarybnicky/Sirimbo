@@ -1,6 +1,6 @@
 'use client';
 
-import { acceptInvitationAction } from '@/lib/auth-actions';
+import { acceptInvitationAction } from '@/lib/server/auth-actions.ts';
 import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { cardCls } from '@/ui/style';

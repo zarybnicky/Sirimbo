@@ -31,7 +31,6 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
-import { isTruthy } from '@/lib/truthyFilter';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/lib/auth';
@@ -174,9 +173,9 @@ export function CreatePersonDialog({
       setValue('facebookUrl', person.facebookUrl || null);
       setValue('websiteUrl', person.websiteUrl || null);
       setValue('sendInvitation', false);
-      setValue('cohortIds', person.cohortIds?.filter(isTruthy) ?? []);
+      setValue('cohortIds', person.cohortIds);
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setCohortPickerOpen((person.cohortIds?.filter(isTruthy) ?? []).length > 0);
+      setCohortPickerOpen(person.cohortIds.length > 0);
       void trigger();
     }
   }, [personId, people, setValue, trigger]);
@@ -242,10 +241,7 @@ export function CreatePersonDialog({
     const id = result.data?.createPerson?.result?.id;
     if (id) {
       const result = await syncCohorts({
-        input: {
-          personId: id,
-          cohortIds: (cohortIds ?? []).filter(isTruthy),
-        },
+        input: { personId: id, cohortIds },
       });
       if (result.error) return;
 
@@ -385,7 +381,8 @@ export function CreatePersonDialog({
                   label="E-mail"
                   type="email"
                 />
-                {linksExpanded || [
+                {linksExpanded ||
+                [
                   linkDefaults?.instagramUsername,
                   linkDefaults?.tiktokUsername,
                   linkDefaults?.facebookUrl,

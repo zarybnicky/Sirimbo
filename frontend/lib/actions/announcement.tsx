@@ -6,19 +6,12 @@ import {
   UpdateAnnouncementDocument,
 } from '@/graphql/Announcement';
 
-export function canManageAnnouncement({
-  auth,
-  item,
-}: Pick<ActionContext<AnnouncementFragment>, 'auth' | 'item'>) {
-  return auth.isAdmin || (auth.isTrainer && item.authorId === auth.userId);
-}
-
 export const announcementActions = defineActions<AnnouncementFragment>()([
   {
     id: 'announcement.edit',
     label: 'Upravit',
     icon: Pencil,
-    visible: canManageAnnouncement,
+    visible: ({ auth, item }) => auth.canManageAnnouncement(item),
     href: ({ item }) => `/nastenka/${item.id}/edit`,
   },
   {
@@ -26,7 +19,7 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
     label: ({ item }) => (item.isSticky ? 'Odepnout' : 'Připnout'),
     icon: ({ item }: ActionContext<AnnouncementFragment>) =>
       item.isSticky ? PinOff : Pin,
-    visible: canManageAnnouncement,
+    visible: ({ auth, item }) => auth.canManageAnnouncement(item),
     execute: async ({ item, mutate }) => {
       await mutate(UpdateAnnouncementDocument, {
         id: item.id,
@@ -39,7 +32,7 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
     label: ({ item }) => (item.status === 'PUBLISHED' ? 'Archivovat' : 'Zveřejnit'),
     icon: ({ item }: ActionContext<AnnouncementFragment>) =>
       item.status === 'PUBLISHED' ? Archive : Send,
-    visible: canManageAnnouncement,
+    visible: ({ auth, item }) => auth.canManageAnnouncement(item),
     execute: async ({ item, mutate }) => {
       await mutate(UpdateAnnouncementDocument, {
         id: item.id,
@@ -52,7 +45,7 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
     label: 'Smazat',
     icon: Trash2,
     variant: 'danger',
-    visible: canManageAnnouncement,
+    visible: ({ auth, item }) => auth.canManageAnnouncement(item),
     confirm: ({ item }) => ({
       description: `Opravdu chcete smazat příspěvek "${item.title}"?`,
     }),

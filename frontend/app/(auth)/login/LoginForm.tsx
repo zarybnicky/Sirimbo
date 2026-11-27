@@ -1,6 +1,6 @@
 'use client';
 
-import { loginAction } from '@/lib/auth-actions';
+import { loginAction } from '@/lib/server/auth-actions.ts';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { useTenantConfig } from '@/lib/auth';

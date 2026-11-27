@@ -5,7 +5,7 @@ import {
   type UserProxyFragment,
 } from '@/graphql/Memberships';
 import { defineActions } from '@/lib/actions';
-import { logInAsAction } from '@/lib/auth-actions';
+import { logInAsAction } from '@/lib/server/auth-actions.ts';
 import { EditUserProxyForm } from '@/ui/forms/EditUserProxyForm';
 
 export const userProxyActions = defineActions<UserProxyFragment>()([

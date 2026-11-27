@@ -1,4 +1,18 @@
+import {
+  type EventRegistrationFragment,
+  type EventWithTrainerFragment,
+  UpdateEventDocument,
+} from '@/graphql/Event';
+import { type ActionContext, defineActions } from '@/lib/actions';
 import { AttendanceStats } from '@/ui/AttendanceStats';
+import { EventForm } from '@/ui/event-form/EventForm';
+import { AddToEventScheduleForm } from '@/ui/forms/AddToEventScheduleForm';
+import { CloneCampForm } from '@/ui/forms/CloneCampForm';
+import { DeleteEventForm } from '@/ui/forms/DeleteEventForm';
+import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
+import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
+import { exportEventParticipants } from '@/ui/reports/export-event-participants';
+import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
 import { format } from 'date-fns';
 import {
   CalendarDays,
@@ -13,20 +27,6 @@ import {
   Trash2,
   UserPlus,
 } from 'lucide-react';
-import {
-  type EventRegistrationFragment,
-  type EventWithTrainerFragment,
-  UpdateEventDocument,
-} from '@/graphql/Event';
-import { type ActionContext, defineActions } from '@/lib/actions';
-import { EventForm } from '@/ui/event-form/EventForms';
-import { AddToEventScheduleForm } from '@/ui/forms/AddToEventScheduleForm';
-import { CloneCampForm } from '@/ui/forms/CloneCampForm';
-import { DeleteEventForm } from '@/ui/forms/DeleteEventForm';
-import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm.tsx';
-import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
-import { exportEventParticipants } from '@/ui/reports/export-event-participants';
-import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
 
 const preventDefault = (e: Event) => e.preventDefault();
 
@@ -95,7 +95,8 @@ export const eventActions = defineActions<EventWithTrainerFragment>()([
     id: 'event.clone',
     label: 'Duplikovat soustředění',
     icon: Copy,
-    visible: ({ auth, item }) => auth.isSystemAdmin && item.type === 'CAMP',
+    requireAdmin: true,
+    visible: ({ item }) => item.type === 'CAMP',
     render: ({ item }) => <CloneCampForm id={item.id} since={item.since} />,
   },
   {

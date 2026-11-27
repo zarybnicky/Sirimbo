@@ -1,13 +1,10 @@
 import {
   createEventDefaults,
+  type CreateEventDefaults,
   editEventDefaults,
   splitIntoLessonRanges,
-  type CreateEventDefaults,
 } from '@/calendar/eventDefaults';
-import {
-  SaveEventsDocument,
-  type EventWithTrainerFragment,
-} from '@/graphql/Event';
+import { type EventWithTrainerFragment, SaveEventsDocument } from '@/graphql/Event';
 import { useAuth, useTenantConfig } from '@/lib/auth';
 import { keyIsNonNull } from '@/lib/truthyFilter';
 import { Checkbox, CheckboxElement } from '@/ui/fields/checkbox';
@@ -23,18 +20,14 @@ import { useSetAtom } from 'jotai';
 import { eventTypes, formPreviewAtom } from '@/calendar/state';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useMutation } from 'urql';
-import { EventOverlapWarning, useEventOverlaps } from './EventOverlapWarning';
+import { EventOverlapWarning, useEventOverlaps } from './useEventOverlaps';
 import { DateTimeRangeField } from './DateTimeRangeField';
 import { InstanceListElement } from './InstanceListElement';
 import { LocationField } from './LocationField';
 import { ParticipantListElement } from './ParticipantListElement';
 import { TrainerListElement } from './TrainerListElement';
 import { useEventFormOptions } from './useEventFormOptions';
-import {
-  EventFormSchema,
-  type EventFormInput,
-  type EventFormType,
-} from './types';
+import { type EventFormInput, EventFormSchema, type EventFormType } from './types';
 
 const eventTypeOptions = eventTypes.map((type) => ({
   id: type,
@@ -47,29 +40,47 @@ type EventFormProps = CreateEventDefaults & {
 };
 
 export function EventForm(input: EventFormProps) {
-  const { event } = input;
   const auth = useAuth();
   const { lockEventsByDefault } = useTenantConfig();
-  const [now] = React.useState(() => new Date());
-  const { data, error, participants } = useEventFormOptions({
-    eventId: event?.id, withRegistrations: !!event,
-  });
-  const parent = input.parent ?? data?.event?.parent;
-  const trainerOptions = React.useMemo(() => (data?.tenant?.tenantTrainersList ?? [])
-    .filter(keyIsNonNull('person'))
-    .map(({ person }) => ({
-      id: person.id,
-      label: person.name,
-      hidden: !auth.isAdmin && !auth.isMyPerson(person.id),
-      disabled: !!parent && !parent.eventTrainersList.some((x) => x.personId === person.id),
-    })), [data?.tenant?.tenantTrainersList, auth, parent]);
+  const { onSuccess } = useFormResult();
+  const [result, saveEvents] = useMutation(SaveEventsDocument);
 
+  const { event } = input;
+  const mode = event ? 'edit' : 'create';
+
+  const { data, error, participants } = useEventFormOptions({
+    eventId: event?.id,
+    withRegistrations: !!event,
+  });
+  const ready = !!data;
+
+  const parent = input.parent ?? data?.event?.parent;
+  const parentId = input.parent?.id ?? event?.parentId ?? input.after?.parentId;
+  const seriesId = input.seriesId ?? event?.seriesId;
+
+  const trainerOptions = React.useMemo(
+    () =>
+      (data?.tenant?.tenantTrainersList ?? [])
+        .filter(keyIsNonNull('person'))
+        .map(({ person }) => ({
+          id: person.id,
+          label: person.name,
+          hidden: !auth.isAdmin && !auth.isMyPerson(person.id),
+          disabled:
+            !!parent && !parent.eventTrainersList.some((x) => x.personId === person.id),
+        })),
+    [data?.tenant?.tenantTrainersList, auth, parent],
+  );
+
+  const [now] = React.useState(() => new Date());
   const defaultValues = React.useMemo(() => {
     if (event) return editEventDefaults(event, data, now.getTime());
     const enabledTrainers = trainerOptions.filter((x) => !x.hidden && !x.disabled);
     const trainer =
       (enabledTrainers.length === 1 ? enabledTrainers[0] : undefined) ??
-        auth.persons.find((p) => p.roles.includes('TRAINER') && enabledTrainers.some((x) => x.id === p.id));
+      auth.persons.find(
+        (p) => p.roles.includes('TRAINER') && enabledTrainers.some((x) => x.id === p.id),
+      );
 
     return createEventDefaults(
       { ...input, date: input.date ?? now },
@@ -81,56 +92,112 @@ export function EventForm(input: EventFormProps) {
     );
   }, [event, input, lockEventsByDefault, now, data, auth.persons, trainerOptions]);
 
-  const setPreview = useSetAtom(formPreviewAtom);
-  const mode = event ? 'edit' : 'create';
-  const parentId = input.parent?.id ?? event?.parentId ?? input.after?.parentId;
-  const seriesId = input.seriesId ?? event?.seriesId;
-  const ready = !!data;
-  const { onSuccess } = useFormResult();
-  const [result, saveEvents] = useMutation(SaveEventsDocument);
-  const [splitLessons, setSplitLessons] = React.useState(false);
-  const [splitIds, setSplitIds] = React.useState<Record<string, string | null>>({});
-  const { control, handleSubmit, setValue } = useForm<EventFormInput, unknown, EventFormType>({
+  const { control, handleSubmit, setValue } = useForm<
+    EventFormInput,
+    unknown,
+    EventFormType
+  >({
     resolver: zodResolver(EventFormSchema),
     resetOptions: { keepDirtyValues: true },
     values: defaultValues,
   });
-  const [type, instances, isPublic, trainers, registrations, locationId, locationText, name] = useWatch({
+  const [
+    type,
+    instances,
+    isPublic,
+    trainers,
+    registrations,
+    locationId,
+    locationText,
+    name,
+  ] = useWatch({
     control,
-    name: ['type', 'instances', 'isPublic', 'trainers', 'registrations', 'locationId', 'locationText', 'name'],
+    name: [
+      'type',
+      'instances',
+      'isPublic',
+      'trainers',
+      'registrations',
+      'locationId',
+      'locationText',
+      'name',
+    ],
   });
-  const draft = React.useMemo<EventWithTrainerFragment>(() => ({
-    id: event?.id ?? 'form-preview',
-    name: name ?? '',
-    type: type ?? 'LESSON',
-    since: '', until: '',
-    summary: null, capacity: 0, capacityUnit: 'REGISTRATIONS',
-    shareToken: null, enableNotes: false, seriesId: null, parentId: parentId ?? null,
-    managerPersonIds: (trainers ?? []).map((x) => x.personId),
-    isVisible: true, isPublic: isPublic ?? false, hasPublicDetails: false,
-    isCancelled: false, registrationPeriod: null, seriesInfo: null,
-    registrationInfo: null, approxPriceList: null, parent: null,
-    stats: { total: 0, unknown: 0, attended: 0, notExcused: 0 },
-    location: data?.tenant?.locationsList?.find((x) => x.id === locationId) ?? null,
-    locationText: locationId === 'other' ? locationText ?? '' : '',
-    targetCohortsList: [],
-    eventTrainersList: (trainers ?? []).map(({ personId }) => ({
-      id: personId, personId, lessonsOffered: 0,
-      person: { id: personId, name: trainerOptions.find((x) => x.id === personId)?.label ?? '' },
-    })),
-    registrations: {
-      nodes: (registrations ?? []).flatMap(({ personId, coupleId, isCancelled }) => {
-        const participant = participants.get(personId ? `person:${personId}` : `couple:${coupleId}`);
-        return !isCancelled && participant ? [{
-          id: participant.id,
-          person: participant.person && personId ? { ...participant.person, id: personId } : null,
-          couple: participant.couple && coupleId ? { ...participant.couple, id: coupleId } : null,
-        }] : [];
-      }),
-    },
-  }), [event?.id, name, type, parentId, trainers, isPublic, locationId, locationText, registrations, data, trainerOptions, participants]);
-  const namePlaceholder = formatEventName({ ...draft, name: null }, 'neutral');
+  const draft = React.useMemo<EventWithTrainerFragment>(
+    () => ({
+      id: event?.id ?? 'form-preview',
+      name: name ?? '',
+      type: type ?? 'LESSON',
+      since: '',
+      until: '',
+      summary: null,
+      capacity: 0,
+      capacityUnit: 'REGISTRATIONS',
+      shareToken: null,
+      enableNotes: false,
+      seriesId: null,
+      parentId: parentId ?? null,
+      managerPersonIds: (trainers ?? []).map((x) => x.personId),
+      isVisible: true,
+      isPublic: isPublic ?? false,
+      hasPublicDetails: false,
+      isCancelled: false,
+      registrationPeriod: null,
+      seriesInfo: null,
+      registrationInfo: null,
+      approxPriceList: null,
+      parent: null,
+      stats: { total: 0, unknown: 0, attended: 0, notExcused: 0 },
+      location: data?.tenant?.locationsList?.find((x) => x.id === locationId) ?? null,
+      locationText: locationId === 'other' ? (locationText ?? '') : '',
+      targetCohortsList: [],
+      eventTrainersList: (trainers ?? []).map(({ personId }) => ({
+        id: personId,
+        personId,
+        lessonsOffered: 0,
+        person: {
+          id: personId,
+          name: trainerOptions.find((x) => x.id === personId)?.label ?? '',
+        },
+      })),
+      registrations: {
+        nodes: (registrations ?? []).flatMap(({ personId, coupleId, isCancelled }) => {
+          const participant = participants.get(
+            personId ? `person:${personId}` : `couple:${coupleId}`,
+          );
+          return !isCancelled && participant
+            ? {
+                id: participant.id,
+                person:
+                  participant.person && personId
+                    ? { ...participant.person, id: personId }
+                    : null,
+                couple:
+                  participant.couple && coupleId
+                    ? { ...participant.couple, id: coupleId }
+                    : null,
+              }
+            : [];
+        }),
+      },
+    }),
+    [
+      event?.id,
+      name,
+      type,
+      parentId,
+      trainers,
+      isPublic,
+      locationId,
+      locationText,
+      registrations,
+      data,
+      trainerOptions,
+      participants,
+    ],
+  );
 
+  const setPreview = useSetAtom(formPreviewAtom);
   React.useEffect(() => {
     const resourceKeys = (trainers ?? []).map((x) => `person:${x.personId}`);
     if (locationId === 'other') {
@@ -139,11 +206,17 @@ export function EventForm(input: EventFormProps) {
       resourceKeys.push(`location:${locationId}`);
     }
     setPreview({
-      events: instances.filter((x) => !x.isCancelled).map((x, index) => ({
-        kind: 'event', id: `form-preview-${index}`, __isPreview: true,
-        start: new Date(x.since), end: new Date(x.until), resourceKeys,
-        instance: { ...draft, since: x.since, until: x.until },
-      })),
+      events: instances
+        .filter((x) => !x.isCancelled)
+        .map((x, index) => ({
+          kind: 'event',
+          id: `form-preview-${index}`,
+          __isPreview: true,
+          start: new Date(x.since),
+          end: new Date(x.until),
+          resourceKeys,
+          instance: { ...draft, since: x.since, until: x.until },
+        })),
       resourceKeys: resourceKeys.length > 0 ? resourceKeys : ['unassigned'],
     });
     return () => setPreview(null);
@@ -153,9 +226,10 @@ export function EventForm(input: EventFormProps) {
     if (!isPublic) setValue('hasPublicDetails', false);
   }, [isPublic, setValue]);
 
-  const first = instances[0];
-  const lessonRanges = first
-    ? splitIntoLessonRanges(new Date(first.since), new Date(first.until))
+  const [splitLessons, setSplitLessons] = React.useState(false);
+  const [splitIds, setSplitIds] = React.useState<Record<string, string | null>>({});
+  const lessonRanges = instances[0]
+    ? splitIntoLessonRanges(new Date(instances[0].since), new Date(instances[0].until))
     : [];
   const canSplit =
     mode === 'create' &&
@@ -164,16 +238,26 @@ export function EventForm(input: EventFormProps) {
     instances.length === 1;
   const isSplitting = canSplit && splitLessons;
   const trainerIds = (trainers ?? []).map((x) => x.personId);
-  const participantIds = (registrations ?? []).filter((x) => !x.isCancelled).flatMap(
-    (x) => x.personId ? [x.personId] : participants.get(`couple:${x.coupleId}`)?.personIds ?? [],
+  const participantIds = (registrations ?? [])
+    .filter((x) => !x.isCancelled)
+    .flatMap((x) =>
+      x.personId
+        ? [x.personId]
+        : (participants.get(`couple:${x.coupleId}`)?.personIds ?? []),
+    );
+  const overlaps = useEventOverlaps(
+    isSplitting
+      ? lessonRanges.map(({ since, until }) => ({
+          since: since.toISOString(),
+          until: until.toISOString(),
+          personIds: [
+            ...trainerIds,
+            ...(participants.get(splitIds[since.toISOString()] ?? '')?.personIds ?? []),
+          ],
+        }))
+      : instances.map((x) => ({ ...x, personIds: [...trainerIds, ...participantIds] })),
+    parentId,
   );
-  const overlaps = useEventOverlaps(isSplitting
-    ? lessonRanges.map(({ since, until }) => ({
-        since: since.toISOString(), until: until.toISOString(),
-        people: [...trainerIds, ...(participants.get(splitIds[since.toISOString()] ?? '')?.personIds ?? [])],
-      }))
-    : instances.map((instance) => ({ ...instance, people: [...trainerIds, ...participantIds] })), parentId);
-
 
   React.useEffect(() => {
     if (!canSplit && splitLessons) {
@@ -186,9 +270,7 @@ export function EventForm(input: EventFormProps) {
     if (!ready) return;
     const events = isSplitting
       ? lessonRanges.map(({ since, until }) => {
-          const registration = participants.get(
-            splitIds[since.toISOString()] ?? '',
-          );
+          const registration = participants.get(splitIds[since.toISOString()] ?? '');
           return {
             since: since.toISOString(),
             until: until.toISOString(),
@@ -275,8 +357,11 @@ export function EventForm(input: EventFormProps) {
               control={control}
               locations={data?.tenant?.locationsList ?? []}
             />
-            <TrainerListElement control={control} trainers={trainerOptions}
-              conflicts={overlaps.byPerson} />
+            <TrainerListElement
+              control={control}
+              trainers={trainerOptions}
+              conflicts={overlaps.byPerson}
+            />
           </fieldset>
           <div className="grid gap-1 rounded-md border border-neutral-4 bg-neutral-2 p-2">
             {lessonRanges.map((range, index) => {
@@ -328,8 +413,8 @@ export function EventForm(input: EventFormProps) {
           <TextFieldElement
             control={control}
             name="name"
-            label={mode === 'create' ? 'Název (nepovinný)' : 'Název'}
-            placeholder={namePlaceholder}
+            label={'Název (nepovinný)'}
+            placeholder={formatEventName({ ...draft, name: null }, 'neutral')}
           />
           <InstanceListElement control={control} conflicts={overlaps.byInstance} />
           <fieldset disabled={!ready} className="min-w-0 space-y-2">
@@ -337,8 +422,11 @@ export function EventForm(input: EventFormProps) {
               control={control}
               locations={data?.tenant?.locationsList ?? []}
             />
-            <TrainerListElement control={control} trainers={trainerOptions}
-              conflicts={overlaps.byPerson} />
+            <TrainerListElement
+              control={control}
+              trainers={trainerOptions}
+              conflicts={overlaps.byPerson}
+            />
             <ParticipantListElement
               control={control}
               options={participants}

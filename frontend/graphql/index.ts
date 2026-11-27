@@ -4672,7 +4672,7 @@ export type Event = {
   location: Maybe<Location>;
   locationId: Maybe<Scalars['BigInt']['output']>;
   locationText: Maybe<Scalars['String']['output']>;
-  managerPersonIds: Array<Maybe<Scalars['BigInt']['output']>>;
+  managerPersonIds: Array<Scalars['BigInt']['output']>;
   name: Maybe<Scalars['String']['output']>;
   /** Reads a single `Event` that is related to this `Event`. */
   parent: Maybe<Event>;
@@ -8995,7 +8995,7 @@ export type Person = {
   bio: Scalars['String']['output'];
   birthDate: Maybe<Scalars['Date']['output']>;
   birthday: Maybe<Scalars['Date']['output']>;
-  cohortIds: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
+  cohortIds: Array<Scalars['BigInt']['output']>;
   /** Reads and enables pagination through a set of `CohortMembership`. */
   cohortMembershipsList: Array<CohortMembership>;
   /** Reads and enables pagination through a set of `Couple`. */
@@ -9058,7 +9058,7 @@ export type Person = {
   tenantAdministrators: TenantAdministratorConnection;
   /** Reads and enables pagination through a set of `TenantAdministrator`. */
   tenantAdministratorsList: Array<TenantAdministrator>;
-  tenantIds: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
+  tenantIds: Array<Scalars['BigInt']['output']>;
   /** Reads and enables pagination through a set of `TenantMembership`. */
   tenantMemberships: TenantMembershipConnection;
   /** Reads and enables pagination through a set of `TenantMembership`. */

@@ -1,6 +1,6 @@
 import { CreateTenantMembershipDocument } from '@/graphql/Memberships';
 import { TenantsDocument } from '@/graphql/Tenant';
-import { useAuth, useTenantId } from '@/lib/auth';
+import { useAuth } from '@/lib/auth';
 import { DialogTitle } from '@/ui/dialog';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { DatePickerElement } from '@/ui/fields/date';
@@ -16,11 +16,10 @@ const Form = z.object({
   since: z.date(),
 });
 
-export function AddToClubForm({ personId }: { personId: string }) {
+export function AddToOtherTenantForm({ personId }: { personId: string }) {
   const auth = useAuth();
-  const tenantId = useTenantId();
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit } = useForm({
+  const { control, setError, handleSubmit } = useForm({
     resolver: zodResolver(Form),
     defaultValues: { tenantId: '', since: new Date() },
   });
@@ -29,27 +28,23 @@ export function AddToClubForm({ personId }: { personId: string }) {
   const options =
     tenants.data?.tenantsList
       ?.filter(
-        (x) =>
-          x.id !== tenantId && (auth.isSystemAdmin || auth.adminTenantIds.includes(x.id)),
+        (x) => x.id !== auth.currentTenantId && auth.canManageTenant({ tenantId: x.id }),
       )
       .map((x) => ({ id: x.id, label: x.name })) ?? [];
 
+  const onSubmit = async ({ tenantId, since }: z.infer<typeof Form>) => {
+    const response = await create({
+      input: { tenantMembership: { personId, tenantId, since: since.toISOString() } },
+    });
+    if (response.error) {
+      setError('root.server', { message: response.error.message });
+    } else {
+      onSuccess();
+    }
+  };
+
   return (
-    <form
-      className="grid gap-2"
-      onSubmit={handleSubmit(async (values) => {
-        const saved = await create({
-          input: {
-            tenantMembership: {
-              personId,
-              tenantId: values.tenantId,
-              since: values.since.toISOString(),
-            },
-          },
-        });
-        if (!saved.error) onSuccess();
-      })}
-    >
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
       <DialogTitle>Přidat do jiného klubu</DialogTitle>
       <FormError error={result.error || tenants.error} />
       <ComboboxElement control={control} name="tenantId" label="Klub" options={options} />

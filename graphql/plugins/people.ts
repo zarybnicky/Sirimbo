@@ -15,8 +15,8 @@ const PersonFieldsPlugin = extendSchema(
   () => ({
     typeDefs: `
     extend type Person {
-      cohortIds: [BigInt]
-      tenantIds: [BigInt]
+      cohortIds: [BigInt!]!
+      tenantIds: [BigInt!]!
       """Current roles in the active tenant. Empty for external people."""
       roles: [TenantRole!]!
       isTrainer: Boolean @deprecated(reason: "Use roles containing TRAINER.")
@@ -27,10 +27,10 @@ const PersonFieldsPlugin = extendSchema(
       Person: {
         plans: {
           cohortIds($person: PgSelectSingleStep) {
-            return pgClassExpression($person, LIST_TYPES.bigint)`(
-            select nullif(current_cohort_ids, '{}'::bigint[]) from app_private.tenant_relation
+            return pgClassExpression($person, LIST_TYPES.bigint)`coalesce((
+            select current_cohort_ids from app_private.tenant_relation
             where tenant_id = (select public.current_tenant_id()) and person_id = ${$person.get('id')}
-          )`;
+          ), '{}'::bigint[])`;
           },
           tenantIds($person: PgSelectSingleStep) {
             return pgClassExpression($person, LIST_TYPES.bigint)`array(

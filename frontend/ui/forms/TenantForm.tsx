@@ -73,7 +73,7 @@ export function TenantForm({ tenantId }: { tenantId: string }) {
           ...(auth.isSystemAdmin && {
             origins: origins
               .split(',')
-              .map((origin) => origin.trim())
+              .map((x) => x.trim())
               .filter(Boolean),
           }),
           cstsId: values.cstsId ? Number(values.cstsId) : null,

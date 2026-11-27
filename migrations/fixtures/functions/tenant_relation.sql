@@ -49,7 +49,7 @@ $$;
 
 create or replace function app_private.tg_tenant_relation__refresh()
   returns trigger
-  language plpgsql
+  language plpgsql security definer
   set search_path = pg_catalog, public, pg_temp
 as $$
 begin

@@ -1,20 +1,19 @@
 'use client';
 
-import { getEntityLink } from '@/ui/EntityLink';
-import { ListItem } from '@/ui/ListItem';
-
 import { EventListDocument } from '@/graphql/Event';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { TextField } from '@/ui/fields/text';
-import { formatEventName, fullDateFormatter } from '@/ui/format';
 import { useAuth } from '@/lib/auth';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { getEntityLink } from '@/ui/EntityLink';
+import { EventForm } from '@/ui/event-form/EventForm';
+import { TextField } from '@/ui/fields/text';
+import { formatEventName, fullDateFormatter } from '@/ui/format';
+import { ListItem } from '@/ui/ListItem';
 import { endOfWeek, startOfDay } from 'date-fns';
+import { CalendarDays } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
-import { EventForm } from '@/ui/event-form/EventForms';
-import { CalendarDays } from 'lucide-react';
 
 interface EventNode {
   id: string;
@@ -85,7 +84,9 @@ export function EventList() {
   const currentId = useSearchParams()?.get('instance') ?? undefined;
   const auth = useAuth();
 
-  const [createDate] = React.useState(() => startOfDay(endOfWeek(new Date(), { weekStartsOn: 1 })));
+  const [createDate] = React.useState(() =>
+    startOfDay(endOfWeek(new Date(), { weekStartsOn: 1 })),
+  );
 
   return (
     <div className="flex flex-col h-full">

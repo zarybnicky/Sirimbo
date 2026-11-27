@@ -5,20 +5,20 @@ import {
   UpdatePersonDocument,
 } from '@/graphql/Person.ts';
 import { useAuth } from '@/lib/auth.ts';
-import { parseAsString, useQueryState } from 'nuqs';
-import { useMutation, useQuery } from 'urql';
+import { DotSeparated } from '@/ui/DotSeparated.tsx';
+import { EntityLink } from '@/ui/EntityLink';
 import { Spinner } from '@/ui/Spinner.tsx';
 import { Tab, TabMenu } from '@/ui/TabMenu.tsx';
+import { formatAgeGroup } from '@/ui/csts.ts';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog.tsx';
-import { EntityLink } from '@/ui/EntityLink';
 import { FormError } from '@/ui/form.tsx';
 import { formatDateOnly } from '@/ui/format.ts';
-import { EditPersonForm } from '@/ui/forms/EditPersonForm.tsx';
-import React from 'react';
-import { DotSeparated } from '@/ui/DotSeparated.tsx';
-import { formatAgeGroup } from '@/ui/csts.ts';
+import { EditPersonForm } from '@/ui/forms/EditPersonForm';
 import { buttonCls } from '@/ui/style.tsx';
 import { Check, Undo2 } from 'lucide-react';
+import { parseAsString, useQueryState } from 'nuqs';
+import React from 'react';
+import { useMutation, useQuery } from 'urql';
 
 type Federation = 'csts' | 'wdsf';
 type Person = NonNullable<MissingFederationIdCandidatesQuery['people']>['nodes'][number];
@@ -218,7 +218,10 @@ function FederationIdIssues({ federation }: { federation: Federation }) {
           <h3 className="font-bold">
             {idLabel} {id}{' '}
             {id > 0 ? (
-              <EntityLink type="federation-person" entity={{ federation, externalId: id }}>
+              <EntityLink
+                type="federation-person"
+                entity={{ federation, externalId: id }}
+              >
                 {people[0]!.federationPeople.nodes[0]?.canonicalName ||
                   `${idLabel} ${id}`}
               </EntityLink>
@@ -245,11 +248,8 @@ function FederationIdIssues({ federation }: { federation: Federation }) {
                         ...person.tenantMembershipsList,
                         ...person.tenantTrainersList,
                         ...person.tenantAdministratorsList,
-                      ].filter(
-                        (m) =>
-                          auth.isSystemAdmin || auth.adminTenantIds.includes(m.tenantId),
-                      ),
-                      (membership) => membership.tenantId,
+                      ].filter((m) => auth.canManageTenant(m)),
+                      (x) => x.tenantId,
                     ),
                   ].map(([tenantId, xs]) => (
                     <span key={tenantId} className="text-neutral-11">

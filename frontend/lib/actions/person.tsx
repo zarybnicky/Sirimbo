@@ -11,7 +11,7 @@ import {
   CreateTenantTrainerDocument,
   CreateUserProxyDocument,
 } from '@/graphql/Memberships';
-import { AddToClubForm } from '@/ui/forms/AddToClubForm';
+import { AddToOtherTenantForm } from '@/ui/forms/AddToOtherTenantForm.tsx';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
 import { AddPersonAccessForm } from '@/ui/forms/AddPersonAccessForm';
@@ -25,7 +25,7 @@ export type PersonActionItem = {
   externalIds?: (string | null)[] | null;
   roles: TenantRole[];
   matchingUserIds?: string[];
-  tenantIds?: (string | null)[] | null;
+  tenantIds: string[];
 };
 
 export const personActions = defineActions<PersonActionItem>()([
@@ -78,17 +78,19 @@ export const personActions = defineActions<PersonActionItem>()([
     label: 'Přidat do jiného klubu',
     icon: UserPlus,
     requireAdmin: true,
-    visible: ({ auth, item, tenantId }) => auth.canManagePerson(item) &&
-      (auth.isSystemAdmin || auth.adminTenantIds.some((id) => id !== tenantId)),
-    render: ({ item }) => <AddToClubForm personId={item.id} />,
+    visible: ({ auth, item }) =>
+      auth.canManagePerson(item) &&
+      (auth.isSystemAdmin ||
+        auth.adminTenantIds.some((id) => id !== auth.currentTenantId)),
+    render: ({ item }) => <AddToOtherTenantForm personId={item.id} />,
   },
   {
     id: 'person.addMember',
     group: 'add',
     label: 'Přidat jako člena',
     icon: UserPlus,
-    requireAdmin: true,
-    visible: ({ auth, item }) => auth.canManagePerson(item) && !item.roles.includes('MEMBER'),
+    visible: ({ auth, item }) =>
+      auth.canManagePerson(item) && !item.roles.includes('MEMBER'),
     execute: async ({ item, mutate }) => {
       await mutate(CreateTenantMembershipDocument, {
         input: { tenantMembership: { personId: item.id } },
@@ -100,8 +102,8 @@ export const personActions = defineActions<PersonActionItem>()([
     group: 'add',
     label: 'Přidat jako trenéra',
     icon: UserPlus,
-    requireAdmin: true,
-    visible: ({ auth, item }) => auth.canManagePerson(item) && !item.roles.includes('TRAINER'),
+    visible: ({ auth, item }) =>
+      auth.canManagePerson(item) && !item.roles.includes('TRAINER'),
     execute: async ({ item, mutate }) => {
       await mutate(CreateTenantTrainerDocument, {
         input: { tenantTrainer: { personId: item.id } },
@@ -113,8 +115,8 @@ export const personActions = defineActions<PersonActionItem>()([
     group: 'add',
     label: 'Přidat jako správce',
     icon: UserPlus,
-    requireAdmin: true,
-    visible: ({ auth, item }) => auth.canManagePerson(item) && !item.roles.includes('ADMINISTRATOR'),
+    visible: ({ auth, item }) =>
+      auth.canManagePerson(item) && !item.roles.includes('ADMINISTRATOR'),
     execute: async ({ item, mutate }) => {
       await mutate(CreateTenantAdministratorDocument, {
         input: { tenantAdministrator: { personId: item.id } },

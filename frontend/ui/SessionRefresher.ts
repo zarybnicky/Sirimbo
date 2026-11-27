@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { authAtom } from '@/lib/auth';
-import { refreshSessionAction } from '@/lib/auth-actions';
+import { refreshSessionAction } from '@/lib/server/auth-actions.ts';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
 

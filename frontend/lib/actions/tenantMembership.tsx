@@ -12,18 +12,14 @@ export const tenantMembershipActions = defineActions<TenantMembershipFragment>()
     id: 'tenantMembership.edit',
     label: 'Upravit členství',
     icon: Pencil,
-    requireAdmin: true,
-    visible: ({ auth, tenantId, item }) =>
-      auth.isSystemAdmin || item.tenantId === tenantId,
+    visible: ({ auth, item }) => auth.canManageTenant(item),
     render: ({ item }) => <EditTenantMembershipForm id={item.id} />,
   },
   {
     id: 'tenantMembership.endToday',
     label: 'Ukončit ke dnešnímu datu',
     icon: Unplug,
-    requireAdmin: true,
-    visible: ({ auth, tenantId, item }) =>
-      (auth.isSystemAdmin || item.tenantId === tenantId) && item.status === 'ACTIVE',
+    visible: ({ auth, item }) => auth.canManageTenant(item) && item.status === 'ACTIVE',
     confirm: ({ item }) =>
       `Opravdu chcete členovi ${item.person?.name} ukončit členství ke dnešnímu datu?`,
     execute: async ({ item, mutate }) => {
@@ -37,9 +33,7 @@ export const tenantMembershipActions = defineActions<TenantMembershipFragment>()
     label: 'Smazat',
     icon: Trash2,
     variant: 'danger',
-    requireAdmin: true,
-    visible: ({ auth, tenantId, item }) =>
-      auth.isSystemAdmin || item.tenantId === tenantId,
+    visible: ({ auth, item }) => auth.canManageTenant(item),
     confirm:
       'Opravdu chcete členství NENÁVRATNĚ smazat, včetně všech přiřazených? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.',
     execute: async ({ item, mutate }) => {

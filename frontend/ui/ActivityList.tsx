@@ -1,22 +1,23 @@
-import { type CalendarView, CalendarViews } from '@/calendar/CalendarViews';
+import { CalendarViews, type CalendarView } from '@/calendar/CalendarViews';
 import { DateNavigator } from '@/calendar/DateNavigator';
 import { ViewPicker } from '@/calendar/ViewPicker';
 import {
-  type CalendarFilters,
   calendarTypes,
   useCalendarData,
+  type CalendarFilters,
 } from '@/calendar/useCalendarData';
 import type { EventRegistrationAttendanceFragment } from '@/graphql/Event';
-import { compareText } from '@/lib/compare';
+import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/cn';
-import { CompetitionEventCard } from '@/ui/Competitions';
-import { EventButton } from '@/ui/EventButton';
-import { BirthdayChip } from '@/ui/BirthdayChip';
+import { compareText } from '@/lib/compare';
 import { AttendanceStatsLink } from '@/ui/AttendanceStats';
+import { BirthdayChip } from '@/ui/BirthdayChip';
+import { CompetitionEventCard } from '@/ui/Competitions';
 import { attendanceIcons } from '@/ui/EventAttendance';
+import { EventButton } from '@/ui/EventButton';
 import { FacetFilter } from '@/ui/FacetFilter';
-import { capitalize, longDayFormatter } from '@/ui/format';
 import { FormError } from '@/ui/form';
+import { capitalize, longDayFormatter } from '@/ui/format';
 import { buttonCls, cardCls } from '@/ui/style';
 import {
   addYears,
@@ -28,11 +29,10 @@ import {
   startOfYear,
 } from 'date-fns';
 import { CalendarDays, ChevronDown, List, Plus, Search } from 'lucide-react';
+import Link from 'next/link';
 import * as React from 'react';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
-import { EventForm } from './event-form/EventForms';
-import Link from 'next/link';
-import { useAuth } from '@/lib/auth';
+import { EventForm } from './event-form/EventForm';
 
 const monthView = {
   ...CalendarViews.month,

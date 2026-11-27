@@ -1,4 +1,3 @@
-import { EventOverlapWarning } from './EventOverlapWarning';
 import { useController, useWatch } from 'react-hook-form';
 import type { EventFormControl, EventParticipantOption } from './types';
 import { buttonCls } from '@/ui/style';
@@ -7,6 +6,8 @@ import { ComboboxButton } from '@/ui/fields/Combobox';
 import { cn } from '@/lib/cn';
 import type { EventFormOptionsQuery } from '@/graphql/Event';
 import { SelectionListElement } from '@/ui/fields/SelectionList';
+import React from 'react';
+import { EventOverlapWarning } from './useEventOverlaps';
 
 export function ParticipantListElement({
   control,
@@ -161,7 +162,9 @@ export function ParticipantListElement({
                   </span>
                 )}
               </div>
-              <EventOverlapWarning lines={(personId ? [personId] : options.get(id)?.personIds ?? []).flatMap((id) => conflicts?.[id] ?? [])} />
+              <EventOverlapWarning
+                lines={options.get(id)?.personIds?.flatMap((id) => conflicts?.[id] ?? [])}
+              />
               <button
                 type="button"
                 className={buttonCls({ size: 'sm', variant: 'outline' })}

@@ -1,6 +1,6 @@
 import { sql, sqlValueWithCodec, TYPES } from 'postgraphile/@dataplan/pg';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
-import { SQL } from 'postgraphile/pg-sql2';
+import type { SQL } from 'postgraphile/pg-sql2';
 
 type DateCondition = {
   since?: string | null;

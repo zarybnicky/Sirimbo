@@ -1,10 +1,10 @@
 import { DevelopmentUsersDocument } from '@/graphql/CurrentUser';
-import { logInAsAction } from '@/lib/auth-actions';
+import { logInAsAction } from '@/lib/server/auth-actions.ts';
 import { getDevelopmentUsers, pickDevelopmentUser } from '@/lib/development-identity';
 import { sanitizeReturnURL } from '@/lib/sanitize';
 import { executeGraphql } from '@/lib/server/graphql';
 import { getRequestContext } from '@/lib/server/tenant';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   if (process.env.NODE_ENV !== 'development') {
@@ -19,7 +19,10 @@ export async function GET(request: NextRequest) {
     pgSettings: { ...pgSettings, role: 'system_admin' },
   });
   const candidates = getDevelopmentUsers(users?.nodes ?? [], tenant, Date.now());
-  const user = pickDevelopmentUser(candidates.filter((x) => x.role === role), auth.userId);
+  const user = pickDevelopmentUser(
+    candidates.filter((x) => x.role === role),
+    auth.userId,
+  );
   if (!user)
     return new Response('No development user found for this role', { status: 404 });
 

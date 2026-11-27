@@ -31,16 +31,21 @@ function normalizeUsername(value: unknown, platform: 'instagram.com' | 'tiktok.c
   if (typeof value !== 'string') return null;
   const i = value.toLowerCase().indexOf(`${platform}/`);
   const text = i !== -1 ? value.slice(i + platform.length + 1) : value;
-  return sanitizeUnicode(text)
-    .trim()
-    .replace(/^@+/, '')
-    .split(/[/?#]/, 1)[0]?.trim() || null;
+  return (
+    sanitizeUnicode(text).trim().replace(/^@+/, '').split(/[/?#]/, 1)[0]?.trim() || null
+  );
 }
 
 const Form = z.object({
   prefixTitle: z.string().prefault('').overwrite(sanitizeUnicode),
-  firstName: z.string({ error: 'Zadejte jméno' }).min(1, 'Zadejte jméno').overwrite(sanitizeUnicode),
-  lastName: z.string({ error: 'Zadejte příjmení' }).min(1, 'Zadejte příjmení').overwrite(sanitizeUnicode),
+  firstName: z
+    .string({ error: 'Zadejte jméno' })
+    .min(1, 'Zadejte jméno')
+    .overwrite(sanitizeUnicode),
+  lastName: z
+    .string({ error: 'Zadejte příjmení' })
+    .min(1, 'Zadejte příjmení')
+    .overwrite(sanitizeUnicode),
   suffixTitle: z.string().prefault('').overwrite(sanitizeUnicode),
   gender: z.enum(['MAN', 'WOMAN', 'UNSPECIFIED'], { error: 'Vyberte pohlaví' }),
   birthDate: z.string().nullish(),
@@ -65,15 +70,17 @@ const Form = z.object({
   nationality: z.string().min(1, 'Vyberte národnost'),
   bio: z.string().prefault(''),
   note: z.string().prefault(''),
-  address: z.object({
-    city: z.string().nullish().prefault(''),
-    conscriptionNumber: z.string().nullish().prefault(''),
-    district: z.string().nullish().prefault(''),
-    orientationNumber: z.string().nullish().prefault(''),
-    postalCode: z.string().nullish().prefault(''),
-    region: z.string().nullish().prefault(''),
-    street: z.string().nullish().prefault(''),
-  }).nullish(),
+  address: z
+    .object({
+      city: z.string().nullish().prefault(''),
+      conscriptionNumber: z.string().nullish().prefault(''),
+      district: z.string().nullish().prefault(''),
+      orientationNumber: z.string().nullish().prefault(''),
+      postalCode: z.string().nullish().prefault(''),
+      region: z.string().nullish().prefault(''),
+      street: z.string().nullish().prefault(''),
+    })
+    .nullish(),
 });
 
 export function EditPersonForm({ id }: { id: string }) {
@@ -94,14 +101,17 @@ export function EditPersonForm({ id }: { id: string }) {
 
   React.useEffect(() => {
     if (!data) return;
-    reset({
-      ...data,
-      birthDate: data.birthDate ?? null,
-    } as unknown as any, {
-      keepDirtyValues: true,
-      keepTouched: true,
-      keepErrors: true,
-    });
+    reset(
+      {
+        ...data,
+        birthDate: data.birthDate ?? null,
+      } as unknown as any,
+      {
+        keepDirtyValues: true,
+        keepTouched: true,
+        keepErrors: true,
+      },
+    );
   }, [reset, data]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
@@ -135,7 +145,8 @@ export function EditPersonForm({ id }: { id: string }) {
 
       <TextFieldElement control={control} name="email" type="email" label="E-mail" />
       <TextFieldElement control={control} name="phone" type="tel" label="Telefon" />
-      {linksExpandedFor === id || [
+      {linksExpandedFor === id ||
+      [
         data?.instagramUsername,
         data?.tiktokUsername,
         data?.facebookUrl,
@@ -252,11 +263,7 @@ export function EditPersonForm({ id }: { id: string }) {
       </div>
 
       <div className="col-full">
-        <RichTextEditor
-          control={control}
-          name="note"
-          label="Poznámky"
-        />
+        <RichTextEditor control={control} name="note" label="Poznámky" />
       </div>
 
       <div className="col-full">

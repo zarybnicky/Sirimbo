@@ -1,12 +1,19 @@
-import { EventOverlapWarning } from './EventOverlapWarning';
 import type { EventFormControl } from '@/ui/event-form/types';
 import { buttonCls } from '@/ui/style';
 import { addMinutes, addWeeks } from 'date-fns';
 import { Plus, X } from 'lucide-react';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import { DateTimeRangeField } from './DateTimeRangeField';
+import React from 'react';
+import { EventOverlapWarning } from '@/ui/event-form/useEventOverlaps.tsx';
 
-export function InstanceListElement({ control, conflicts }: { control: EventFormControl; conflicts?: string[][] }) {
+export function InstanceListElement({
+  control,
+  conflicts,
+}: {
+  control: EventFormControl;
+  conflicts?: string[][];
+}) {
   const { fields, append, remove } = useFieldArray({ name: 'instances', control });
   const instances = useWatch({ control, name: 'instances' });
 

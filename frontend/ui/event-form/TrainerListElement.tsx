@@ -1,9 +1,10 @@
-import { EventOverlapWarning } from './EventOverlapWarning';
 import { SelectionList } from '@/ui/fields/SelectionList';
 import { TextFieldElement } from '@/ui/fields/text';
 import { Checkbox } from '@/ui/fields/checkbox';
 import { useController, useFieldArray, useWatch } from 'react-hook-form';
 import type { EventFormControl } from '@/ui/event-form/types';
+import React from 'react';
+import { EventOverlapWarning } from '@/ui/event-form/useEventOverlaps.tsx';
 
 export type EventTrainerOption = {
   id: string;
@@ -22,7 +23,7 @@ export function TrainerListElement({
   conflicts?: Record<string, string[]>;
 }) {
   const { fields, append, remove } = useFieldArray({ name: 'trainers', control });
-  const type = useWatch({ control, name: 'type' });
+  const type = useWatch({ control, name: 'type' }) ?? 'LESSON';
 
   return (
     <SelectionList
@@ -32,13 +33,12 @@ export function TrainerListElement({
       value={fields.map((x) => x.personId)}
       onAdd={(personId) => append({ personId, lessonsOffered: 0 })}
       onRemove={remove}
-      renderItem={(id, index) => <>
-        <EventOverlapWarning lines={conflicts?.[id]} />
-        {!['LESSON', 'GROUP'].includes(type ?? 'LESSON') && (
-          <TrainerLessonsField control={control} index={index} />
-        )}
-      </>}
-
+      renderItem={(id, index) => (
+        <>
+          <EventOverlapWarning lines={conflicts?.[id]} />
+          {type === 'CAMP' && <TrainerLessonsField control={control} index={index} />}
+        </>
+      )}
     />
   );
 }

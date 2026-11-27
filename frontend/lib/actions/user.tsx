@@ -1,5 +1,5 @@
 import { Link2, LogIn, Mail } from 'lucide-react';
-import { logInAsAction } from '@/lib/auth-actions';
+import { logInAsAction } from '@/lib/server/auth-actions.ts';
 import { ResetPasswordDocument } from '@/graphql/CurrentUser';
 import { toast } from 'react-toastify';
 import { defineActions } from '@/lib/actions';

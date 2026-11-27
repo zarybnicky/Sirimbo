@@ -29,12 +29,12 @@ import { compareText } from '@/lib/compare';
 import { slugify } from '@/lib/slugify';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import {
-  comparePeople,
-  groupRegistrations,
-  genderLabels,
   actionLabels,
+  comparePeople,
   type ComparisonPerson,
   type ComparisonRow,
+  genderLabels,
+  groupRegistrations,
 } from './person-comparison';
 import { starletSettingsAtom, starletTokenAtom } from './state';
 
@@ -58,7 +58,7 @@ export function PersonComparisonForm() {
   const updateMembership = useMutation(UpdateTenantMembershipDocument)[1];
   const syncCohorts = useMutation(SyncCohortMembershipsDocument)[1];
 
-  const sourceKey = JSON.stringify([tenantId, token, courses]);
+  const sourceKey = JSON.stringify([token, courses]);
   const source = useAsync(async () => {
     if (!token?.auth_ok) return;
     const registrations: ComparisonPerson[] = [];
@@ -104,7 +104,7 @@ export function PersonComparisonForm() {
         else if (person.roles.includes('TRAINER')) keepReason = 'trenér';
         else if (!person.roles.includes('MEMBER')) keepReason = 'nečlen';
         else if (!person.externalIds?.length) keepReason = 'bez vazby na evidenci';
-        else if (!person.cohortIds?.some((id) => id && managedIds.get(id)))
+        else if (!person.cohortIds.some((id) => managedIds.get(id)))
           keepReason = 'mimo skupiny evidence';
         return {
           id: person.id,
@@ -115,7 +115,7 @@ export function PersonComparisonForm() {
           keepReason,
           unmatchedAction: keepReason
             ? undefined
-            : person.cohortIds?.some((id) => id && managedIds.get(id) === false)
+            : person.cohortIds.some((id) => managedIds.get(id) === false)
               ? 'endGroups'
               : 'archive',
           firstName: person.firstName,
@@ -131,7 +131,7 @@ export function PersonComparisonForm() {
           city: person.address?.city ?? null,
           postalCode: person.address?.postalCode ?? null,
           address: person.address ?? undefined,
-          cohortIds: person.cohortIds?.filter((id): id is string => !!id) ?? [],
+          cohortIds: person.cohortIds ?? [],
           groups: person.cohortMembershipsList
             .filter(
               (membership) =>

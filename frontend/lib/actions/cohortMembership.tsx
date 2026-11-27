@@ -10,9 +10,11 @@ import { EditCohortMembershipForm } from '@/ui/forms/EditCohortMembershipForm';
 type Item = {
   __typename?: 'CohortMembership';
   id: string;
+  tenantId: string;
   status: RelationshipStatus;
   person?: {
     name: string;
+    tenantIds: string[];
   } | null;
 };
 
@@ -21,7 +23,7 @@ export const cohortMembershipActions = defineActions<Item>()([
     id: 'cohortMembership.edit',
     label: 'Upravit členství',
     icon: Pencil,
-    requireAdmin: true,
+    visible: ({ auth, item }) => auth.canManageTenant(item),
     render: ({ item }) => <EditCohortMembershipForm id={item.id} />,
   },
   {
@@ -29,7 +31,8 @@ export const cohortMembershipActions = defineActions<Item>()([
     label: 'Ukončit ke dnešnímu datu',
     icon: Unplug,
     requireAdmin: true,
-    visible: ({ item }) => item.status === 'ACTIVE',
+    visible: ({ auth, item }) =>
+      auth.canManageTenant(item) && item.status === 'ACTIVE',
     confirm: ({ item }) =>
       `Opravdu chcete členovi ${item.person?.name} ukončit členství ke dnešnímu datu?`,
     execute: async ({ item, mutate }) => {
@@ -43,7 +46,7 @@ export const cohortMembershipActions = defineActions<Item>()([
     label: 'Smazat členství',
     icon: Trash2,
     variant: 'danger',
-    requireAdmin: true,
+    visible: ({ auth, item }) => auth.canManageTenant(item),
     confirm:
       'Opravdu chcete členství NENÁVRATNĚ smazat, včetně všech přiřazených? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.',
     execute: async ({ item, mutate }) => {
