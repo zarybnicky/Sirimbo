@@ -1,10 +1,19 @@
-import { pgClassExpression, LIST_TYPES, sql, sqlValueWithCodec, TYPES, type PgSelectSingleStep, type PgSelectStep } from 'postgraphile/@dataplan/pg';
+import {
+  LIST_TYPES,
+  pgClassExpression,
+  type PgSelectSingleStep,
+  type PgSelectStep,
+  sql,
+  sqlValueWithCodec,
+  TYPES,
+} from 'postgraphile/@dataplan/pg';
 import type { GrafastFieldConfig } from 'postgraphile/grafast';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
-import personMembershipPlugins, { membershipCandidateIds, type MembershipCondition } from './person-membership-condition.ts';
+import personMembershipPlugins from './person-membership-condition.ts';
 
-const PersonFieldsPlugin = extendSchema(() => ({
-  typeDefs: `
+const PersonFieldsPlugin = extendSchema(
+  () => ({
+    typeDefs: `
     extend type Person {
       cohortIds: [BigInt]
       tenantIds: [BigInt]
@@ -14,39 +23,41 @@ const PersonFieldsPlugin = extendSchema(() => ({
       isAdmin: Boolean @deprecated(reason: "Use roles containing ADMINISTRATOR.")
     }
   `,
-  objects: {
-    Person: {
-      plans: {
-        cohortIds($person: PgSelectSingleStep) {
-          return pgClassExpression($person, LIST_TYPES.bigint)`(
+    objects: {
+      Person: {
+        plans: {
+          cohortIds($person: PgSelectSingleStep) {
+            return pgClassExpression($person, LIST_TYPES.bigint)`(
             select nullif(current_cohort_ids, '{}'::bigint[]) from app_private.tenant_relation
             where tenant_id = (select public.current_tenant_id()) and person_id = ${$person.get('id')}
           )`;
-        },
-        tenantIds($person: PgSelectSingleStep) {
-          return pgClassExpression($person, LIST_TYPES.bigint)`array(
+          },
+          tenantIds($person: PgSelectSingleStep) {
+            return pgClassExpression($person, LIST_TYPES.bigint)`array(
             select tenant_id from app_private.tenant_relation
             where person_id = ${$person.get('id')} and has_roles
           )`;
-        },
-        roles($person: PgSelectSingleStep) {
-          return pgClassExpression($person, LIST_TYPES.text)`coalesce((
+          },
+          roles($person: PgSelectSingleStep) {
+            return pgClassExpression($person, LIST_TYPES.text)`coalesce((
             select current_roles::text[] from app_private.current_tenant_relation
             where person_id = ${$person.get('id')}
           ), '{}'::text[])`;
-        },
-        isTrainer($person: PgSelectSingleStep) {
-          return pgClassExpression($person, TYPES.boolean)`
+          },
+          isTrainer($person: PgSelectSingleStep) {
+            return pgClassExpression($person, TYPES.boolean)`
             ${$person.get('id')} in (select person_id from app_private.current_tenant_relation where 'trainer' = any(current_roles))`;
-        },
-        isAdmin($person: PgSelectSingleStep) {
-          return pgClassExpression($person, TYPES.boolean)`
+          },
+          isAdmin($person: PgSelectSingleStep) {
+            return pgClassExpression($person, TYPES.boolean)`
             ${$person.get('id')} in (select person_id from app_private.current_tenant_relation where 'administrator' = any(current_roles))`;
+          },
         },
       },
     },
-  },
-}), 'PersonFieldsPlugin');
+  }),
+  'PersonFieldsPlugin',
+);
 
 const TenantNamesPlugin = extendSchema((build) => {
   const tenant = build.input.pgRegistry.pgResources.tenant!;
@@ -126,21 +137,6 @@ const plugins: GraphileConfig.Plugin[] = [
       return sql`(${row}.man_id = ${personId} or ${row}.woman_id = ${personId})`;
     },
   ),
-  addPgTableCondition(
-    { schemaName: 'public', tableName: 'couple' },
-    'membership',
-    (build) => ({
-      description: 'Require at least one partner to match the current-tenant person membership condition.',
-      type: build.getInputTypeByName('PersonMembershipCondition'),
-    }),
-    (value, { sqlTableAlias: row }) => {
-      const candidates = membershipCandidateIds(value as MembershipCondition | null);
-      return candidates ? sql`exists (
-        select 1 from (${candidates}) membership
-        where membership.person_id in (${row}.man_id, ${row}.woman_id)
-      )` : null;
-    },
-  ),
   {
     name: 'PeopleRelationsPlugin',
     schema: {
@@ -148,9 +144,14 @@ const plugins: GraphileConfig.Plugin[] = [
         GraphQLObjectType_fields: {
           after: ['PgRelationsPlugin'],
           callback(fields, build, { Self }) {
-            const batchedRelations = Self.name === 'CohortMembership' ? ['cohort']
-              : Self.name === 'Couple' ? ['man', 'woman', 'image']
-              : Self.name === 'Person' ? ['image'] : [];
+            const batchedRelations =
+              Self.name === 'CohortMembership'
+                ? ['cohort']
+                : Self.name === 'Couple'
+                  ? ['man', 'woman', 'image']
+                  : Self.name === 'Person'
+                    ? ['image']
+                    : [];
             for (const name of batchedRelations) {
               const field = fields[name]!;
               const plan = field.plan!;
@@ -169,14 +170,17 @@ const plugins: GraphileConfig.Plugin[] = [
             }
             if (Self.name !== 'Person') return fields;
             const query = build.getTypeByName('Query');
-            if (!build.graphql.isObjectType(query)) throw new Error('Expected Query object type.');
+            if (!build.graphql.isObjectType(query))
+              throw new Error('Expected Query object type.');
             const canonical = query.toConfig().fields.couplesList!;
             const plan = canonical.extensions?.grafast?.plan;
             if (!plan) throw new Error('Expected couplesList plan.');
 
             const field: GrafastFieldConfig<PgSelectSingleStep> = {
               ...canonical,
-              type: new build.graphql.GraphQLNonNull(build.graphql.getNullableType(canonical.type)),
+              type: new build.graphql.GraphQLNonNull(
+                build.graphql.getNullableType(canonical.type),
+              ),
               description: 'Partnerships involving this person.',
               extensions: {
                 ...canonical.extensions,

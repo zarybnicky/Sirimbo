@@ -1,13 +1,12 @@
+import { addDays, addMilliseconds, startOfDay, isSameDay, isSameMonth } from 'date-fns';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import { add, eq, gt, inRange, lt, neq, startOf } from 'date-arithmetic';
 import React from 'react';
 import BackgroundCells from './BackgroundCells';
 import { getSlotMetrics } from './DateSlotMetrics';
 import EventEndingRow from './EventEndingRow';
 import EventRow from './EventRow';
 import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection';
-import { eventSegments, type Segment } from './common';
-import { diff, merge, inEventRange } from './localizer';
+import { eventInRange, eventSegments, merge, type Segment } from './common';
 import type { CalendarEvent, Resource } from './types';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
 import { formPreviewFor, dragListenersAtom, dragSubjectAtom, isDraggingAtom } from './state';
@@ -34,7 +33,7 @@ function DateContentRow({
   const draggableRef = React.useRef<HTMLDivElement>(null);
 
   const preview = useAtomValue(React.useMemo(
-    () => formPreviewFor(resource, range[0]!, add(range.at(-1)!, 1, 'day')),
+    () => formPreviewFor(resource, range[0]!, addDays(range.at(-1)!, 1)),
     [resource, range],
   ));
   const isDragging = useAtomValue(isDraggingAtom);
@@ -77,7 +76,7 @@ function DateContentRow({
      *     }
      *     const date = slotMetrics.getDateForSlot(getSlotAtX(bounds, point.x, slotMetrics.slots))
      *     const start = merge(date, event.start)
-     *     const end = add(start, diff(start, event.end, 'milliseconds'), 'milliseconds')
+     *     const end = addMilliseconds(start, Math.abs(+event.end - +start))
      *     const newSegment = eventSegments({ ...event, end, start, __isPreview: true }, slotMetrics.range)
      *     if (segment && segment.span === newSegment.span && segment.left === newSegment.left && segment.right === newSegment.right) {
      *       return segment;
@@ -90,7 +89,7 @@ function DateContentRow({
      *   const bounds = getBoundsForNode(containerRef.current!)
      *   if (pointInBox(bounds, point)) {
      *     const start = slotMetrics.getDateForSlot(getSlotAtX(bounds, point.x, slotMetrics.slots))
-     *     const end = add(start, 1, 'day')
+     *     const end = addDays(start, 1)
      *     onDropFromOutside?.({ start, end }) * /
      *   }
      *   setIsDragging(false);
@@ -113,45 +112,45 @@ function DateContentRow({
             return null;
           }
           start = merge(date, event.start);
-          end = add(start, diff(event.start, event.end, 'milliseconds'), 'milliseconds');
+          end = addMilliseconds(start, Math.abs(+event.end - +event.start));
         }
         if (action === 'resize') {
           const cursorInRow = pointInBox(bounds, point);
 
           if (direction === 'RIGHT') {
             if (cursorInRow) {
-              if (slotMetrics.last < start) {
+              if (slotMetrics.last <= start) {
                 return null;
               }
-              end = eq(startOf(end, 'day'), end) ? add(date, 1, 'day') : date;
+              end = +startOfDay(end) === +end ? addDays(date, 1) : date;
             } else if (
-              inRange(start, slotMetrics.first, slotMetrics.last) ||
+              (start >= slotMetrics.first && start < slotMetrics.last) ||
               (bounds.bottom < point.y && +slotMetrics.first > +start)
             ) {
-              end = add(slotMetrics.last, 1, 'milliseconds');
+              end = slotMetrics.last;
             } else {
               return null;
             }
             end = merge(end, event.end);
-            if (lt(end, start)) {
+            if (end < start) {
               end = event.end;
             }
           } else if (direction === 'LEFT') {
             if (cursorInRow) {
-              if (slotMetrics.first > end) {
+              if (slotMetrics.first >= end) {
                 return null;
               }
               start = date;
             } else if (
-              inRange(end, slotMetrics.first, slotMetrics.last) ||
-              (bounds.top > point.y && lt(slotMetrics.last, end))
+              (end > slotMetrics.first && end <= slotMetrics.last) ||
+              (bounds.top > point.y && slotMetrics.last < end)
             ) {
-              start = add(slotMetrics.first, -1, 'milliseconds');
+              start = addDays(slotMetrics.first, -1);
             } else {
               return null;
             }
             start = merge(start, event.start);
-            if (gt(start, end)) {
+            if (start > end) {
               start = event.start;
             }
           }
@@ -244,7 +243,7 @@ function DateContentRow({
   const previewSegments = segment ? [segment]
     : !isDragging
       ? preview?.events
-          .filter((event) => inEventRange(event, { start: range[0]!, end: range.at(-1)! }))
+          .filter((event) => eventInRange(event, { start: range[0]!, end: range.at(-1)! }))
           .map((event) => eventSegments(event, range)) ?? []
       : [];
 
@@ -268,8 +267,8 @@ function DateContentRow({
             <div
               key={`header_${index}`}
               className={cn('flex-1 min-w-0 pr-1.25 text-right', {
-                'font-bold': eq(date, new Date(), 'day'),
-                'text-neutral-9': neq(date, currentDate, 'month'),
+                'font-bold': isSameDay(date, new Date()),
+                'text-neutral-9': !isSameMonth(date, currentDate),
               })}
             >
               <button

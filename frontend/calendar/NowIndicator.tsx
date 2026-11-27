@@ -1,6 +1,6 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import React from 'react';
-import { merge } from './localizer';
+import { merge } from './common';
 import type { TimeSlotMetrics } from './TimeSlotMetrics';
 import { maxTimeAtom, minTimeAtom } from './state';
 import { useAtomValue } from 'jotai';

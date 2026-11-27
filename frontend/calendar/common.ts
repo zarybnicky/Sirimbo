@@ -1,11 +1,21 @@
+import { addDays, startOfDay, differenceInCalendarDays, subMilliseconds, min, max } from 'date-fns';
 import type { CalendarEvent } from './types';
-import { diff, ceil } from './localizer';
-import { add, eq, min, max, startOf } from 'date-arithmetic';
+
+export function merge(date: Date, time: Date): Date {
+  const result = new Date(date);
+  result.setHours(
+    time.getHours(),
+    time.getMinutes(),
+    time.getSeconds(),
+    time.getMilliseconds(),
+  );
+  return result;
+}
 
 export function endOfRange(dateRange: Date[]) {
   return {
     first: dateRange[0]!,
-    last: add(dateRange.at(-1)!, 1, 'day'),
+    last: addDays(dateRange.at(-1)!, 1),
   };
 }
 
@@ -19,15 +29,14 @@ export type Segment = {
 export function eventSegments(event: CalendarEvent, range: Date[]): Segment {
   const { first, last } = endOfRange(range);
 
-  const slots = diff(first, last, 'day');
-  const start = max(startOf(event.start, 'day'), first);
-  const end = min(ceil(event.end, 'day'), last);
-  const padding = range.findIndex((x) => eq(x, start, 'day'));
-  const span = diff(start, end, 'day');
+  const start = max([startOfDay(event.start), first]);
+  const end = subMilliseconds(min([event.end, last]), 1);
+  const padding = differenceInCalendarDays(start, first);
+  const span = Math.max(1, differenceInCalendarDays(end, start) + 1);
 
   return {
     event,
-    span: Math.max(Math.min(span, slots), 1),
+    span: Math.min(span, range.length),
     left: padding + 1,
     right: Math.max(padding + span, 1),
   };
@@ -37,30 +46,33 @@ export function eventLevels(rowSegments: Segment[], limit = Number.POSITIVE_INFI
   const levels: Segment[][] = [];
   const extra: Segment[] = [];
 
-  for (const rowSegment of rowSegments) {
-    const seg = rowSegment!;
+  for (const segment of rowSegments) {
+    const available = levels.findIndex((level) =>
+      level.every((other) => other.left > segment.right || other.right < segment.left),
+    );
+    const index = available === -1 ? levels.length : available;
 
-    // Check for overlapping
-    let j: number;
-    for (j = 0; j < levels.length; j++) {
-      if (
-        !levels[j]?.some((other) => other.left <= seg.right && other.right >= seg.left)
-      ) {
-        break;
-      }
-    }
-
-    if (j >= limit) {
-      extra.push(seg);
+    if (index >= limit) {
+      extra.push(segment);
+    } else if (index === levels.length) {
+      levels.push([segment]);
     } else {
-      if (levels.length <= j) {
-        levels.push([]);
-      }
-      levels[j]?.push(seg);
+      levels[index]!.push(segment);
     }
   }
 
   for (const arr of levels) arr.sort((a, b) => a.left - b.left);
 
   return { levels, extra };
+}
+
+export function eventInRange(
+  event: { start: Date; end: Date },
+  range: { start: Date; end: Date },
+) {
+  return (
+    event.start < addDays(startOfDay(range.end), 1) &&
+    (event.end > startOfDay(range.start) ||
+      (+event.start === +event.end && event.start >= startOfDay(range.start)))
+  );
 }

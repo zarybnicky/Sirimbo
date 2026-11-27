@@ -1,12 +1,10 @@
-import { LIST_TYPES, TYPES, sql, sqlValueWithCodec } from 'postgraphile/@dataplan/pg';
+import { LIST_TYPES, sql, sqlValueWithCodec, TYPES } from 'postgraphile/@dataplan/pg';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
-
-type SqlTag = GraphileBuild.Build['sql'];
-type SQL = ReturnType<SqlTag>;
+import { SQL } from 'postgraphile/pg-sql2';
 
 type MembershipState = 'current' | 'former';
 
-export type MembershipCondition = {
+type MembershipCondition = {
   state?: MembershipState | null;
   states?: readonly MembershipState[] | null;
   inCohorts?: readonly string[] | null;
@@ -14,32 +12,45 @@ export type MembershipCondition = {
   isAdmin?: boolean | null;
 };
 
-export function membershipCandidateIds(condition: MembershipCondition | null | undefined): SQL | null {
+function membershipCandidateIds(
+  condition: MembershipCondition | null | undefined,
+): SQL | null {
   if (condition == null) return null;
 
-  const states = condition.states == null
-    ? [condition.state ?? 'current']
-    : condition.states.length ? condition.states : ['current', 'former'];
+  const states =
+    condition.states == null
+      ? [condition.state ?? 'current']
+      : condition.states.length
+        ? condition.states
+        : ['current', 'former'];
   const cohorts = condition.inCohorts;
   const predicates: SQL[] = [];
-  if (condition.states != null || condition.state != null) predicates.push(sql`m.in_state`);
+  if (condition.states != null || condition.state != null)
+    predicates.push(sql`m.in_state`);
   if (cohorts) {
-    predicates.push(cohorts.length === 0
-      ? sql`cardinality(m.cohort_ids) = 0`
-      : sql`m.cohort_ids && ${sqlValueWithCodec(cohorts, LIST_TYPES.bigint)}`);
+    predicates.push(
+      cohorts.length === 0
+        ? sql`cardinality(m.cohort_ids) = 0`
+        : sql`m.cohort_ids && ${sqlValueWithCodec(cohorts, LIST_TYPES.bigint)}`,
+    );
   }
   for (const [column, value] of [
     ['is_trainer', condition.isTrainer],
     ['is_admin', condition.isAdmin],
   ] as const) {
-    if (value != null) predicates.push(sql`m.${sql.identifier(column)} = ${sqlValueWithCodec(value, TYPES.boolean)}`);
+    if (value != null)
+      predicates.push(
+        sql`m.${sql.identifier(column)} = ${sqlValueWithCodec(value, TYPES.boolean)}`,
+      );
   }
-  return predicates.length ? sql`
+  return predicates.length
+    ? sql`
     select m.person_id
     from unnest(${sqlValueWithCodec(states, LIST_TYPES.text)}) s(state)
     cross join lateral app_private.person_membership_candidates(s.state) m
     where ${sql.join(predicates, ' and ')}
-  ` : null;
+  `
+    : null;
 }
 
 const plugins: GraphileConfig.Plugin[] = [
@@ -69,12 +80,31 @@ const plugins: GraphileConfig.Plugin[] = [
     { schemaName: 'public', tableName: 'person' },
     'membership',
     (build) => ({
-      description: 'Filters people by tenant membership, cohort membership, trainer status, and administrator status.',
+      description:
+        'Filters people by tenant membership, cohort membership, trainer status, and administrator status.',
       type: build.getInputTypeByName('PersonMembershipCondition'),
     }),
     (value, { sqlTableAlias: personAlias }) => {
       const candidates = membershipCandidateIds(value as MembershipCondition | null);
-      return candidates ? sql`${personAlias}.id in (${candidates})` : null;
+      if (!candidates) return null;
+      return sql`${personAlias}.id in (${candidates})`;
+    },
+  ),
+  addPgTableCondition(
+    { schemaName: 'public', tableName: 'couple' },
+    'membership',
+    (build) => ({
+      description:
+        'Require at least one partner to match the current-tenant person membership condition.',
+      type: build.getInputTypeByName('PersonMembershipCondition'),
+    }),
+    (value, { sqlTableAlias: row }) => {
+      const candidates = membershipCandidateIds(value as MembershipCondition | null);
+      if (!candidates) return null;
+      return sql`exists (
+        select 1 from (${candidates}) membership
+        where membership.person_id in (${row}.man_id, ${row}.woman_id)
+      )`;
     },
   ),
 ];

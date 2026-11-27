@@ -1,12 +1,11 @@
 import { federationCalendarDays } from './competitions';
-import { format } from 'date-fns';
+import { addDays, format, startOfDay } from 'date-fns';
 import type { CompetitionParticipantCondition } from '@/graphql';
 import {
   CalendarDataDocument,
   type CalendarDataQueryVariables,
   type EventSavedSearchFragment,
 } from '@/graphql/Event';
-import { add, startOf } from 'date-arithmetic';
 import React from 'react';
 import { useClient, useQuery } from 'urql';
 import {
@@ -86,8 +85,8 @@ function prepareVariables(
   range: DateRange,
   variables: CalendarDataQueryVariables,
 ): CalendarDataQueryVariables {
-  const start = startOf(range.since, 'day');
-  const end = add(startOf(range.until, 'day'), 1, 'day');
+  const start = startOfDay(range.since);
+  const end = addDays(startOfDay(range.until), 1);
   const overlaps = { start: start.toISOString(), end: end.toISOString() };
   const dates = {
     since: format(start, 'yyyy-MM-dd'),

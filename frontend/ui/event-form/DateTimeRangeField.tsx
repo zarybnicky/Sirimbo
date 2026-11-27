@@ -1,4 +1,3 @@
-import { cn } from '@/lib/cn';
 import { FieldHelper } from '@/ui/form';
 import { inputCls, inputGroupCls } from '@/ui/style';
 import {
@@ -59,9 +58,6 @@ export function DateTimeRangeField({
     if (nextUntil) until.field.onChange(nextUntil.toISOString());
   };
 
-  const timeInputClassName = inputCls({
-    className: cn('min-w-0', showEndDate && 'grow basis-24'),
-  });
   const startDateInput = (
     <input
       type="date"
@@ -79,7 +75,9 @@ export function DateTimeRangeField({
       value={startTime}
       required
       onChange={(event) => setSince(startDate, event.currentTarget.value)}
-      className={timeInputClassName}
+      className={inputCls({
+        className: 'min-w-0 ' + (showEndDate ? 'grow basis-24' : ''),
+      })}
     />
   );
   const endTimeInput = (
@@ -90,18 +88,33 @@ export function DateTimeRangeField({
       required
       aria-invalid={rangeError ? true : undefined}
       onChange={(event) => setUntil(endDate, event.currentTarget.value)}
-      className={timeInputClassName}
+      className={inputCls({
+        className: 'min-w-0 ' + (showEndDate ? 'grow basis-24' : ''),
+      })}
     />
   );
 
   return (
     <div className="min-w-0 flex-1">
-      <div className={cn('flex gap-2', type === 'CAMP' ? 'flex-col' : 'flex-wrap')}>
+      <div className={'flex gap-2 ' + (showEndDate ? 'flex-col' : 'flex-wrap')}>
         {showEndDate ? (
-          <div className={inputGroupCls({ className: 'w-full sm:w-auto' })}>
-            {startDateInput}
-            {startTimeInput}
-          </div>
+          <>
+            <div className={inputGroupCls({ className: 'w-full sm:w-auto' })}>
+              {startDateInput}
+              {startTimeInput}
+            </div>
+            <div className={inputGroupCls({ className: 'w-full sm:w-auto' })}>
+              <input
+                type="date"
+                value={endDate}
+                required={type === 'CAMP'}
+                aria-invalid={rangeError ? true : undefined}
+                onChange={(event) => setUntil(event.currentTarget.value, endTime)}
+                className={inputCls({ className: 'min-w-0 grow basis-36' })}
+              />
+              {endTimeInput}
+            </div>
+          </>
         ) : (
           <>
             {startDateInput}
@@ -110,20 +123,6 @@ export function DateTimeRangeField({
               {endTimeInput}
             </div>
           </>
-        )}
-
-        {showEndDate && (
-          <div className={inputGroupCls({ className: 'w-full sm:w-auto' })}>
-            <input
-              type="date"
-              value={endDate}
-              required={type === 'CAMP'}
-              aria-invalid={rangeError ? true : undefined}
-              onChange={(event) => setUntil(event.currentTarget.value, endTime)}
-              className={inputCls({ className: 'min-w-0 grow basis-36' })}
-            />
-            {endTimeInput}
-          </div>
         )}
       </div>
       <FieldHelper error={rangeError} />

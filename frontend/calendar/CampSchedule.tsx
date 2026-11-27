@@ -17,7 +17,7 @@ import type { CalendarClubEvent, InteractionInfo } from '@/calendar/types';
 import { FormError } from '@/ui/form';
 import { formatEventName } from '@/ui/format';
 import { useAuth } from '@/lib/auth';
-import { startOf } from 'date-arithmetic';
+import { startOfDay } from 'date-fns';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { parseAsStringLiteral, useQueryState } from 'nuqs';
 import { calendarGroupBy } from './useCalendarData';
@@ -79,12 +79,12 @@ export const CampSchedule = React.memo(function CampSchedule({
   }, [registrations, event.eventTrainersList, lessons]);
   const dateRange = React.useMemo(
     () => ({
-      since: startOf(new Date(since), 'day'),
-      until: startOf(new Date(until), 'day'),
+      since: startOfDay(new Date(since)),
+      until: startOfDay(new Date(until)),
     }),
     [since, until],
   );
-  const today = new Date();
+  const today = startOfDay(new Date());
   const initialDate =
     today >= dateRange.since && today <= dateRange.until ? today : dateRange.since;
 

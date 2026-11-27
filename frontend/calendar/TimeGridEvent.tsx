@@ -156,7 +156,7 @@ function TimeGridEvent({
         </div>
         <div className="block truncate text-[80%] pr-1.25 w-auto">{label}</div>
 
-        {!continuesPrior && canEdit && (
+        {!continuesAfter && canEdit && (
           <div
             className="absolute bottom-0 opacity-0 group-hover:opacity-100 cursor-s-resize w-3 left-1/2 mx-auto border-t-[6px] border-double"
             data-resize="DOWN"

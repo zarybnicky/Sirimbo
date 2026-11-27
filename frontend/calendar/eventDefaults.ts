@@ -1,7 +1,7 @@
 import type { Resource } from '@/calendar/types';
 import type { EventFormOptionsQuery, EventWithTrainerFragment } from '@/graphql/Event';
 import { EventFormSchema, type EventFormType } from '@/ui/event-form/types';
-import { add, eq } from 'date-arithmetic';
+import { addMinutes, isSameDay } from 'date-fns';
 
 export type CreateEventDefaults = {
   date?: Date;
@@ -19,8 +19,8 @@ export function splitIntoLessonRanges(since: Date, until: Date) {
   const ranges: { since: Date; until: Date }[] = [];
   let start = since;
 
-  while (add(start, 45, 'minutes') <= until) {
-    const end = add(start, 45, 'minutes');
+  while (addMinutes(start, 45) <= until) {
+    const end = addMinutes(start, 45);
     ranges.push({ since: start, until: end });
     start = end;
   }
@@ -61,7 +61,7 @@ export function createEventDefaults(
   const { after, events = [], type = 'LESSON' } = input;
   const since = new Date(input.since ?? after?.until ?? input.date ?? new Date());
   if (!input.since && !after) since.setHours(type === 'CAMP' ? 9 : 15, 0, 0, 0);
-  const until = input.until ?? add(since, type === 'CAMP' ? 480 : 45, 'minutes');
+  const until = input.until ?? addMinutes(since, type === 'CAMP' ? 480 : 45);
   const prefilledTrainerIds =
     after?.eventTrainersList.map((x) => x.personId) ??
     (fallback.trainerId ? [fallback.trainerId] : []);
@@ -81,7 +81,7 @@ export function createEventDefaults(
     for (const event of events) {
       if (
         !event.isCancelled &&
-        eq(new Date(event.since), since, 'day') &&
+        isSameDay(new Date(event.since), since) &&
         new Date(event.until) <= since &&
         event.eventTrainersList.some((x) => trainerPersonIds.includes(x.personId)) &&
         (!previous || new Date(event.since) > new Date(previous.since))

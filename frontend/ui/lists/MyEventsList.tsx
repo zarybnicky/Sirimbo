@@ -10,7 +10,7 @@ import { useAuth } from '@/lib/auth';
 import { EventButton } from '@/ui/EventButton';
 import { BirthdayChip } from '@/ui/BirthdayChip';
 import { capitalize, longDayFormatter } from '@/ui/format';
-import { startOf } from 'date-arithmetic';
+import { startOfDay, startOfWeek } from 'date-fns';
 import * as React from 'react';
 import { buttonCls, cardCls, typographyCls } from '@/ui/style';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
@@ -37,7 +37,7 @@ const myEventsFilters: CalendarFilters = {
 
 export const MyEventsList = React.memo(function MyEventsList() {
   const auth = useAuth();
-  const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
+  const [startDate, setStartDate] = React.useState(() => startOfWeek(new Date(), { weekStartsOn: 1 }));
   const [savedSearch, setSavedSearch] = useAtom(savedSearchAtom);
 
   const { calendarEvents, savedSearches, fetching, error } = useCalendarData({
@@ -57,7 +57,7 @@ export const MyEventsList = React.memo(function MyEventsList() {
 
   const days = React.useMemo(
     () =>
-      [...Map.groupBy(calendarEvents, (x) => +startOf(x.start, 'day'))]
+      [...Map.groupBy(calendarEvents, (x) => +startOfDay(x.start))]
         .toSorted(([a], [b]) => a - b)
         .map(([date, items]) => ({
           date,
@@ -87,7 +87,7 @@ export const MyEventsList = React.memo(function MyEventsList() {
             variant="subtle"
             date={startDate}
             view={CalendarViews.week}
-            setDate={(date) => setStartDate(startOf(date, 'week', 1))}
+            setDate={(date) => setStartDate(startOfWeek(date, { weekStartsOn: 1 }))}
           />
         </div>
         <div className="mb-2 flex items-center text-neutral-11 text-sm">

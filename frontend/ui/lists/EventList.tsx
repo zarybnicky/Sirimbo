@@ -9,7 +9,7 @@ import { TextField } from '@/ui/fields/text';
 import { formatEventName, fullDateFormatter } from '@/ui/format';
 import { useAuth } from '@/lib/auth';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
-import { endOf, startOf } from 'date-arithmetic';
+import { endOfWeek, startOfDay } from 'date-fns';
 import { useSearchParams } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
@@ -85,7 +85,7 @@ export function EventList() {
   const currentId = useSearchParams()?.get('instance') ?? undefined;
   const auth = useAuth();
 
-  const [createDate] = React.useState(() => startOf(endOf(new Date(), 'week', 1), 'day'));
+  const [createDate] = React.useState(() => startOfDay(endOfWeek(new Date(), { weekStartsOn: 1 })));
 
   return (
     <div className="flex flex-col h-full">

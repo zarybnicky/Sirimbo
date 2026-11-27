@@ -5,9 +5,9 @@ import {
   type RadioButtonGroupItem,
 } from '@/ui/fields/RadioButtonGroupElement';
 import { capitalize, dayFormatter } from '@/ui/format';
-import { add, startOf } from 'date-arithmetic';
+import { eachDayOfInterval, startOfDay } from 'date-fns';
 
-const dayId = (date: Date) => String(startOf(date, 'day').getTime());
+const dayId = (date: Date) => String(startOfDay(date).getTime());
 
 export function BoundedDayPicker({
   range,
@@ -22,14 +22,7 @@ export function BoundedDayPicker({
   setDate: (date: Date) => void;
   setView: (view: CalendarViewKey) => void;
 }) {
-  const days: Date[] = [];
-  for (
-    let day = startOf(range.since, 'day');
-    day <= startOf(range.until, 'day');
-    day = add(day, 1, 'day')
-  ) {
-    days.push(day);
-  }
+  const days = eachDayOfInterval({ start: range.since, end: range.until });
 
   if (days.length <= 1) return null;
 

@@ -11,7 +11,7 @@ import {
   formatStartsIn,
   shortTimeFormatter,
 } from '@/ui/format';
-import { add } from 'date-arithmetic';
+import { addHours } from 'date-fns';
 import React from 'react';
 import { useQuery } from 'urql';
 
@@ -132,7 +132,7 @@ export default function NowPage() {
       condition: {
         overlaps: {
           start: reference.toISOString(),
-          end: add(reference, 24, 'hours').toISOString(),
+          end: addHours(reference, 24).toISOString(),
         },
       },
       orderBy: ['SINCE_ASC'],

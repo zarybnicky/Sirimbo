@@ -9,7 +9,7 @@ import {
 } from '@/ui/format';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { useAuth } from '@/lib/auth';
-import { diff } from 'date-arithmetic';
+import { differenceInMinutes } from 'date-fns';
 import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
 import * as React from 'react';
 import { AttendanceStatsLink } from '@/ui/AttendanceStats';
@@ -35,7 +35,7 @@ export function EventButton({
 
   const start = new Date(event.since);
   const end = new Date(event.until);
-  const duration = diff(start, end, 'minutes');
+  const duration = differenceInMinutes(end, start, { roundingMethod: 'round' });
 
   const perspective =
     viewer === 'auto'

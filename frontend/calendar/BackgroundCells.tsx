@@ -1,6 +1,6 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import React from 'react';
-import { eq, neq } from 'date-arithmetic';
+import { isSameDay, isSameMonth } from 'date-fns';
 import Selection, {
   type Bounds,
   getBoundsForNode,
@@ -150,7 +150,7 @@ function BackgroundCells({
 
     selector.addEventListener('select', () => {
       setState(({ start, end }) => {
-        if (start && end && end !== -1 && start !== -1) {
+        if (start !== undefined && end !== undefined && start >= 0 && end >= 0) {
           onCreate?.(defaultsFromSlot({
             start: range[start]!,
             end: range[end]!,
@@ -178,8 +178,8 @@ function BackgroundCells({
         <div
           key={index}
           className={cn('rbc-day-bg', {
-            'bg-accent-3/80': eq(date, new Date(), 'day'),
-            'bg-neutral-3': currentDate && neq(currentDate, date, 'month'),
+            'bg-accent-3/80': isSameDay(date, new Date()),
+            'bg-neutral-3': currentDate && !isSameMonth(currentDate, date),
             'bg-neutral-5': state.selecting &&
               index >= (state.start ?? -1) && index <= (state.end ?? Number.POSITIVE_INFINITY),
           })}

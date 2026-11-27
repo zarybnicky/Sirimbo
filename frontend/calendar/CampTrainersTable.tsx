@@ -6,7 +6,7 @@ import { cn } from '@/lib/cn';
 import { compareText } from '@/lib/compare';
 import { dayFormatter, formatCount, moneyFormatter } from '@/ui/format';
 import { Table } from '@/ui/Table';
-import { add, startOf } from 'date-arithmetic';
+import { eachDayOfInterval } from 'date-fns';
 import * as React from 'react';
 import { useQuery } from 'urql';
 
@@ -34,11 +34,10 @@ export const CampTrainersTable = React.memo(function CampTrainersTable({
     if (!query.data?.event) return { rows: [], days: [] };
     const event = query.data.event;
 
-    for (
-      let day = startOf(new Date(event.since), 'day');
-      day <= new Date(event.until);
-      day = add(day, 1, 'day')
-    ) {
+    for (const day of eachDayOfInterval({
+      start: new Date(event.since),
+      end: new Date(event.until),
+    })) {
       days.set(dayKeyFormatter.format(day), day);
     }
     for (const trainer of event.eventTrainersList) {

@@ -8,7 +8,7 @@ import { BirthdayChip } from '@/ui/BirthdayChip';
 import { capitalize, listFormatter, longDayFormatter } from '@/ui/format';
 import { buttonCls, cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
-import { startOf } from 'date-arithmetic';
+import { startOfDay } from 'date-fns';
 import { Plus } from 'lucide-react';
 import React from 'react';
 import { useAtomValue } from 'jotai';
@@ -19,7 +19,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
   const { onCreate } = useAtomValue(dragListenersAtom);
 
   const days = React.useMemo(() => {
-    return [...Map.groupBy(events, (x) => +startOf(x.start, 'day'))]
+    return [...Map.groupBy(events, (x) => +startOfDay(x.start))]
       .toSorted(([a], [b]) => a - b)
       .map(([date, items]) => {
         const events = items.filter((x) => x.kind === 'event').map((x) => x.instance);

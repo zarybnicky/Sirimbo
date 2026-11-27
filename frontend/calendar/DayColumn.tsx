@@ -1,5 +1,5 @@
+import { addDays, addMilliseconds, addMinutes, isSameDay, min, max } from 'date-fns';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import { add, eq, gt, lte, max, min } from 'date-arithmetic';
 import React from 'react';
 import { NowIndicator } from './NowIndicator';
 import Selection, {
@@ -12,7 +12,6 @@ import Selection, {
 } from './Selection';
 import TimeGridEvent from './TimeGridEvent';
 import { getSlotMetrics } from './TimeSlotMetrics';
-import { diff } from './localizer';
 import { resourceKey, type CalendarEvent, type CalendarClubEvent, type Resource } from './types';
 import { useAuth } from '@/lib/auth';
 import {
@@ -83,7 +82,7 @@ function DayColumn({
 }: DayColumnProps) {
   const columnRef = React.useRef<HTMLDivElement>(null);
   const preview = useAtomValue(React.useMemo(
-    () => formPreviewFor(resource, date, add(date, 1, 'day')),
+    () => formPreviewFor(resource, date, addDays(date, 1)),
     [resource, date],
   ));
   const isDragging = useAtomValue(isDraggingAtom);
@@ -133,8 +132,8 @@ function DayColumn({
       const initialSlot = state.initialSlot || currentSlot;
 
       const selectRange = slotMetrics.getRange(
-        lte(initialSlot, currentSlot) ? slotMetrics.nextSlot(currentSlot) : currentSlot,
-        gt(initialSlot, currentSlot) ? slotMetrics.nextSlot(initialSlot) : initialSlot,
+        initialSlot <= currentSlot ? slotMetrics.nextSlot(currentSlot) : currentSlot,
+        initialSlot > currentSlot ? slotMetrics.nextSlot(initialSlot) : initialSlot,
       );
       return {
         ...selectRange,
@@ -250,7 +249,7 @@ function DayColumn({
 
       setEventState((eventState) => {
         const { start, end } = event;
-        const duration = diff(start, end, 'milliseconds');
+        const duration = Math.abs(+end - +start);
 
         let newRange = slotMetrics.getRange(start, end);
         if (action === 'move') {
@@ -261,19 +260,19 @@ function DayColumn({
             { x: point.x, y: point.y - eventOffsetTopRef.current },
             bounds,
           );
-          const newEnd = add(newSlot, duration, 'milliseconds');
+          const newEnd = addMilliseconds(newSlot, duration);
           newRange = slotMetrics.getRange(newSlot, newEnd, false, true);
         } else {
           const newTime = slotMetrics.closestSlotFromPoint(point, bounds);
           if (direction === 'UP') {
             newRange = slotMetrics.getRange(
-              min(newTime, slotMetrics.closestSlotFromDate(end, -1)),
+              min([newTime, slotMetrics.closestSlotFromDate(end, -1)]),
               end,
             );
           } else if (direction === 'DOWN') {
             newRange = slotMetrics.getRange(
               start,
-              max(newTime, slotMetrics.closestSlotFromDate(start)),
+              max([newTime, slotMetrics.closestSlotFromDate(start)]),
             );
           }
         }
@@ -316,7 +315,7 @@ function DayColumn({
 
         if (point.dataTransfer) point.dataTransfer.dropEffect = 'copy';
         const start = slotMetrics.closestSlotFromPoint(point, bounds);
-        const end = add(start, subject.durationMinutes, 'minutes');
+        const end = addMinutes(start, subject.durationMinutes);
         const preview = slotMetrics.getRange(start, end, false, true);
         setBackgroundState({
           ...preview,
@@ -346,7 +345,7 @@ function DayColumn({
         const start = slotMetrics.closestSlotFromPoint(point, bounds);
         void onDropFromOutside(subject, {
           start,
-          end: add(start, subject.durationMinutes, 'minutes'),
+          end: addMinutes(start, subject.durationMinutes),
           resource,
         });
         setExternalDragSubject(null);
@@ -448,7 +447,7 @@ function DayColumn({
       ? preview?.events.map((event) => ({ event, ...slotMetrics.getRange(event.start, event.end) })) ?? []
       : [];
 
-  const isToday = eq(date, new Date(), 'day');
+  const isToday = isSameDay(date, new Date());
 
   return (
     <div

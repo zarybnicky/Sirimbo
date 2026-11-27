@@ -1,5 +1,4 @@
 import { eventSegments, endOfRange, eventLevels } from './common';
-import { eq, lt, gt, gte } from 'date-arithmetic';
 import type { CalendarEvent } from './types';
 
 export type DateSlotMetrics = ReturnType<typeof getSlotMetrics>;
@@ -38,12 +37,11 @@ export const getSlotMetrics = ({
     },
 
     continuesPrior({ start }: CalendarEvent) {
-      return lt(start, first, 'day');
+      return start < first;
     },
 
     continuesAfter({ start, end }: CalendarEvent) {
-      const singleDayDuration = eq(start, end, 'minutes');
-      return singleDayDuration ? gte(end, last, 'minutes') : gt(end, last, 'minutes');
+      return end > last || (+start === +end && end >= last);
     },
   };
 };

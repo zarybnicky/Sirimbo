@@ -1,6 +1,6 @@
+import { differenceInCalendarDays, eachDayOfInterval, isSameDay } from 'date-fns';
 import { cn } from '@/lib/cn';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import { add, eq, startOf } from 'date-arithmetic';
 import { useAtomValue } from 'jotai';
 import React from 'react';
 import DayColumn from './DayColumn';
@@ -8,7 +8,7 @@ import { getSlotMetrics as getDateSlotMetrics } from './DateSlotMetrics';
 import EventEndingRow from './EventEndingRow';
 import EventRow from './EventRow';
 import TimeGutter from './TimeGutter';
-import { diff, inEventRange, merge, range } from './localizer';
+import { eventInRange, merge } from './common';
 import {
   dragListenersAtom,
   focusedTimeAtom,
@@ -79,10 +79,10 @@ export default React.memo(function TimeGrid({
   useLayoutEffect(() => {
     const content = contentRef.current;
     if (!content) return;
-    const totalMillis = diff(minTime, maxTime, 'milliseconds');
+    const totalMillis = +maxTime - +minTime;
     if (totalMillis <= 0) return;
 
-    const diffMillis = diff(merge(focusedTime, minTime), focusedTime, 'milliseconds');
+    const diffMillis = +focusedTime - +merge(focusedTime, minTime);
     const ratio = Math.min(1, Math.max(0, diffMillis / totalMillis));
     content.scrollTop = (content.scrollHeight - content.clientHeight) * ratio;
   }, [focusedTime, minTime, maxTime]);
@@ -129,7 +129,7 @@ export default React.memo(function TimeGrid({
             columns,
             allDayRange,
             allDayEvents: allDayEvents.filter((event) =>
-              columns.some(({ date }) => inEventRange(event, { start: date, end: date })),
+              columns.some(({ date }) => eventInRange(event, { start: date, end: date })),
             ),
           },
         ];
@@ -160,7 +160,7 @@ export default React.memo(function TimeGrid({
             : [{ resource: undefined, events: [], backgroundEvents: [] }],
         allDayRange: [date],
         allDayEvents: allDayEvents.filter((event) =>
-          inEventRange(event, { start: date, end: date }),
+          eventInRange(event, { start: date, end: date }),
         ),
       };
     });
@@ -309,7 +309,7 @@ function buildGrid(
   events: readonly CalendarEvent[],
   bgEvents: readonly CalendarEvent[],
 ): Grid {
-  const days = range(since, until, 'day').map((d) => startOf(d, 'day'));
+  const days = eachDayOfInterval({ start: since, end: until });
   const viewStart = days[0]!;
   const viewEnd = days.at(-1)!;
 
@@ -323,9 +323,6 @@ function buildGrid(
     for (let i = 0; i < resources.length; i++)
       resourceIdx.set(resourceKey(resources[i]!), i);
 
-  const dayIdx = new Map<number, number>();
-  for (let i = 0; i < days.length; i++) dayIdx.set(+days[i]!, i);
-
   const init = () =>
     Array.from({ length: resourceList.length }, () =>
       Array.from({ length: days.length }, () => [] as CalendarEvent[]),
@@ -338,20 +335,21 @@ function buildGrid(
 
   const distribute = (src: readonly CalendarEvent[], out: CalendarEvent[][][]) => {
     for (const ev of src) {
-      if (!inEventRange(ev, dateRange)) continue;
+      if (!eventInRange(ev, dateRange)) continue;
 
-      const evStart = startOf(new Date(Math.max(+ev.start, +viewStart)), 'day');
-      const evEnd = startOf(new Date(Math.min(+ev.end, +viewEnd)), 'day');
+      const firstDay = Math.max(0, differenceInCalendarDays(ev.start, viewStart));
+      const lastDay = Math.min(
+        days.length - 1,
+        differenceInCalendarDays(Math.max(+ev.start, +ev.end - 1), viewStart),
+      );
 
       const keys = hasResources ? ev.resourceKeys : [resourceKey()];
       for (const key of keys) {
         const r = hasResources ? resourceIdx.get(key) : 0;
         if (r === undefined) continue;
 
-        for (let d = evStart; +d <= +evEnd; d = add(d, 1, 'day')) {
-          const di = dayIdx.get(+d);
-          if (di === undefined) continue;
-          out[r]![di]!.push(ev);
+        for (let day = firstDay; day <= lastDay; day++) {
+          out[r]![day]!.push(ev);
         }
       }
     }
@@ -368,7 +366,7 @@ function DayButton({ today, date }: { today: Date; date: Date }) {
   return (
     <div
       className={cn('rbc-header', {
-        'bg-accent-3/80': eq(date, today, 'day'),
+        'bg-accent-3/80': isSameDay(date, today),
       })}
     >
       <button

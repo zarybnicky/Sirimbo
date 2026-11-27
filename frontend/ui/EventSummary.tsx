@@ -13,7 +13,7 @@ import { Clock, Coins, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import { isTruthy } from '@/lib/truthyFilter';
 import React from 'react';
-import { startOf } from 'date-arithmetic';
+import { startOfDay } from 'date-fns';
 import { useAuth } from '@/lib/auth';
 import { ListFormat } from '@/ui/ListFormat';
 import { EntityLink } from '@/ui/EntityLink';
@@ -31,7 +31,7 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
     return [
       !auth.canManageEvent(event) ||
       event.type === 'LESSON' ||
-      startOf(new Date(event.since), 'day') > startOf(new Date(), 'day')
+      startOfDay(new Date(event.since)) > startOfDay(new Date())
         ? 'event.registrations'
         : 'event.attendance',
       'event.edit',

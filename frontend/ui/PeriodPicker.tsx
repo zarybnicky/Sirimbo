@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { add } from 'date-arithmetic';
+import { addDays, addMonths } from 'date-fns';
 import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
 import { buttonCls } from '@/ui/style';
 import { capitalize, fullDateFormatter, monthFormatter } from '@/ui/format';
@@ -62,9 +62,9 @@ function movePeriod(value: PeriodValue, direction: -1 | 1): PeriodValue {
     ...value,
     date:
       direction < 0
-        ? add(range.since, -1, 'day')
+        ? addDays(range.since, -1)
         : value.unit === '12months'
-          ? add(range.until, 11, 'month')
+          ? addMonths(range.until, 11)
           : range.until,
   };
 }
@@ -111,7 +111,7 @@ export function PeriodPicker({
               : value.unit === 'month'
                 ? capitalize(monthFormatter.format(range.since))
                 : fullDateFormatter
-                    .formatRange(range.since, add(range.until, -1, 'day'))
+                    .formatRange(range.since, addDays(range.until, -1))
                     .replaceAll(/\s+/g, ' ')}
           </span>
           <button

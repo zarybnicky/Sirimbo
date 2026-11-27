@@ -1,7 +1,16 @@
 import React from 'react';
 import type { DateRange, ViewProps } from '@/calendar/types';
 import Month from '@/calendar/Month';
-import { add, endOf, startOf } from 'date-arithmetic';
+import {
+  addDays,
+  addMonths,
+  addWeeks,
+  endOfMonth,
+  endOfWeek,
+  startOfDay,
+  startOfMonth,
+  startOfWeek,
+} from 'date-fns';
 import TimeGrid from '@/calendar/TimeGrid';
 import { fullDateFormatter, monthFormatter } from '@/ui/format';
 import Agenda from '@/calendar/Agenda';
@@ -18,20 +27,20 @@ export const CalendarViews = {
   month: {
     component: Month,
     range: (d: Date) => ({
-      since: startOf(startOf(d, 'month'), 'week', 1),
-      until: endOf(endOf(d, 'month'), 'week', 1),
+      since: startOfWeek(startOfMonth(d), { weekStartsOn: 1 }),
+      until: endOfWeek(endOfMonth(d), { weekStartsOn: 1 }),
     }),
-    nav: (d: Date, dir: -1 | 1) => add(d, dir, 'month'),
-    label: ({ since }) => monthFormatter.format(since),
+    nav: (d: Date, dir: -1 | 1) => addMonths(d, dir),
+    label: ({ since }) => monthFormatter.format(addWeeks(since, 1)),
     supportsGrouping: false,
   },
   week: {
     component: TimeGrid,
     range: (d: Date) => ({
-      since: startOf(d, 'week', 1),
-      until: endOf(d, 'week', 1),
+      since: startOfWeek(d, { weekStartsOn: 1 }),
+      until: endOfWeek(d, { weekStartsOn: 1 }),
     }),
-    nav: (d: Date, dir: -1 | 1) => add(d, dir, 'week'),
+    nav: (d: Date, dir: -1 | 1) => addWeeks(d, dir),
     label: ({ since, until }) =>
       fullDateFormatter.formatRange(since, until).replace(' – ', ' – '),
     supportsGrouping: true,
@@ -39,10 +48,10 @@ export const CalendarViews = {
   work_week: {
     component: TimeGrid,
     range: (d: Date) => ({
-      since: startOf(d, 'week', 1),
-      until: add(endOf(d, 'week', 1), -2, 'day'),
+      since: startOfWeek(d, { weekStartsOn: 1 }),
+      until: addDays(endOfWeek(d, { weekStartsOn: 1 }), -2),
     }),
-    nav: (d: Date, dir: -1 | 1) => add(d, dir, 'week'),
+    nav: (d: Date, dir: -1 | 1) => addWeeks(d, dir),
     label: ({ since, until }) =>
       fullDateFormatter.formatRange(since, until).replace(' – ', ' – '),
     supportsGrouping: true,
@@ -50,10 +59,10 @@ export const CalendarViews = {
   day: {
     component: TimeGrid,
     range: (d: Date) => ({
-      since: startOf(d, 'day'),
-      until: startOf(d, 'day'),
+      since: startOfDay(d),
+      until: startOfDay(d),
     }),
-    nav: (d: Date, dir: -1 | 1) => add(d, dir, 'day'),
+    nav: (d: Date, dir: -1 | 1) => addDays(d, dir),
     label: ({ since }) => fullDateFormatter.format(since),
     supportsGrouping: true,
   },
@@ -61,9 +70,9 @@ export const CalendarViews = {
     component: Agenda,
     range: (d: Date) => ({
       since: d,
-      until: add(d, 6, 'day'),
+      until: addDays(d, 6),
     }),
-    nav: (d: Date, dir: -1 | 1) => add(d, 7 * dir, 'day'),
+    nav: (d: Date, dir: -1 | 1) => addWeeks(d, dir),
     label: ({ since, until }) =>
       fullDateFormatter.formatRange(since, until).replace(' – ', ' – '),
     supportsGrouping: false,

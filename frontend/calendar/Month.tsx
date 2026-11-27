@@ -1,14 +1,14 @@
+import { eventInRange } from './common';
 import React from 'react';
 import DateContentRow from './DateContentRow';
-import { ceil, diff, inEventRange, range } from './localizer';
 import { weekdayFormatter } from '@/ui/format';
 import type { ViewProps } from './types';
-import { startOf } from 'date-arithmetic';
+import { eachDayOfInterval, startOfDay, differenceInCalendarDays, subMilliseconds } from 'date-fns';
 
 function MonthView({ range: { since, until }, events }: ViewProps) {
   const today = new Date();
   const weeks = React.useMemo(() => {
-    const days = range(since, until, 'day');
+    const days = eachDayOfInterval({ start: since, end: until });
     return Array.from({ length: Math.ceil(days.length / 7) }, (_, i) =>
       days.slice(i * 7, i * 7 + 7),
     );
@@ -22,7 +22,7 @@ function MonthView({ range: { since, until }, events }: ViewProps) {
       const end = week.at(-1);
       if (!start || !end) return [];
       return monthEvents
-        .filter((event) => inEventRange(event, { start, end }))
+        .filter((event) => eventInRange(event, { start, end }))
         .toSorted(sortEvents);
     });
   }, [weeks, events]);
@@ -57,11 +57,11 @@ function MonthView({ range: { since, until }, events }: ViewProps) {
 export default React.memo(MonthView);
 
 function sortEvents(a: { start: Date; end: Date }, b: { start: Date; end: Date }) {
-  const durA = diff(a.start, ceil(a.end, 'day'), 'day');
-  const durB = diff(b.start, ceil(b.end, 'day'), 'day');
+  const durA = differenceInCalendarDays(subMilliseconds(a.end, 1), a.start) + 1;
+  const durB = differenceInCalendarDays(subMilliseconds(b.end, 1), b.start) + 1;
 
   return (
-    +startOf(a.start, 'day') - +startOf(b.start, 'day') || // sort by start Day first
+    +startOfDay(a.start) - +startOfDay(b.start) || // sort by start Day first
     Math.max(durB, 1) - Math.max(durA, 1) || // events spanning multiple days go first
     +a.start - +b.start || // then sort by start time
     +a.end - +b.end // then sort by end time

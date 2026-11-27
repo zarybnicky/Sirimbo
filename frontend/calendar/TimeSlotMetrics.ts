@@ -1,4 +1,5 @@
-import { merge } from './localizer.ts';
+import { addDays, startOfDay } from 'date-fns';
+import { merge } from './common.ts';
 
 export type TimeSlotMetrics = ReturnType<typeof getSlotMetrics>;
 
@@ -17,6 +18,8 @@ export function getSlotMetrics({
   step: number;
   timeslots: number;
 }) {
+  const dayStart = startOfDay(date);
+  const nextDay = addDays(dayStart, 1);
   const visibleStart = merge(date, minTime);
   const visibleEnd = merge(date, maxTime);
 
@@ -33,21 +36,19 @@ export function getSlotMetrics({
   const numGroups = Math.ceil(rawSlots / timeslots);
   const numSlots = numGroups * timeslots;
 
-  const slotAt = (slotIdx: number) => new Date(startMs + slotIdx * stepMs);
-
-  const groups: Date[][] = Array.from({ length: numGroups }, (_, g) =>
-    Array.from({ length: timeslots }, (_, s) => slotAt(g * timeslots + s)),
+  // Include one extra slot so the end of the range is selectable.
+  const slots = Array.from(
+    { length: numSlots + 1 },
+    (_, i) => new Date(startMs + i * stepMs),
   );
-
-  // includes “one extra”, selectable to end
-  const slots: Date[] = Array.from({ length: numSlots + 1 }, (_, i) => slotAt(i));
+  const groups = Array.from({ length: numGroups }, (_, i) =>
+    slots.slice(i * timeslots, (i + 1) * timeslots),
+  );
 
   function closestSlotToPosition(percent: number): Date {
     const p = Math.min(1, Math.max(0, percent));
-    const idx = Math.min(slots.length - 1, Math.max(0, Math.floor(p * numSlots)));
-    return slots[idx]!;
-  };
-
+    return slots[Math.floor(p * numSlots)]!;
+  }
 
   return {
     groups,
@@ -79,34 +80,23 @@ export function getSlotMetrics({
       if (+date <= startMs) return slots[0]!;
       if (+date >= endMs) return slots.at(-1)!;
 
-      const t = clampMs(+date);
-      const base = Math.floor((t - startMs) / stepMs);
+      const base = Math.floor((+date - startMs) / stepMs);
       const idx = Math.min(slots.length - 1, Math.max(0, base + offset));
       return slots[idx]!;
     },
 
-    startsBeforeDay(d: Date): boolean {
-      const dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
-      return +d < +dayStart;
+    startsBeforeDay(date: Date): boolean {
+      return date < dayStart;
     },
-    startsAfterDay(d: Date): boolean {
-      const dayEnd = new Date(
-        d.getFullYear(),
-        d.getMonth(),
-        d.getDate(),
-        23,
-        59,
-        59,
-        999,
-      );
-      return +d > +dayEnd;
+    startsAfterDay(date: Date): boolean {
+      return date >= nextDay;
     },
 
     startsBefore(date: Date): boolean {
-      return +merge(visibleStart, date) < startMs;
+      return date < visibleStart;
     },
     startsAfter(date: Date): boolean {
-      return +merge(visibleEnd, date) > endMs;
+      return date > visibleEnd;
     },
 
     getRange(rangeStart: Date, rangeEnd: Date, ignoreMin = false, ignoreMax = false) {

@@ -18,8 +18,15 @@ import { FacetFilter } from '@/ui/FacetFilter';
 import { capitalize, longDayFormatter } from '@/ui/format';
 import { FormError } from '@/ui/form';
 import { buttonCls, cardCls } from '@/ui/style';
-import { add, endOf, startOf } from 'date-arithmetic';
-import { format } from 'date-fns';
+import {
+  addYears,
+  endOfMonth,
+  endOfYear,
+  format,
+  startOfDay,
+  startOfMonth,
+  startOfYear,
+} from 'date-fns';
 import { CalendarDays, ChevronDown, List, Plus, Search } from 'lucide-react';
 import * as React from 'react';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
@@ -30,8 +37,8 @@ import { useAuth } from '@/lib/auth';
 const monthView = {
   ...CalendarViews.month,
   range: (date: Date) => ({
-    since: startOf(date, 'month'),
-    until: endOf(date, 'month'),
+    since: startOfMonth(date),
+    until: endOfMonth(date),
   }),
 };
 const activityViews = {
@@ -39,10 +46,10 @@ const activityViews = {
   year: {
     ...monthView,
     range: (date) => ({
-      since: startOf(date, 'year'),
-      until: endOf(date, 'year'),
+      since: startOfYear(date),
+      until: endOfYear(date),
     }),
-    nav: (date, dir) => add(date, dir, 'year'),
+    nav: (date, dir) => addYears(date, dir),
     label: ({ since }) => format(since, 'yyyy'),
   },
 } satisfies Record<'month' | 'year', CalendarView>;
@@ -76,7 +83,7 @@ export const ActivityList = React.memo(function ActivityList({
   const [typesOpen, setTypesOpen] = React.useState(false);
   const todayMarker = React.useRef<HTMLElement>(null);
   const scrollToToday = React.useRef(false);
-  const today = +startOf(new Date(), 'day');
+  const today = +startOfDay(new Date());
   const { range, calendarEvents, fetching, error, filterOptions } = useCalendarData({
     view,
     date,
@@ -93,10 +100,10 @@ export const ActivityList = React.memo(function ActivityList({
   });
 
   const days = React.useMemo(() => {
-    const grouped = Map.groupBy(calendarEvents, (e) => +startOf(e.start, 'day'));
+    const grouped = Map.groupBy(calendarEvents, (e) => +startOfDay(e.start));
     if (
-      today >= +startOf(range.since, 'day') &&
-      today <= +startOf(range.until, 'day') &&
+      today >= +startOfDay(range.since) &&
+      today <= +startOfDay(range.until) &&
       !grouped.has(today)
     ) {
       grouped.set(today, []);
@@ -133,9 +140,7 @@ export const ActivityList = React.memo(function ActivityList({
           }}
         />
         <ViewPicker view={viewKey} setView={setView} views={['month', 'year']} />
-        <h4 className="text-lg tracking-tight flex-1">
-          {capitalize(view.label(range))}
-        </h4>
+        <h4 className="text-lg tracking-tight flex-1">{capitalize(view.label(range))}</h4>
         <div className="flex flex-wrap gap-1">
           <button
             type="button"
@@ -144,7 +149,10 @@ export const ActivityList = React.memo(function ActivityList({
             onClick={() => setTrainersOpen((open) => !open)}
           >
             Trenéři{trainers.length > 0 && ` (${trainers.length})`}
-            <ChevronDown className={cn('size-3', trainersOpen && 'rotate-180')} aria-hidden />
+            <ChevronDown
+              className={cn('size-3', trainersOpen && 'rotate-180')}
+              aria-hidden
+            />
           </button>
           <button
             type="button"
@@ -153,7 +161,10 @@ export const ActivityList = React.memo(function ActivityList({
             onClick={() => setTypesOpen((open) => !open)}
           >
             Typy{types.length !== calendarTypes.length && ' (1)'}
-            <ChevronDown className={cn('size-3', typesOpen && 'rotate-180')} aria-hidden />
+            <ChevronDown
+              className={cn('size-3', typesOpen && 'rotate-180')}
+              aria-hidden
+            />
           </button>
         </div>
       </div>
@@ -176,10 +187,11 @@ export const ActivityList = React.memo(function ActivityList({
               allLabel="Vše"
               value={types}
               defaultValue={calendarTypes}
-              options={filterOptions.types.filter((option) =>
-                option.value === 'COMPETITION' ||
-                ('count' in option && !!option.count) ||
-                (types.length !== calendarTypes.length && types.includes(option.value)),
+              options={filterOptions.types.filter(
+                (option) =>
+                  option.value === 'COMPETITION' ||
+                  ('count' in option && !!option.count) ||
+                  (types.length !== calendarTypes.length && types.includes(option.value)),
               )}
               onChange={setTypes}
             />

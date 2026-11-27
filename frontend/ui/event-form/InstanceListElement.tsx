@@ -1,7 +1,7 @@
 import { EventOverlapWarning } from './EventOverlapWarning';
 import type { EventFormControl } from '@/ui/event-form/types';
 import { buttonCls } from '@/ui/style';
-import { add } from 'date-arithmetic';
+import { addMinutes, addWeeks } from 'date-fns';
 import { Plus, X } from 'lucide-react';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import { DateTimeRangeField } from './DateTimeRangeField';
@@ -13,11 +13,11 @@ export function InstanceListElement({ control, conflicts }: { control: EventForm
   const addInstance = (weeks: 1 | 2) => {
     const previous = instances.at(-1);
     const since = previous ? new Date(previous.since) : new Date();
-    const until = previous ? new Date(previous.until) : add(since, 45, 'minutes');
+    const until = previous ? new Date(previous.until) : addMinutes(since, 45);
     append({
       itemId: null,
-      since: add(since, weeks, 'week').toISOString(),
-      until: add(until, weeks, 'week').toISOString(),
+      since: addWeeks(since, weeks).toISOString(),
+      until: addWeeks(until, weeks).toISOString(),
       isCancelled: false,
     });
   };
