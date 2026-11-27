@@ -47,7 +47,7 @@ export function EventButton({
       : viewer;
 
   let name = formatEventName(event, perspective);
-  if (perspective === 'trainer' && name === 'Lekce') name = event.registrationInfo?.canRegister ? 'Volná' : '-';
+  if (perspective === 'trainer' && name === 'Lekce') name = event.registrationInfo.canRegister ? 'Volná' : '-';
 
   return (
     <div
@@ -63,7 +63,7 @@ export function EventButton({
             className={cn(
               'group grow flex min-w-0 items-center gap-3 p-2.5 rounded-lg',
               'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
-              event?.type === 'LESSON' && event.registrationInfo?.canRegister
+              event?.type === 'LESSON' && event.registrationInfo.canRegister
                 ? 'hover:bg-green-3/80 bg-green-3 text-green-11'
                 : 'hover:bg-accent-4',
             )}

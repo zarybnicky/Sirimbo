@@ -672,40 +672,6 @@ const insertResponseIR: any = {"usedParamSet":{"id":true,"url":true,"httpStatus"
 export const insertResponse = new PreparedQuery<IInsertResponseParams,IInsertResponseResult>(insertResponseIR);
 
 
-/** 'UpsertFrontier' parameters type */
-export interface IUpsertFrontierParams {
-  federation?: string | null | void;
-  key?: string | null | void;
-  kind?: string | null | void;
-}
-
-/** 'UpsertFrontier' return type */
-export type IUpsertFrontierResult = void;
-
-/** 'UpsertFrontier' query type */
-export interface IUpsertFrontierQuery {
-  params: IUpsertFrontierParams;
-  result: IUpsertFrontierResult;
-}
-
-const upsertFrontierIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":66,"b":76}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":79,"b":83}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":86,"b":89}]}],"statement":"INSERT INTO crawler.frontier AS f (federation, kind, key)\nVALUES (:federation, :kind, :key)\nON CONFLICT (federation, kind, key) DO UPDATE\nSET process_status = 'pending',\n    fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,\n    next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END\nWHERE f.process_status = 'error'\n   OR f.fetch_status = 'gone'"};
-
-/**
- * Query generated from SQL:
- * ```
- * INSERT INTO crawler.frontier AS f (federation, kind, key)
- * VALUES (:federation, :kind, :key)
- * ON CONFLICT (federation, kind, key) DO UPDATE
- * SET process_status = 'pending',
- *     fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,
- *     next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END
- * WHERE f.process_status = 'error'
- *    OR f.fetch_status = 'gone'
- * ```
- */
-export const upsertFrontier = new PreparedQuery<IUpsertFrontierParams,IUpsertFrontierResult>(upsertFrontierIR);
-
-
 /** 'UpsertFrontiers' parameters type */
 export interface IUpsertFrontiersParams {
   federations?: stringArray | null | void;
@@ -789,40 +755,5 @@ const setFrontierReferenceDateIR: any = {"usedParamSet":{"referenceDate":true,"f
  * ```
  */
 export const setFrontierReferenceDate = new PreparedQuery<ISetFrontierReferenceDateParams,ISetFrontierReferenceDateResult>(setFrontierReferenceDateIR);
-
-
-/** 'UpsertFrontierKeys' parameters type */
-export interface IUpsertFrontierKeysParams {
-  federation?: string | null | void;
-  keys?: stringArray | null | void;
-  kind?: string | null | void;
-}
-
-/** 'UpsertFrontierKeys' return type */
-export type IUpsertFrontierKeysResult = void;
-
-/** 'UpsertFrontierKeys' query type */
-export interface IUpsertFrontierKeysQuery {
-  params: IUpsertFrontierKeysParams;
-  result: IUpsertFrontierKeysResult;
-}
-
-const upsertFrontierKeysIR: any = {"usedParamSet":{"federation":true,"kind":true,"keys":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":65,"b":75}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":78,"b":82}]},{"name":"keys","required":false,"transform":{"type":"scalar"},"locs":[{"a":101,"b":105}]}],"statement":"INSERT INTO crawler.frontier AS f (federation, kind, key)\nSELECT :federation, :kind, key\nFROM unnest(:keys::text[]) as input(key)\nON CONFLICT (federation, kind, key) DO UPDATE\nSET process_status = 'pending',\n    fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,\n    next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END\nWHERE f.process_status = 'error'\n   OR f.fetch_status = 'gone'"};
-
-/**
- * Query generated from SQL:
- * ```
- * INSERT INTO crawler.frontier AS f (federation, kind, key)
- * SELECT :federation, :kind, key
- * FROM unnest(:keys::text[]) as input(key)
- * ON CONFLICT (federation, kind, key) DO UPDATE
- * SET process_status = 'pending',
- *     fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,
- *     next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END
- * WHERE f.process_status = 'error'
- *    OR f.fetch_status = 'gone'
- * ```
- */
-export const upsertFrontierKeys = new PreparedQuery<IUpsertFrontierKeysParams,IUpsertFrontierKeysResult>(upsertFrontierKeysIR);
 
 

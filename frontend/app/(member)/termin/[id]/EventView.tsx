@@ -58,8 +58,8 @@ export function EventView({
   const [signup, setSignup] = useQueryState('signup');
 
   const trainers = event.eventTrainersList.flatMap((t) => t.person ?? []);
-  const { seriesInfo, registrationInfo } = event;
-  const numRegistrations = registrationInfo?.registrations ?? 0;
+  const { seriesInfo } = event;
+  const { remainingCapacity, registrations: numRegistrations } = event.registrationInfo;
   const showPayments =
     auth.canManageEvent(event) &&
     [event, ...event.childEventsList].some((e) => e.paymentsList.length > 0);
@@ -86,8 +86,7 @@ export function EventView({
         ))}
       </ListFormat>
     </div>,
-    !!event.capacity &&
-      `Kapacita: zbývá ${registrationInfo?.remainingCapacity} míst z ${event.capacity}`,
+    !!event.capacity && `Kapacita: zbývá ${remainingCapacity} míst z ${event.capacity}`,
   ].filter(Boolean);
 
   return (

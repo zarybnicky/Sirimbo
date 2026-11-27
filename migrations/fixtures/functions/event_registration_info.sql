@@ -10,6 +10,12 @@ create type event_registration_info as (
   registration_open boolean
 );
 
+comment on column event_registration_info.registrations is '@notNull';
+comment on column event_registration_info.people is '@notNull';
+comment on column event_registration_info.my is '@notNull';
+comment on column event_registration_info.can_register is '@notNull';
+comment on column event_registration_info.registration_open is '@notNull';
+
 create or replace function event_registration_info(e event)
   returns event_registration_info
   language sql stable security definer
@@ -48,3 +54,4 @@ as $$
 $$;
 
 grant all on function event_registration_info to anonymous;
+comment on function event_registration_info is '@notNull';

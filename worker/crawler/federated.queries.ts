@@ -1750,45 +1750,6 @@ const mergeWdsfCompetitionEntriesIR: any = {"usedParamSet":{"competitorId":true,
 export const mergeWdsfCompetitionEntries = new PreparedQuery<IMergeWdsfCompetitionEntriesParams,IMergeWdsfCompetitionEntriesResult>(mergeWdsfCompetitionEntriesIR);
 
 
-/** 'UpsertCompetitionEntries' parameters type */
-export interface IUpsertCompetitionEntriesParams {
-  cancelled?: booleanArray | null | void;
-  competitionId?: NumberOrString | null | void;
-  competitorId?: stringArray | null | void;
-}
-
-/** 'UpsertCompetitionEntries' return type */
-export type IUpsertCompetitionEntriesResult = void;
-
-/** 'UpsertCompetitionEntries' query type */
-export interface IUpsertCompetitionEntriesQuery {
-  params: IUpsertCompetitionEntriesParams;
-  result: IUpsertCompetitionEntriesResult;
-}
-
-const upsertCompetitionEntriesIR: any = {"usedParamSet":{"competitionId":true,"competitorId":true,"cancelled":true},"params":[{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":26,"b":39}]},{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":112,"b":124}]},{"name":"cancelled","required":false,"transform":{"type":"scalar"},"locs":[{"a":139,"b":148}]}],"statement":"WITH source AS (\n  SELECT :competitionId::bigint AS competition_id, competitor_id, cancelled\n  FROM unnest(\n    :competitorId::text[],\n    :cancelled::boolean[]\n  ) AS input(competitor_id, cancelled)\n)\nINSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled)\nSELECT competition_id, competitor_id, cancelled\nFROM source\nON CONFLICT (competition_id, competitor_id) DO UPDATE\n  SET cancelled = EXCLUDED.cancelled\n  WHERE federated.competition_entry.cancelled IS DISTINCT FROM EXCLUDED.cancelled"};
-
-/**
- * Query generated from SQL:
- * ```
- * WITH source AS (
- *   SELECT :competitionId::bigint AS competition_id, competitor_id, cancelled
- *   FROM unnest(
- *     :competitorId::text[],
- *     :cancelled::boolean[]
- *   ) AS input(competitor_id, cancelled)
- * )
- * INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled)
- * SELECT competition_id, competitor_id, cancelled
- * FROM source
- * ON CONFLICT (competition_id, competitor_id) DO UPDATE
- *   SET cancelled = EXCLUDED.cancelled
- *   WHERE federated.competition_entry.cancelled IS DISTINCT FROM EXCLUDED.cancelled
- * ```
- */
-export const upsertCompetitionEntries = new PreparedQuery<IUpsertCompetitionEntriesParams,IUpsertCompetitionEntriesResult>(upsertCompetitionEntriesIR);
-
-
 /** 'MergeCompetitionResults' parameters type */
 export interface IMergeCompetitionResultsParams {
   competitionId?: NumberOrString | null | void;

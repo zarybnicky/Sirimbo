@@ -67,7 +67,7 @@ function useRegistrationCandidates(
       );
 
   const capacityLeft =
-    event?.registrationInfo?.remainingCapacity ?? Number.POSITIVE_INFINITY;
+    event?.registrationInfo.remainingCapacity ?? Number.POSITIVE_INFINITY;
   const candidates = [
     ...people
       .filter((x) => !registeredPeople.has(x.id))
@@ -95,7 +95,7 @@ function useRegistrationCandidates(
         coupleId: couple.id,
       })),
   ]
-    .filter(() => isManager || event?.registrationInfo?.canRegister)
+    .filter(() => isManager || event?.registrationInfo.canRegister)
     .toSorted((a, b) => {
       const aMine = auth.isMyPerson(a.personId) || auth.isMyCouple(a.coupleId);
       const bMine = auth.isMyPerson(b.personId) || auth.isMyCouple(b.coupleId);

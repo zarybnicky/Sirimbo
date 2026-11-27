@@ -5839,7 +5839,7 @@ type Event {
     orderBy: [PaymentsOrderBy!]
   ): [Payment!]!
   range: DatetimeRange!
-  registrationInfo: EventRegistrationInfo
+  registrationInfo: EventRegistrationInfo!
   registrationPeriod: DatetimeRange
 
   """Reads and enables pagination through a set of `EventRegistration`."""
@@ -6397,11 +6397,11 @@ type EventRegistrationEdge {
 }
 
 type EventRegistrationInfo {
-  canRegister: Boolean
-  my: Boolean
-  people: Int
-  registrationOpen: Boolean
-  registrations: Int
+  canRegister: Boolean!
+  my: Boolean!
+  people: Int!
+  registrationOpen: Boolean!
+  registrations: Int!
   remainingCapacity: Int
 }
 

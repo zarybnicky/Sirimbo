@@ -72,7 +72,7 @@ function TimeGridEvent({
   );
 
   let title = formatEventName(event.instance) || '-';
-  if (title === 'Lekce') title = event.instance.registrationInfo?.canRegister ? 'Volná' : '-';
+  if (title === 'Lekce') title = event.instance.registrationInfo.canRegister ? 'Volná' : '-';
 
   let label =
     startsBeforeDay && startsAfterDay
@@ -107,9 +107,9 @@ function TimeGridEvent({
           'absolute overflow-hidden max-h-full min-h-5 border border-b-transparent',
           {
             'w-full h-full': canEdit,
-            'empty-event': event.instance.registrationInfo?.canRegister,
-            'saturate-50 opacity-75': !event.instance.registrationInfo?.registrations &&
-              !event.instance.registrationInfo?.registrationOpen && !event.instance.name,
+            'empty-event': event.instance.registrationInfo.canRegister,
+            'saturate-50 opacity-75': !event.instance.registrationInfo.registrations &&
+              !event.instance.registrationInfo.registrationOpen && !event.instance.name,
             'is-group': event.instance.type === 'GROUP',
             'opacity-75': isBackgroundEvent,
             'rbc-drag-preview': event.__isPreview,

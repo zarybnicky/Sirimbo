@@ -1,6 +1,6 @@
 import type { Task } from 'graphile-worker';
 import { getNextIdt } from '../crawler/cstsAthleteIdts.ts';
-import { upsertFrontier } from '../crawler/crawler.queries.ts';
+import { upsertFrontiers } from '../crawler/crawler.queries.ts';
 import { LOADERS } from '../crawler/handlers.ts';
 
 const MAX_PROBES_PER_RUN = 200;
@@ -47,8 +47,13 @@ export const discover_csts_athletes: Task<'discover_csts_athletes'> = async (
     if (exists) {
       logger.info(`[IDT probe] Found ${candidateId} (${probes}/${MAX_PROBES_PER_RUN})`);
       await helpers.withPgClient(async (client) => {
-        await upsertFrontier.run(
-          { federation: 'csts', kind: 'member', key: candidateId.toString() },
+        await upsertFrontiers.run(
+          {
+            federations: ['csts'],
+            kinds: ['member'],
+            keys: [candidateId.toString()],
+            referenceDates: [],
+          },
           client,
         );
         await client.query(

@@ -50,7 +50,7 @@ function EventListPage({ search, currentId }: EventListPageProps) {
         event.location?.name,
         event.locationText,
         (event.capacity ?? 0) > 0
-          ? `Zbývá ${event.registrationInfo?.remainingCapacity} míst z ${event.capacity}`
+          ? `Zbývá ${event.registrationInfo.remainingCapacity} míst z ${event.capacity}`
           : '',
       ]
         .filter(Boolean)

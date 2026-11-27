@@ -235,16 +235,6 @@ SELECT crawler.store_response(
   :content::text::jsonb, :fetchStatus::crawler.fetch_status
 ) AS "id!";
 
-/* @name UpsertFrontier */
-INSERT INTO crawler.frontier AS f (federation, kind, key)
-VALUES (:federation, :kind, :key)
-ON CONFLICT (federation, kind, key) DO UPDATE
-SET process_status = 'pending',
-    fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,
-    next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END
-WHERE f.process_status = 'error'
-   OR f.fetch_status = 'gone';
-
 /* @name UpsertFrontiers */
 WITH input AS (
   SELECT federation, kind, key, nullif(reference_date, '')::date AS reference_date
@@ -279,14 +269,3 @@ WHERE f.process_status = 'error'
 UPDATE crawler.frontier SET reference_date = :referenceDate!::date
 WHERE (federation, kind, key) = (:federation!, :kind!, :key!)
   AND reference_date IS DISTINCT FROM :referenceDate!::date;
-
-/* @name UpsertFrontierKeys */
-INSERT INTO crawler.frontier AS f (federation, kind, key)
-SELECT :federation, :kind, key
-FROM unnest(:keys::text[]) as input(key)
-ON CONFLICT (federation, kind, key) DO UPDATE
-SET process_status = 'pending',
-    fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,
-    next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END
-WHERE f.process_status = 'error'
-   OR f.fetch_status = 'gone';

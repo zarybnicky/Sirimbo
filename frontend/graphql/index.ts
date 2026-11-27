@@ -4682,7 +4682,7 @@ export type Event = {
   /** Reads and enables pagination through a set of `Payment`. */
   paymentsList: Array<Payment>;
   range: DatetimeRange;
-  registrationInfo: Maybe<EventRegistrationInfo>;
+  registrationInfo: EventRegistrationInfo;
   registrationPeriod: Maybe<DatetimeRange>;
   /** Reads and enables pagination through a set of `EventRegistration`. */
   registrations: EventRegistrationConnection;
@@ -5141,11 +5141,11 @@ export type EventRegistrationEdge = {
 
 export type EventRegistrationInfo = {
   __typename?: 'EventRegistrationInfo';
-  canRegister: Maybe<Scalars['Boolean']['output']>;
-  my: Maybe<Scalars['Boolean']['output']>;
-  people: Maybe<Scalars['Int']['output']>;
-  registrationOpen: Maybe<Scalars['Boolean']['output']>;
-  registrations: Maybe<Scalars['Int']['output']>;
+  canRegister: Scalars['Boolean']['output'];
+  my: Scalars['Boolean']['output'];
+  people: Scalars['Int']['output'];
+  registrationOpen: Scalars['Boolean']['output'];
+  registrations: Scalars['Int']['output'];
   remainingCapacity: Maybe<Scalars['Int']['output']>;
 };
 

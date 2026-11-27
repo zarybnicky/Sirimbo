@@ -39,11 +39,7 @@ begin
   insert into user_proxy (user_id, person_id) values (usr.id, invitation.person_id) on conflict do nothing;
   update person_invitation set used_at=now() where access_token=token;
   jwt := app_private.create_jwt_token(usr);
-  perform set_config('jwt.claims.user_id', jwt.user_id::text, true);
-  perform set_config('jwt.claims.my_person_ids', jwt.my_person_ids::text, true);
-  perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
-  perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
-  perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
+  perform app_private.set_login_claims(jwt);
   if v_registered then
     insert into security_event (user_id, kind, method)
     values (usr.id, 'registration', 'manual');

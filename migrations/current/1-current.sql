@@ -90,6 +90,12 @@ from (
 --!include views/current_tenant_relation.sql
 --!include functions/person_facets.sql
 --!include functions/create_jwt_token.sql
+--!include functions/set_login_claims.sql
+--!include functions/login.sql
+--!include functions/otp_login.sql
+--!include functions/register_using_invitation.sql
+--!include functions/register_without_invitation.sql
+--!include functions/get_current_user.sql
 --!include functions/visible_person_ids.sql
 --!include functions/can_edit_person.sql
 --!include functions/competition_suggestions.sql
@@ -100,6 +106,7 @@ from (
 --!include functions/global_search.sql
 --!include functions/scoreboard.sql
 --!include functions/event_facets.sql
+--!include functions/event_registration_info.sql
 --!include functions/event_conflicts.sql
 --!include functions/visible_file_ids.sql
 --!include policies/file.sql

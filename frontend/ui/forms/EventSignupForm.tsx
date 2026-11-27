@@ -189,7 +189,7 @@ export function EventSignupForm({ event }: { event: EventWithRegistrationsFragme
         control={control}
         disabled={
           result.fetching ||
-          (!auth.canManageEvent(event) && !event.registrationInfo?.canRegister)
+          (!auth.canManageEvent(event) && !event.registrationInfo.canRegister)
         }
       >
         Přihlásit

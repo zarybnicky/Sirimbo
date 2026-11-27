@@ -55,16 +55,16 @@ export const eventActions = defineActions<EventWithTrainerFragment>()([
     group: 'primary',
     label: ({ auth, item }) =>
       auth.canManageEvent(item)
-        ? `Přihlášky (${item.registrationInfo?.registrations ?? 0})`
-        : !auth.isLoggedIn || !item.registrationInfo?.my
+        ? `Přihlášky (${item.registrationInfo.registrations})`
+        : !auth.isLoggedIn || !item.registrationInfo.my
           ? 'Přihlásit'
           : 'Moje přihlášky',
     variant: ({ auth }) => (auth.isMember ? 'outline' : 'primary'),
     icon: UserPlus,
     visible: ({ auth, item }) =>
       auth.canManageEvent(item) ||
-      !!item.registrationInfo?.my ||
-      !!item.registrationInfo?.canRegister,
+      item.registrationInfo.my ||
+      item.registrationInfo.canRegister,
     render: ({ item }) => <MyRegistrationsDialog eventId={item.id} />,
   },
   {

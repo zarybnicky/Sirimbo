@@ -22,7 +22,7 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
   const auth = useAuth();
   const actions = useActions(eventActions, event);
   const { seriesInfo, registrations } = event;
-  const registrationCount = event.registrationInfo?.registrations ?? 0;
+  const registrationCount = event.registrationInfo.registrations;
   const cohorts = event.targetCohortsList.flatMap((x) => x.cohort ?? []);
   const trainers = event.eventTrainersList.flatMap((x) => x.person ?? []);
   const prices = event.approxPriceList?.flatMap((x) => moneyFormatter.format(x) ?? []);
@@ -93,7 +93,7 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
 
       {(cohorts.length > 0 ||
         registrationCount > 0 ||
-        event.registrationInfo?.canRegister) && (
+        event.registrationInfo.canRegister) && (
         <div className="flex items-center gap-2">
           <Users className="size-4 text-accent-11 shrink-0" />
           <div>
@@ -104,7 +104,7 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
                 ))}
               </ListFormat>
             ) : registrationCount === 0 ? (
-              event.registrationInfo?.canRegister ? (
+              event.registrationInfo.canRegister ? (
                 'VOLNÁ'
               ) : (
                 '-'

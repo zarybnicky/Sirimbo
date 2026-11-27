@@ -935,21 +935,6 @@ DELETE FROM federated.competition_entry e
 WHERE e.competition_id = :competitionId::bigint
   AND NOT EXISTS (SELECT 1 FROM source s WHERE s.competitor_id = e.competitor_id);
 
-/* @name UpsertCompetitionEntries */
-WITH source AS (
-  SELECT :competitionId::bigint AS competition_id, competitor_id, cancelled
-  FROM unnest(
-    :competitorId::text[],
-    :cancelled::boolean[]
-  ) AS input(competitor_id, cancelled)
-)
-INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled)
-SELECT competition_id, competitor_id, cancelled
-FROM source
-ON CONFLICT (competition_id, competitor_id) DO UPDATE
-  SET cancelled = EXCLUDED.cancelled
-  WHERE federated.competition_entry.cancelled IS DISTINCT FROM EXCLUDED.cancelled;
-
 /* @name MergeCompetitionResults */
 WITH source AS (
   SELECT
