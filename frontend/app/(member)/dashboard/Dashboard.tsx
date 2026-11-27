@@ -22,10 +22,10 @@ export function Dashboard() {
           <Tab id="myLessons" title="Moje události">
             <MyEventsList />
           </Tab>
-          <Tab id="myAnnouncements" title="Aktuality" requireMember>
+          <Tab id="myAnnouncements" title="Aktuality">
             <MyAnnouncements />
           </Tab>
-          <Tab id="stickyAnnouncements" title="Stálá nástěnka" requireMember>
+          <Tab id="stickyAnnouncements" title="Stálá nástěnka">
             <StickyAnnouncements />
           </Tab>
         </TabMenu>
@@ -33,8 +33,8 @@ export function Dashboard() {
 
       <div className="hidden xl:grid grid-cols-3 gap-4">
         <MyEventsList />
-        {auth.isMember && <MyAnnouncements />}
-        {auth.isMember && <StickyAnnouncements />}
+        <MyAnnouncements />
+        <StickyAnnouncements />
       </div>
     </div>
   );

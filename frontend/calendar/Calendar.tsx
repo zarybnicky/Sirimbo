@@ -126,7 +126,7 @@ export function Calendar({
     { history: 'push' },
   );
   const { date, v: viewInput } = filters;
-  const onlyMine = auth.isLoggedIn && filters.my;
+  const onlyMine = auth.personIds.length > 0 && filters.my;
   const setView = (v: CalendarViewKey) => {
     void setFilters({ v });
     if (pathname === '/rozpis') setPreferences((previous) => ({ ...previous, v }));
@@ -155,7 +155,7 @@ export function Calendar({
         participants: {
           personIds: filters.participants.length > 0 ? filters.participants : undefined,
           cohortId: filters.cohort,
-          onlyMine: filters.my,
+          onlyMine,
         },
         relevantOnly: !parentId && filters.location.length === 0,
       },
@@ -295,7 +295,7 @@ export function Calendar({
               </DropdownMenuContent>
             </DropdownMenu>
           )}
-          {auth.isLoggedIn && (
+          {auth.personIds.length > 0 && (
             <button
               type="button"
               className={buttonCls({
@@ -320,7 +320,7 @@ export function Calendar({
           >
             Pouze volné
           </button>
-          {auth.isLoggedIn && (
+          {auth.isMember && (
             <button
               type="button"
               aria-pressed={filters.conflicts}
@@ -341,7 +341,7 @@ export function Calendar({
             options={filterOptions.trainers}
             onChange={(trainers) => setFilters({ trainers })}
           />
-          {auth.isLoggedIn && (
+          {auth.isMember && (
             <FacetFilter
               label="Účastníci"
               value={filters.participants}
@@ -382,7 +382,7 @@ export function Calendar({
         viewElement
       )}
 
-      {auth.isLoggedIn && (
+      {auth.isMember && (
         <CalendarConflictsIndicator conflicts={conflicts} fetching={fetching} />
       )}
 

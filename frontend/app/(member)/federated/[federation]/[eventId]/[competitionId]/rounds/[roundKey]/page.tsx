@@ -39,7 +39,7 @@ const getRound = cache(
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { auth } = await getRequestContext();
-  if (!auth.isLoggedIn) return { robots: { index: false, follow: false } };
+  if (!auth.isMember) return { robots: { index: false, follow: false } };
   const { federation, eventId, competitionId, roundKey } = await params;
   const { competition, round } = await getRound(federation, eventId, competitionId, roundKey);
 
@@ -55,13 +55,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function RoundPage({ params }: Props) {
   const { auth } = await getRequestContext();
-  if (!auth.isLoggedIn) return <Layout requireUser />;
+  if (!auth.isMember) return <Layout requireMember />;
 
   const { federation, eventId, competitionId, roundKey } = await params;
   const { competition, event, round } = await getRound(federation, eventId, competitionId, roundKey);
 
   return (
-    <Layout requireUser>
+    <Layout requireMember>
       <PageHeader
         title={formatCategoryName(competition) || competitionId}
         subtitle={

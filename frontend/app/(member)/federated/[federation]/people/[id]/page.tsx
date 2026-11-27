@@ -41,7 +41,7 @@ const getPerson = cache(async (federation: string, externalId: string) => {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { auth } = await getRequestContext();
-  if (!auth.isLoggedIn) return { robots: { index: false, follow: false } };
+  if (!auth.isMember) return { robots: { index: false, follow: false } };
   const { federation, id } = await params;
   const { person, name } = await getPerson(federation, id);
   return {
@@ -52,12 +52,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function FederatedPersonPage({ params }: Props) {
   const { auth } = await getRequestContext();
-  if (!auth.isLoggedIn) return <Layout requireUser />;
+  if (!auth.isMember) return <Layout requireMember />;
   const { federation, id: externalId } = await params;
   const { person, name } = await getPerson(federation, externalId);
 
   return (
-    <Layout requireUser>
+    <Layout requireMember>
       <PageHeader
         title={name}
         breadcrumbLabel="Osoba"

@@ -30,7 +30,7 @@ const getCompetitor = cache(async (federation: string, id: string) => {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { auth } = await getRequestContext();
-  if (!auth.isLoggedIn) return { robots: { index: false, follow: false } };
+  if (!auth.isMember) return { robots: { index: false, follow: false } };
   const { federation, id } = await params;
   const competitor = await getCompetitor(federation, id);
   return {
@@ -41,14 +41,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CompetitorPage({ params }: Props) {
   const { auth } = await getRequestContext();
-  if (!auth.isLoggedIn) return <Layout requireUser />;
+  if (!auth.isMember) return <Layout requireMember />;
 
   const { federation, id: externalId } = await params;
   const competitor = await getCompetitor(federation, externalId);
   const today = new Date().toISOString().slice(0, 10);
 
   return (
-    <Layout requireUser>
+    <Layout requireMember>
       <PageHeader
         title={competitor.name || competitor.id}
         breadcrumbLabel="Soutěžící"

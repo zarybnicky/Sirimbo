@@ -45,6 +45,7 @@ export function Cohort({
   initialCohort: CohortFragment;
   initialMemberCount: number;
 }) {
+  const auth = useAuth();
   const [editingImage, setEditingImage] = React.useState(false);
   const [, updateImage] = useMutation(UpdateCohortDocument);
   const [tab, setTab] = useQueryState(
@@ -100,7 +101,7 @@ export function Cohort({
       <TabMenu selected={tab} onSelect={setTab}>
         <Tab id="members" title="Info">
           <RichTextView value={description} />
-          <CohortMembers cohortId={cohort.id} />
+          {(auth.isMember || auth.isTrainer) && <CohortMembers cohortId={cohort.id} />}
         </Tab>
         <Tab id="activity" title="Tréninky" requireMember>
           <ActivityList cohortId={cohort.id} />
@@ -169,8 +170,6 @@ const CohortMembers = React.memo(function CohortMembers({
   const members = people.flatMap((person) => person.cohortMembership ?? []);
   const membershipActionMap = useActionMap(cohortMembershipActions, members);
   const memberActionMap = useActionMap(personActions, people);
-
-  if (!auth.isMember || !auth.isTrainer) return null;
 
   return (
     <div

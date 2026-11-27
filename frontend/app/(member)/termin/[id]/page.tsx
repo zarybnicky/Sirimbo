@@ -5,7 +5,7 @@ import { getRequestContext } from '@/lib/server/tenant';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
-import { EventPageClient } from './EventPageClient';
+import { EventView } from './EventView.tsx';
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -15,11 +15,7 @@ type PageProps = {
 const loadEvent = cache(async (id: string, share: string) => {
   if (!/^\d{1,18}$/.test(id)) return null;
   const { pgSettings } = await getRequestContext(share);
-  const data = await executeGraphql(
-    EventWithAttendanceDocument,
-    { id },
-    { pgSettings },
-  );
+  const data = await executeGraphql(EventWithAttendanceDocument, { id }, { pgSettings });
   return data.event;
 });
 
@@ -53,5 +49,5 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 export default async function EventPage(props: PageProps) {
   const { id, hasShareToken, event } = await resolvePage(props);
   if (!event) notFound();
-  return <EventPageClient id={id} initialEvent={event} hasShareToken={hasShareToken} />;
+  return <EventView id={id} initialEvent={event} hasShareToken={hasShareToken} />;
 }

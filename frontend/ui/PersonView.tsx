@@ -48,7 +48,8 @@ export const PersonView = React.memo(function PersonView({
   );
 
   const item = data?.person;
-  const isAdminOrCurrentPerson = auth.isMyPerson(id) || (!!item && auth.canManagePerson(item));
+  const isAdminOrCurrentPerson =
+    auth.isMyPerson(id) || (!!item && auth.canManagePerson(item));
 
   const actions = useActions(personActions, item);
   const sttProgress = getBestCstsProgress(
@@ -211,7 +212,7 @@ export const PersonView = React.memo(function PersonView({
           </div>
         </Tab>
         {isAdminOrCurrentPerson && item.eventTrainersList.length > 0 && (
-          <Tab id="workReport" title="Výkaz práce" requireTrainer>
+          <Tab id="workReport" title="Výkaz práce">
             <PersonWorkReportView id={id} />
           </Tab>
         )}

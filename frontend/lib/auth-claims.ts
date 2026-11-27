@@ -34,7 +34,7 @@ export function normalizeClaims(
 }
 
 export type AccessRequirements = {
-  requireUser?: boolean;
+  requireLoggedIn?: boolean;
   requireMember?: boolean;
   requireTrainer?: boolean;
   requireAdmin?: boolean;
@@ -72,8 +72,8 @@ export function resolveAuth(claims: JwtClaims | null | undefined, tenant: AuthTe
     email: claims?.email,
     userId,
     currentTenantId: tenantId,
+    allowedTenantIds: claims?.my_tenant_ids?.map(Number) ?? [],
     personIds,
-    tenantIds: claims?.my_tenant_ids?.map(Number) ?? [],
     adminTenantIds,
     cohortIds: claims?.my_cohort_ids ?? [],
     coupleIds,
@@ -85,7 +85,7 @@ export function resolveAuth(claims: JwtClaims | null | undefined, tenant: AuthTe
     isMyPerson: (id: string | null | undefined) => !!id && personIds.includes(id),
     isMyCouple: (id: string | null | undefined) => !!id && coupleIds.includes(id),
     canAccess: (reqs: AccessRequirements) =>
-      (!reqs.requireUser || isLoggedIn) &&
+      (!reqs.requireLoggedIn || isLoggedIn) &&
       (!reqs.requireMember || isMember) &&
       (!reqs.requireTrainer || isTrainer) &&
       (!reqs.requireAdmin || isAdmin) &&
@@ -101,6 +101,7 @@ export function resolveAuth(claims: JwtClaims | null | undefined, tenant: AuthTe
       (isTrainer && personIds.some((id) => event.managerPersonIds.includes(id))),
     canManageTenant: (x: { tenantId: string }) =>
       isSystemAdmin || adminTenantIds.includes(x.tenantId),
+    canCreateAnnouncement: isTrainer,
     canManageAnnouncement: (x: { authorId: string | null }) =>
       isAdmin || (isTrainer && x.authorId === userId),
   };

@@ -53,7 +53,7 @@ export function AnnouncementList() {
       <div className="px-1 my-2 flex gap-2 items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase flex-1">Nástěnka</div>
 
-        {auth.isTrainer && (
+        {auth.canCreateAnnouncement && (
           <Link
             href="/nastenka/add"
             className={buttonCls({
@@ -67,7 +67,7 @@ export function AnnouncementList() {
         <ComboboxButton
           value={status}
           placeholder="Všechny stavy"
-          options={auth.isTrainer ? trainerStatuses : memberStatuses}
+          options={auth.canCreateAnnouncement ? trainerStatuses : memberStatuses}
           searchable={false}
           onChange={(value) => {
             setStatus((value ?? null) as AnnouncementStatus | null);

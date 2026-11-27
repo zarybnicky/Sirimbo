@@ -37,7 +37,7 @@ const getEvent = cache(async (federation: string, eventId: string) => {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { auth } = await getRequestContext();
-  if (!auth.isLoggedIn) return { robots: { index: false, follow: false } };
+  if (!auth.isMember) return { robots: { index: false, follow: false } };
   const { federation, eventId } = await params;
   const { title, date } = await getEvent(federation, eventId);
   return { title: `${title} · ${date}`, robots: { index: false, follow: false } };
@@ -45,12 +45,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function EventPage({ params }: Props) {
   const { auth } = await getRequestContext();
-  if (!auth.isLoggedIn) return <Layout requireUser />;
+  if (!auth.isMember) return <Layout requireMember />;
   const { federation, eventId } = await params;
   const { event, title, date } = await getEvent(federation, eventId);
 
   return (
-    <Layout requireUser>
+    <Layout requireMember>
       <PageHeader
         title={title}
         subtitle={date}

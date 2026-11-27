@@ -34,7 +34,7 @@ const getCompetition = cache(
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { auth } = await getRequestContext();
-  if (!auth.isLoggedIn) return { robots: { index: false, follow: false } };
+  if (!auth.isMember) return { robots: { index: false, follow: false } };
   const { federation, eventId, competitionId } = await params;
   const { competition } = await getCompetition(federation, eventId, competitionId);
   return {
@@ -45,13 +45,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CompetitionPage({ params }: Props) {
   const { auth } = await getRequestContext();
-  if (!auth.isLoggedIn) return <Layout requireUser />;
+  if (!auth.isMember) return <Layout requireMember />;
 
   const { federation, eventId, competitionId } = await params;
   const { event, competition } = await getCompetition(federation, eventId, competitionId);
 
   return (
-    <Layout requireUser>
+    <Layout requireMember>
       <PageHeader
         title={formatCategoryName(competition) || competition.externalId}
         subtitle={

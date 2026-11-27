@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 
 export default async function CompetitionPlanningPage() {
   const { auth } = await getRequestContext();
-  if (!auth.isLoggedIn) return <Layout requireUser />;
+  if (!auth.isMember) return <Layout requireMember />;
   return (
-    <Layout requireUser>
+    <Layout requireMember>
       <PageHeader title="Plánování soutěží" />
       <CompetitionPlanning />
     </Layout>

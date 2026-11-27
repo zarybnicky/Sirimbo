@@ -36,10 +36,11 @@ export function TenantSelect() {
   const options = React.useMemo(() => {
     return Object.values(tenantCatalog)
       .filter(
-        (x) => isElevated || String(x.id) === tenantId || auth.tenantIds.includes(x.id),
+        (x) =>
+          isElevated || String(x.id) === tenantId || auth.allowedTenantIds.includes(x.id),
       )
       .map(({ id, name }) => ({ value: id.toString(), label: name }));
-  }, [isElevated, auth.tenantIds, tenantId]);
+  }, [isElevated, auth.allowedTenantIds, tenantId]);
 
   const onChange = React.useCallback(
     (tenantId: string) => {
@@ -148,7 +149,10 @@ function DevelopmentIdentity() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   {users.map((user) => (
-                    <DropdownMenuButton key={user.id} onSelect={() => login.execute(user.id)}>
+                    <DropdownMenuButton
+                      key={user.id}
+                      onSelect={() => login.execute(user.id)}
+                    >
                       <span>
                         {user.name}
                         <span className="block text-xs opacity-70">{user.email}</span>

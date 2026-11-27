@@ -4,10 +4,10 @@ import { CampSchedule } from '@/calendar/CampSchedule';
 import { CampLessonsTable } from '@/calendar/CampLessonsTable';
 import { CampTrainersTable } from '@/calendar/CampTrainersTable';
 import {
-  EventWithAttendanceDocument,
   EventPaymentsDocument,
-  UpdateEventDocument,
+  EventWithAttendanceDocument,
   type EventWithAttendanceQuery,
+  UpdateEventDocument,
 } from '@/graphql/Event';
 import { eventActions } from '@/lib/actions/event';
 import { useActions } from '@/lib/actions';
@@ -29,7 +29,7 @@ import { ListFormat } from '@/ui/ListFormat';
 import { EntityLink, getEntityLink } from '@/ui/EntityLink';
 import { DotSeparated } from '@/ui/DotSeparated';
 
-export function EventPageClient({
+export function EventView({
   id,
   initialEvent,
   hasShareToken,
@@ -60,9 +60,15 @@ export function EventPageClient({
   const trainers = event.eventTrainersList.flatMap((t) => t.person ?? []);
   const { seriesInfo, registrationInfo } = event;
   const numRegistrations = registrationInfo?.registrations ?? 0;
-  const hasPayments = [event, ...event.childEventsList].some(
-    (e) => e.paymentsList.length > 0,
-  );
+  const showPayments =
+    auth.canManageEvent(event) &&
+    [event, ...event.childEventsList].some((e) => e.paymentsList.length > 0);
+  const showSchedule =
+    event.type === 'CAMP' && (auth.isLoggedIn || event.hasPublicDetails || hasShareToken);
+  const showChildEventReports =
+    auth.canManageEvent(event) && event.childEventsList.length > 0;
+  const showRegistrations =
+    auth.canManageEvent(event) || (auth.isLoggedIn && numRegistrations > 0);
 
   const subtitleParts = [
     event.isCancelled && 'Zrušeno',
@@ -117,7 +123,7 @@ export function EventPageClient({
             seriesInfo && (seriesInfo.length ?? 0) > 1
               ? `${seriesInfo.position}. ${formatEventType(event.type).toLowerCase()} z ${seriesInfo.length}`
               : formatEventType(event.type)
-         }
+          }
           breadcrumbs={[
             { title: 'Události', href: '/akce' },
             ...(event.parentId
@@ -162,36 +168,34 @@ export function EventPageClient({
           </Tab>
         )}
 
-        {event.type === 'CAMP' &&
-          (auth.isLoggedIn || event.hasPublicDetails || hasShareToken) && (
-            <Tab id="schedule" title="Rozpis">
-              <CampSchedule event={event} />
-            </Tab>
-          )}
-
-        {(auth.canManageEvent(event) || (auth.isLoggedIn && numRegistrations > 0)) && (
+        {showSchedule && (
+          <Tab id="schedule" title="Rozpis">
+            <CampSchedule event={event} />
+          </Tab>
+        )}
+        {showRegistrations && (
           <Tab id="registrations" title={`Přihlášky (${numRegistrations})`}>
             <div className="col-popout">
               <EventRegistrations event={event} />
             </div>
           </Tab>
         )}
-        {event.type === 'CAMP' && event.childEventsList.length > 0 && (
-          <Tab id="lessons" title="Lekce" requireTrainer>
+        {showChildEventReports && (
+          <Tab id="lessons" title="Lekce">
             <div className="col-full-width relative">
               <CampLessonsTable id={event.id} />
             </div>
           </Tab>
         )}
-        {event.type === 'CAMP' && event.childEventsList.length > 0 && (
-          <Tab id="trainers" title="Trenéři" requireTrainer>
+        {showChildEventReports && (
+          <Tab id="trainers" title="Trenéři">
             <div className="col-full-width relative">
               <CampTrainersTable id={event.id} />
             </div>
           </Tab>
         )}
-        {hasPayments && (
-          <Tab id="payments" title="Platby" requireTrainer>
+        {showPayments && (
+          <Tab id="payments" title="Platby">
             <div className="col-popout">
               <EventPayments id={event.id} />
             </div>

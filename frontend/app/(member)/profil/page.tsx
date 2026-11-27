@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function ProfilePage() {
   return (
-    <Layout requireUser>
+    <Layout requireLoggedIn>
       <Profile />
     </Layout>
   );

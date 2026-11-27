@@ -15,10 +15,10 @@ export const metadata: Metadata = {
 
 export default async function FederationsPage() {
   const { auth } = await getRequestContext();
-  if (!auth.isLoggedIn) return <Layout requireUser />;
+  if (!auth.isMember) return <Layout requireMember />;
   const { federationsList: federations } = await executeGraphql(FederationListDocument);
   return (
-    <Layout requireUser>
+    <Layout requireMember>
       <PageHeader title="Soutěžní data" />
       <Table columns={['Organizace', 'Soutěže', 'Osoby', 'Soutěžící']}>
         {federations?.map((federation) => (
