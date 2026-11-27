@@ -3,7 +3,6 @@ import { CoupleDocument, UpdateCoupleDocument } from '@/graphql/Memberships';
 import { DatePickerElement } from '@/ui/fields/date';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -16,25 +15,24 @@ const Form = z.object({
 
 export function EditCoupleForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit, setError } = useForm({
-    resolver: zodResolver(Form),
-  });
   const [query] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
   const [result, update] = useMutation(UpdateCoupleDocument);
 
   const item = query.data?.couple;
-
-  React.useEffect(() => {
-    if (!item) return;
-    reset({
-      since: item.since ? new Date(item.since) : null,
-      until: item.until ? new Date(item.until) : null,
-    }, {
+  const { control, handleSubmit, setError } = useForm({
+    resolver: zodResolver(Form),
+    values: item
+      ? {
+          since: item.since ? new Date(item.since) : null,
+          until: item.until ? new Date(item.until) : null,
+        }
+      : undefined,
+    resetOptions: {
       keepDirtyValues: true,
       keepTouched: true,
       keepErrors: true,
-    });
-  }, [reset, item]);
+    },
+  });
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
     if (!item || query.error) return;

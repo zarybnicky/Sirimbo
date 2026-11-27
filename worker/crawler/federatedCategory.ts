@@ -21,12 +21,12 @@ export type CategoryParams = {
 
 function categoryKey(params: CategoryParams): string {
   return [
-    params.series ?? '',
-    params.discipline ?? '',
-    params.ageGroup ?? '',
-    params.genderGroup ?? '',
-    params.class ?? '',
-    params.competitorType ?? '',
+    params.series,
+    params.discipline,
+    params.ageGroup,
+    params.genderGroup,
+    params.class,
+    params.competitorType,
   ].join('\0');
 }
 
@@ -55,27 +55,13 @@ export async function getFederatedCategoryIds(
     await refreshCache();
   }
 
-  const misses = makePgtypedCollection<{
-    series: string;
-    discipline: string;
-    ageGroup: string;
-    genderGroup: string;
-    class: string;
-    competitorType: competitor_type;
-  }>(
+  const misses = makePgtypedCollection<CategoryParams>(
     ['series', 'discipline', 'ageGroup', 'genderGroup', 'class', 'competitorType'],
     ['series', 'discipline', 'ageGroup', 'genderGroup', 'class', 'competitorType'],
   );
   for (const item of params) {
     if (!categoryCache.has(categoryKey(item))) {
-      misses.add({
-        series: item.series ?? '',
-        discipline: item.discipline ?? '',
-        ageGroup: item.ageGroup ?? '',
-        genderGroup: item.genderGroup ?? '',
-        class: item.class ?? '',
-        competitorType: item.competitorType,
-      });
+      misses.add(item);
     }
   }
 

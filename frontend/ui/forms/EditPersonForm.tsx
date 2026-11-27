@@ -86,8 +86,23 @@ const Form = z.object({
 export function EditPersonForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
   const [linksExpandedFor, setLinksExpandedFor] = React.useState<string>();
-  const { reset, control, handleSubmit, getValues, setValue } = useForm({
+
+  const [result, update] = useMutation(UpdatePersonDocument);
+  const [query] = useQuery({ query: PersonDocument, variables: { id } });
+  const data = query.data?.person;
+  const { control, handleSubmit, getValues, setValue } = useForm({
     resolver: zodResolver(Form),
+    values: data
+      ? {
+          ...data,
+          birthDate: data.birthDate ?? null,
+        } as unknown as any
+      : undefined,
+    resetOptions: {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
+    },
   });
 
   const fillBirthDate = () => {
@@ -95,24 +110,6 @@ export function EditPersonForm({ id }: { id: string }) {
     const birthDate = parseCzechBirthNumber(getValues('taxIdentificationNumber'));
     if (birthDate) setValue('birthDate', birthDate, { shouldDirty: true });
   };
-  const [result, update] = useMutation(UpdatePersonDocument);
-  const [query] = useQuery({ query: PersonDocument, variables: { id } });
-  const data = query.data?.person;
-
-  React.useEffect(() => {
-    if (!data) return;
-    reset(
-      {
-        ...data,
-        birthDate: data.birthDate ?? null,
-      } as unknown as any,
-      {
-        keepDirtyValues: true,
-        keepTouched: true,
-        keepErrors: true,
-      },
-    );
-  }, [reset, data]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
     const result = await update({

@@ -14,7 +14,6 @@ import { DatePickerElement } from '@/ui/fields/date';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { useRouter } from 'next/navigation';
-import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
@@ -43,29 +42,25 @@ export function ArticleForm({ id = '' }: { id?: string }) {
 
   const [result, upsert] = useMutation(UpsertArticleDocument);
 
-  const { reset, control, handleSubmit } = useForm({
+  const { control, handleSubmit } = useForm({
     defaultValues: { attachmentIds: [] },
     resolver: zodResolver(Form),
+    values: {
+      atJmeno: data?.atJmeno ?? '',
+      atPreview: data?.atPreview ?? '',
+      atText: data?.atText ?? '',
+      titlePhotoUrl: data?.titlePhotoUrl ?? '',
+      isVisible: data?.isVisible ?? false,
+      publishedAt: data?.publishedAt ? new Date(data.publishedAt) : null,
+      attachmentIds: data?.explicitAttachments.nodes.flatMap((x) => x.file?.id ?? []) ?? [],
+    },
+    resetOptions: {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
+    },
   });
   const { field: attachmentIds } = useController({ control, name: 'attachmentIds' });
-  React.useEffect(() => {
-    reset(
-      {
-        atJmeno: data?.atJmeno ?? '',
-        atPreview: data?.atPreview ?? '',
-        atText: data?.atText ?? '',
-        titlePhotoUrl: data?.titlePhotoUrl ?? '',
-        isVisible: data?.isVisible ?? false,
-        publishedAt: data?.publishedAt ? new Date(data.publishedAt) : null,
-        attachmentIds: data?.explicitAttachments.nodes.flatMap((x) => x.file?.id ?? []) ?? [],
-      },
-      {
-        keepDirtyValues: true,
-        keepTouched: true,
-        keepErrors: true,
-      },
-    );
-  }, [data, reset]);
 
   const onSubmit: Parameters<typeof handleSubmit>[0] = async (values, event) => {
     const intent = (event?.nativeEvent as SubmitEvent | undefined)?.submitter?.getAttribute(

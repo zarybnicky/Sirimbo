@@ -6,7 +6,6 @@ import {
 import { DatePickerElement } from '@/ui/fields/date';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -19,9 +18,6 @@ const Form = z.object({
 
 export function EditTenantAdministratorForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit, setError } = useForm({
-    resolver: zodResolver(Form),
-  });
   const [query] = useQuery({
     query: TenantAdministratorDocument,
     variables: { id },
@@ -30,18 +26,20 @@ export function EditTenantAdministratorForm({ id }: { id: string }) {
   const [result, update] = useMutation(UpdateTenantAdministratorDocument);
 
   const item = query.data?.tenantAdministrator;
-
-  React.useEffect(() => {
-    if (!item) return;
-    reset({
-      since: item.since ? new Date(item.since) : undefined,
-      until: item.until ? new Date(item.until) : undefined,
-    }, {
+  const { control, handleSubmit, setError } = useForm({
+    resolver: zodResolver(Form),
+    values: item
+      ? {
+          since: new Date(item.since),
+          until: item.until ? new Date(item.until) : undefined,
+        }
+      : undefined,
+    resetOptions: {
       keepDirtyValues: true,
       keepTouched: true,
       keepErrors: true,
-    });
-  }, [reset, item]);
+    },
+  });
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
     if (!item || query.error) return;

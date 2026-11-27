@@ -16,30 +16,26 @@ const Form = z.object({
 
 export function EditEventDescriptionForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit } = useForm({
-    shouldUnregister: false,
-    defaultValues: { summary: '', description: '' },
-    resolver: zodResolver(Form),
-  });
   const [result, update] = useMutation(UpdateEventDocument);
   const [{ data }] = useQuery({ query: EventDescriptionDocument, variables: { id } });
   const [tab, setTab] = React.useState('summary');
   const event = data?.event;
-
-  React.useEffect(() => {
-    if (!event) return;
-    reset(
-      {
-        summary: event.summary ?? '',
-        description: event.description ?? '',
-      },
-      {
-        keepDirtyValues: true,
-        keepTouched: true,
-        keepErrors: true,
-      },
-    );
-  }, [reset, event]);
+  const { control, handleSubmit } = useForm({
+    shouldUnregister: false,
+    defaultValues: { summary: '', description: '' },
+    resolver: zodResolver(Form),
+    values: event
+      ? {
+          summary: event.summary ?? '',
+          description: event.description ?? '',
+        }
+      : undefined,
+    resetOptions: {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
+    },
+  });
 
   const onSubmit = async (patch: z.infer<typeof Form>) => {
     const result = await update({ id, patch });

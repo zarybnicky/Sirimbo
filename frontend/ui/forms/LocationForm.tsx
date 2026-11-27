@@ -7,7 +7,6 @@ import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
 import { FilePicker } from '@/ui/forms/FilePicker';
 import { SubmitButton } from '@/ui/submit';
-import React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useController, useForm } from 'react-hook-form';
@@ -38,7 +37,16 @@ const Form = z.object({
 
 export function LocationForm({ id = '' }: { id?: string }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit, getValues, setValue } = useForm({
+  const [query] = useQuery({
+    query: LocationDocument,
+    variables: { id },
+    pause: !id,
+  });
+  const [{ data: fileData }] = useQuery({ query: FileListDocument });
+  const [result, upsert] = useMutation(UpsertLocationDocument);
+
+  const item = query.data?.location;
+  const { control, handleSubmit, getValues, setValue } = useForm({
     resolver: zodResolver(Form),
     defaultValues: {
       name: '',
@@ -47,18 +55,40 @@ export function LocationForm({ id = '' }: { id?: string }) {
       imageIds: [],
       coverImageId: null,
     },
+    values: item
+      ? {
+          name: item.name,
+          longName: item.longName || item.name,
+          description: item.description,
+          showInLists: item.showInLists,
+          ordering: item.ordering,
+          latitude: item.latitude,
+          longitude: item.longitude,
+          imageIds: item.imagesList.map((x) => x.fileId),
+          coverImageId: item.imagesList.some((x) => x.fileId === item.coverImageId)
+            ? item.coverImageId
+            : null,
+          address: {
+            street: item.address?.street || '',
+            conscriptionNumber: item.address?.conscriptionNumber || '',
+            orientationNumber: item.address?.orientationNumber || '',
+            district: item.address?.district || '',
+            city: item.address?.city || '',
+            postalCode: item.address?.postalCode || '',
+            region: item.address?.region || '',
+          },
+        }
+      : undefined,
+    resetOptions: {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
+    },
   });
-  const [query] = useQuery({
-    query: LocationDocument,
-    variables: { id },
-    pause: !id,
-  });
-  const [{ data: fileData }] = useQuery({ query: FileListDocument });
-  const [result, upsert] = useMutation(UpsertLocationDocument);
+
   const imageIds = useController({ control, name: 'imageIds' }).field;
   const coverImageId = useController({ control, name: 'coverImageId' }).field;
 
-  const item = query.data?.location;
   const filesById = new Map(
     [
       ...(fileData?.files?.nodes ?? []),
@@ -68,39 +98,6 @@ export function LocationForm({ id = '' }: { id?: string }) {
   const coverOptions = (imageIds.value ?? [])
     .flatMap((id) => filesById.get(id) ?? [])
     .map((file) => ({ id: file.id, label: file.displayName ?? file.name }));
-
-  React.useEffect(() => {
-    if (!item) return;
-    reset(
-      {
-        name: item.name,
-        longName: item.longName || item.name,
-        description: item.description,
-        showInLists: item.showInLists,
-        ordering: item.ordering,
-        latitude: item.latitude,
-        longitude: item.longitude,
-        imageIds: item.imagesList.map((x) => x.fileId),
-        coverImageId: item.imagesList.some((x) => x.fileId === item.coverImageId)
-          ? item.coverImageId
-          : null,
-        address: {
-          street: item.address?.street || '',
-          conscriptionNumber: item.address?.conscriptionNumber || '',
-          orientationNumber: item.address?.orientationNumber || '',
-          district: item.address?.district || '',
-          city: item.address?.city || '',
-          postalCode: item.address?.postalCode || '',
-          region: item.address?.region || '',
-        },
-      },
-      {
-        keepDirtyValues: true,
-        keepTouched: true,
-        keepErrors: true,
-      },
-    );
-  }, [reset, item]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
     const { imageIds, coverImageId, ...location } = values;

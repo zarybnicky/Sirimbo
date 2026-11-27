@@ -23,17 +23,6 @@ const Form = z.object({
 export function AddPersonAccessForm({ personId }: { personId: string }) {
   const { onSuccess } = useFormResult();
   const [selectedUserId, setSelectedUserId] = React.useState<string | null>(null);
-  const {
-    control,
-    handleSubmit,
-    reset,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm({
-    resolver: zodResolver(Form),
-    defaultValues: { email: '' },
-  });
-
   const [list] = useQuery({ query: UserListDocument });
   const [query] = useQuery({
     query: PersonMembershipsDocument,
@@ -44,18 +33,21 @@ export function AddPersonAccessForm({ personId }: { personId: string }) {
   const person = query.data?.person;
   const users = list.data?.users?.nodes ?? [];
 
-  React.useEffect(() => {
-    if (!person) return;
-    const { email, userProxiesList } = person;
-    const alreadyLinked = userProxiesList.some(
-      (x) =>
-        x.status !== 'EXPIRED' && x.user?.uEmail.toLowerCase() === email?.toLowerCase(),
-    );
-    reset(
-      { email: alreadyLinked ? '' : (email ?? '') },
-      { keepDirtyValues: true, keepTouched: true },
-    );
-  }, [person, reset]);
+  const alreadyLinked = person?.userProxiesList.some(
+    (x) =>
+      x.status !== 'EXPIRED' && x.user?.uEmail.toLowerCase() === person.email?.toLowerCase(),
+  );
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(Form),
+    defaultValues: { email: '' },
+    values: person ? { email: alreadyLinked ? '' : (person.email ?? '') } : undefined,
+    resetOptions: { keepDirtyValues: true, keepTouched: true },
+  });
 
   const { field, fieldState } = useController({ control, name: 'email' });
   const email = field.value.trim().toLowerCase();

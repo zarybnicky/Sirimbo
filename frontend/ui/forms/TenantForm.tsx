@@ -6,7 +6,6 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { DialogTitle } from '@/ui/dialog';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -42,25 +41,22 @@ export function TenantForm({ tenantId }: { tenantId: string }) {
   const { onSuccess } = useFormResult();
   const [result, update] = useMutation(UpdateTenantDocument);
 
-  const { reset, control, handleSubmit } = useForm({
-    resolver: zodResolver(Form),
-  });
   const tenant = query.data?.tenant;
-  React.useEffect(() => {
-    if (!tenant) return;
-    reset(
-      {
-        ...tenant,
-        cstsId: tenant.cstsId?.toString() ?? null,
-        origins: tenant.origins.join(', '),
-      },
-      {
-        keepDirtyValues: true,
-        keepTouched: true,
-        keepErrors: true,
-      },
-    );
-  }, [reset, tenant]);
+  const { control, handleSubmit } = useForm({
+    resolver: zodResolver(Form),
+    values: tenant
+      ? {
+          ...tenant,
+          cstsId: tenant.cstsId?.toString() ?? null,
+          origins: tenant.origins.join(', '),
+        }
+      : undefined,
+    resetOptions: {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
+    },
+  });
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
     if (!tenant || query.error) return;

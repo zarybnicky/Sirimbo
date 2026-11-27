@@ -65,7 +65,7 @@ const athleteSchema = z.object({
   lat: rankingPointsSchema.optional(),
   stt: rankingPointsSchema.optional(),
 
-  validFor: z.iso.date().optional(),
+  validFor: z.iso.date().optional().transform(() => undefined),
   barcode: z.string().optional(),
   avatar: z.string().optional(),
 });
@@ -110,12 +110,6 @@ export const cstsMember: JsonLoader<Response> = {
   mapResponseToStatus({ parsed, fetchStatus }) {
     if (fetchStatus === 'ok' && parsed && parsed.collection.length === 0) return 'gone';
     return undefined;
-  },
-  cleanResponse(_url, parsed) {
-    for (const row of parsed.collection) {
-      if ('validFor' in row) delete row['validFor'];
-    }
-    return parsed;
   },
   async load(client, parsed) {
     const upsertFrontier: NonNullable<LoaderEffect['upsertFrontier']>[number][] = [];

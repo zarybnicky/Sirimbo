@@ -95,7 +95,6 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({
     for (const event of data?.eventsList ?? []) {
       if (event.isCancelled) continue;
       if (new Date(event.until).getTime() > now.getTime()) continue;
-      if (!event.eventTrainersList?.some((x) => x.personId === id)) continue;
 
       if (event.type !== 'GROUP' && event.type !== 'LESSON') continue;
 
@@ -119,13 +118,8 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({
       month[event.type === 'GROUP' ? 'groupRows' : 'privateRows'].push(row);
     }
 
-    for (const month of byKey.values()) {
-      month.groupRows.sort((a, b) => a.event.since.localeCompare(b.event.since));
-      month.privateRows.sort((a, b) => a.event.since.localeCompare(b.event.since));
-    }
-
     return [...byKey.values()];
-  }, [data?.eventsList, id, months, now]);
+  }, [data?.eventsList, months, now]);
 
   const selectedMonth = reports.find((month) => month.key === monthKey) ?? reports[0];
 

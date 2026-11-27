@@ -16,7 +16,6 @@ import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { badgeCls, buttonCls } from '@/ui/style';
-import React from 'react';
 import { type Control, useController, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
@@ -73,7 +72,7 @@ export function AnnouncementForm({
   const [result, upsert] = useMutation(UpsertAnnouncementDocument);
   const { onSuccess, onCancel } = useFormResult();
 
-  const { reset, control, handleSubmit } = useForm({
+  const { control, handleSubmit } = useForm({
     defaultValues: {
       status: 'DRAFT' as const,
       audienceRoles: [],
@@ -81,31 +80,27 @@ export function AnnouncementForm({
       attachmentIds: [],
     },
     resolver: zodResolver(Form),
+    values: {
+      title: data?.title ?? '',
+      body: data?.body ?? '',
+      status: data?.status === 'SCHEDULED' ? 'PUBLISHED' : (data?.status ?? 'DRAFT'),
+      isSticky: data?.isSticky ?? false,
+      scheduledSince: data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
+      scheduledUntil: data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
+      audienceRoles:
+        data?.announcementAudiences.nodes.flatMap((x) => x.audienceRole ?? []),
+      cohortIds:
+        data?.announcementAudiences.nodes.flatMap((x) => x.cohortId ?? []),
+      attachmentIds:
+        data?.explicitAttachments.nodes.flatMap((f) => f.file?.id ?? []),
+    },
+    resetOptions: {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
+    },
   });
   const { field: attachmentIds } = useController({ control, name: 'attachmentIds' });
-  React.useEffect(() => {
-    reset(
-      {
-        title: data?.title ?? '',
-        body: data?.body ?? '',
-        status: data?.status === 'SCHEDULED' ? 'PUBLISHED' : (data?.status ?? 'DRAFT'),
-        isSticky: data?.isSticky ?? false,
-        scheduledSince: data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
-        scheduledUntil: data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
-        audienceRoles:
-          data?.announcementAudiences.nodes.flatMap((x) => x.audienceRole ?? []),
-        cohortIds:
-          data?.announcementAudiences.nodes.flatMap((x) => x.cohortId ?? []),
-        attachmentIds:
-          data?.explicitAttachments.nodes.flatMap((f) => f.file?.id ?? []),
-      },
-      {
-        keepDirtyValues: true,
-        keepTouched: true,
-        keepErrors: true,
-      },
-    );
-  }, [data, reset]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
     const oldAudiences = [...(data?.announcementAudiences.nodes || [])];

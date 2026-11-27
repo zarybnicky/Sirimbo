@@ -8,7 +8,6 @@ import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -28,9 +27,6 @@ const Form = z.object({
 
 export function EditTenantTrainerForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit, setError } = useForm({
-    resolver: zodResolver(Form),
-  });
   const [query] = useQuery({
     query: TenantTrainerDocument,
     variables: { id },
@@ -39,28 +35,27 @@ export function EditTenantTrainerForm({ id }: { id: string }) {
   const [result, update] = useMutation(UpdateTenantTrainerDocument);
 
   const item = query.data?.tenantTrainer;
-
-  React.useEffect(() => {
-    if (!item) return;
-    reset(
-      {
-        since: item.since ? new Date(item.since) : null,
-        until: item.until ? new Date(item.until) : null,
-        memberPrice: Number.parseFloat(item.memberPrice45MinAmount || '0') || null,
-        guestPrice: Number.parseFloat(item.guestPrice45MinAmount || '0') || null,
-        memberPayout: Number.parseFloat(item.memberPayout45MinAmount || '0') || null,
-        guestPayout: Number.parseFloat(item.guestPayout45MinAmount || '0') || null,
-        createPayoutPayments: item.createPayoutPayments,
-        isVisible: item.isVisible,
-        isExternal: item.isExternal,
-      },
-      {
-        keepDirtyValues: true,
-        keepTouched: true,
-        keepErrors: true,
-      },
-    );
-  }, [reset, item]);
+  const { control, handleSubmit, setError } = useForm({
+    resolver: zodResolver(Form),
+    values: item
+      ? {
+          since: item.since ? new Date(item.since) : null,
+          until: item.until ? new Date(item.until) : null,
+          memberPrice: Number.parseFloat(item.memberPrice45MinAmount || '0') || null,
+          guestPrice: Number.parseFloat(item.guestPrice45MinAmount || '0') || null,
+          memberPayout: Number.parseFloat(item.memberPayout45MinAmount || '0') || null,
+          guestPayout: Number.parseFloat(item.guestPayout45MinAmount || '0') || null,
+          createPayoutPayments: item.createPayoutPayments,
+          isVisible: item.isVisible,
+          isExternal: item.isExternal,
+        }
+      : undefined,
+    resetOptions: {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
+    },
+  });
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
     if (!item || query.error) return;

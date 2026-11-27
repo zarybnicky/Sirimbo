@@ -7,7 +7,6 @@ import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
@@ -25,23 +24,19 @@ const Form = z.object({
 
 export function TenantSettingsForm({ tenantId }: { tenantId: string }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit } = useForm({
-    resolver: zodResolver(Form),
-  });
   const [query] = useQuery({
     query: TenantSettingsDocument,
     variables: { tenantId },
   });
   const [result, replaceSettings] = useMutation(ReplaceTenantSettingsDocument);
   const settings = query.data?.tenantSetting;
-
-  React.useEffect(() => {
-    if (!settings) return;
-    reset(
-      { settings: JSON.stringify(settings.settings ?? {}, null, 2) },
-      { keepDirtyValues: true, keepTouched: true, keepErrors: true },
-    );
-  }, [reset, settings]);
+  const { control, handleSubmit } = useForm({
+    resolver: zodResolver(Form),
+    values: settings
+      ? { settings: JSON.stringify(settings.settings ?? {}, null, 2) }
+      : undefined,
+    resetOptions: { keepDirtyValues: true, keepTouched: true, keepErrors: true },
+  });
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
     if (!settings || query.error) return;

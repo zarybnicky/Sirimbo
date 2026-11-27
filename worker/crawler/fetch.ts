@@ -43,7 +43,6 @@ type ParseResult<T> =
 async function parseResponse<T>(
   resp: Impit.ImpitResponse,
   handler: Loader<T>,
-  opts: { mode: 'strict' | 'loose' },
 ): Promise<ParseResult<T>> {
   if (handler.mode === 'text') {
     const text = await resp.text();
@@ -58,8 +57,7 @@ async function parseResponse<T>(
     return { parsed: null, raw: body, error: 'Response body is not valid JSON' };
   }
 
-  const wrapSchema = opts.mode === 'strict' ? zx.deepStrict : zx.deepLoose;
-  const result = wrapSchema(handler.schema).safeParse(raw, { reportInput: true });
+  const result = zx.deepLoose(handler.schema).safeParse(raw, { reportInput: true });
   if (!result.success) {
     const error = result.error.toString();
     return { parsed: null, raw, error };
@@ -72,7 +70,6 @@ export async function fetchResponse<T>(
   handler: Loader<T>,
   url: URL,
   init: Impit.RequestInit = {},
-  opts: { mode: 'strict' | 'loose' } = { mode: 'loose' },
 ) {
   let httpStatus: number | null = null;
   let parsed: T | null = null;
@@ -97,7 +94,7 @@ export async function fetchResponse<T>(
     }
     fetchStatus = classifyHttpStatus(httpStatus);
 
-    const result = await parseResponse<T>(resp, handler, opts);
+    const result = await parseResponse<T>(resp, handler);
     parsed = result.parsed;
     raw = result.raw;
     if (httpStatus === 404 && url.hostname === 'www.csts.cz' && url.pathname.startsWith('/api/')) {
@@ -119,7 +116,7 @@ export async function fetchResponse<T>(
   return {
     httpStatus,
     error,
-    content: (parsed ? (handler.cleanResponse?.(url, parsed, raw) ?? parsed) : raw) as T,
+    content: (parsed ?? raw) as T,
     fetchStatus:
       handler.mapResponseToStatus?.({ parsed, raw, error, httpStatus, fetchStatus }) ?? fetchStatus,
   };
