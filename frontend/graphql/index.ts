@@ -5610,7 +5610,7 @@ export type Federation = {
   competitorFacetsList: Maybe<Array<FederationCompetitorFacetsRecord>>;
   /** Reads and enables pagination through a set of `FederationCompetitor`. */
   competitors: FederationCompetitorConnection;
-  eventFacets: Maybe<FederationEventFacet>;
+  eventFacets: FederationEventFacet;
   /** Reads and enables pagination through a set of `FederationEvent`. */
   events: FederationEventConnection;
   /** Reads and enables pagination through a set of `FederationPersonLicense`. */
@@ -6517,7 +6517,7 @@ export type FederationEventEdge = {
 
 export type FederationEventFacet = {
   __typename?: 'FederationEventFacet';
-  years: Array<Maybe<FederationEventYear>>;
+  years: Array<FederationEventYear>;
 };
 
 export type FederationEventOfficial = {
@@ -11456,15 +11456,15 @@ export type ScoreboardRecord = {
   /** Reads a single `Cohort` that is related to this `ScoreboardRecord`. */
   cohort: Maybe<Cohort>;
   cohortId: Maybe<Scalars['BigInt']['output']>;
-  eventTotalScore: Maybe<Scalars['BigInt']['output']>;
-  groupTotalScore: Maybe<Scalars['BigInt']['output']>;
-  lessonTotalScore: Maybe<Scalars['BigInt']['output']>;
-  manualTotalScore: Maybe<Scalars['BigInt']['output']>;
+  eventTotalScore: Scalars['BigInt']['output'];
+  groupTotalScore: Scalars['BigInt']['output'];
+  lessonTotalScore: Scalars['BigInt']['output'];
+  manualTotalScore: Scalars['BigInt']['output'];
   /** Reads a single `Person` that is related to this `ScoreboardRecord`. */
   person: Maybe<Person>;
-  personId: Maybe<Scalars['BigInt']['output']>;
-  ranking: Maybe<Scalars['BigInt']['output']>;
-  totalScore: Maybe<Scalars['BigInt']['output']>;
+  personId: Scalars['BigInt']['output'];
+  ranking: Scalars['BigInt']['output'];
+  totalScore: Scalars['BigInt']['output'];
 };
 
 export type ScoringMethod =
@@ -12680,16 +12680,16 @@ export type TenantsOrderBy =
 
 export type TrainerGroupAttendanceCompletion = {
   __typename?: 'TrainerGroupAttendanceCompletion';
-  filledEvents: Maybe<Scalars['Int']['output']>;
-  filledRatio: Maybe<Scalars['Float']['output']>;
-  partiallyFilledEvents: Maybe<Scalars['Int']['output']>;
-  pendingAttendances: Maybe<Scalars['Int']['output']>;
+  filledEvents: Scalars['Int']['output'];
+  filledRatio: Scalars['Float']['output'];
+  partiallyFilledEvents: Scalars['Int']['output'];
+  pendingAttendances: Scalars['Int']['output'];
   /** Reads a single `Person` that is related to this `TrainerGroupAttendanceCompletion`. */
   person: Maybe<Person>;
-  personId: Maybe<Scalars['BigInt']['output']>;
-  totalAttendances: Maybe<Scalars['Int']['output']>;
-  totalEvents: Maybe<Scalars['Int']['output']>;
-  unfilledEvents: Maybe<Scalars['Int']['output']>;
+  personId: Scalars['BigInt']['output'];
+  totalAttendances: Scalars['Int']['output'];
+  totalEvents: Scalars['Int']['output'];
+  unfilledEvents: Scalars['Int']['output'];
 };
 
 export type Transaction = {

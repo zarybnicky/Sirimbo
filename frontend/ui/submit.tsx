@@ -15,23 +15,23 @@ type SubmitAction = AsyncState<unknown> & {
   execute: () => Promise<unknown>;
 };
 
-export type SubmitButtonProps<T extends FieldValues = FieldValues> =
+export type SubmitButtonProps<T extends FieldValues = FieldValues, TOutput = T> =
   | (BaseSubmitButtonProps & {
       action?: SubmitAction;
       control?: never;
     })
   | (BaseSubmitButtonProps & {
       action?: never;
-      control: Control<T>;
+      control: Control<T, unknown, TOutput>;
     });
 
-export function SubmitButton<T extends FieldValues>({
+export function SubmitButton<T extends FieldValues, TOutput = T>({
   control,
   action,
   onClick,
   type,
   ...props
-}: SubmitButtonProps<T>) {
+}: SubmitButtonProps<T, TOutput>) {
   return control ? (
     <FormStateSubmitButton {...props} control={control} type={type} onClick={onClick} />
   ) : (
@@ -44,13 +44,13 @@ export function SubmitButton<T extends FieldValues>({
   );
 }
 
-function FormStateSubmitButton<T extends FieldValues>({
+function FormStateSubmitButton<T extends FieldValues, TOutput>({
   control,
   state,
   disabled,
   type,
   ...props
-}: BaseSubmitButtonProps & { control: Control<T> }) {
+}: BaseSubmitButtonProps & { control: Control<T, unknown, TOutput> }) {
   const { isSubmitted, isSubmitting, isSubmitSuccessful } = useFormState({ control });
   const controlState = isSubmitting
     ? 'loading'

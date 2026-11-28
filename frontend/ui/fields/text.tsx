@@ -78,19 +78,13 @@ export function TextFieldElement<T extends FieldValues>({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChangeProp?.(event);
 
-    const nextValue = event.currentTarget.value;
     if (!valueAsNumber) {
-      field.onChange(nextValue);
+      field.onChange(event.currentTarget.value);
       return;
     }
 
-    if (nextValue === '') {
-      field.onChange();
-      return;
-    }
-
-    const parsedValue = Number.parseFloat(nextValue);
-    field.onChange(Number.isNaN(parsedValue) ? undefined : parsedValue);
+    const value = event.currentTarget.valueAsNumber;
+    field.onChange(Number.isNaN(value) ? undefined : value);
   };
 
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {

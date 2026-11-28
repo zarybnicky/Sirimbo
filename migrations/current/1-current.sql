@@ -104,7 +104,16 @@ from (
 --!include functions/queue_announcement_notification.sql
 --!include views/person_last_activity.sql
 --!include functions/global_search.sql
+comment on column public.scoreboard_record.person_id is '@notNull';
+comment on column public.scoreboard_record.lesson_total_score is '@notNull';
+comment on column public.scoreboard_record.group_total_score is '@notNull';
+comment on column public.scoreboard_record.event_total_score is '@notNull';
+comment on column public.scoreboard_record.manual_total_score is '@notNull';
+comment on column public.scoreboard_record.total_score is '@notNull';
+comment on column public.scoreboard_record.ranking is '@notNull';
 --!include functions/scoreboard.sql
+--!include functions/trainer_group_attendance_completion.sql
+--!include functions/federation_event_facets.sql
 --!include functions/event_facets.sql
 --!include functions/event_registration_info.sql
 --!include functions/event_conflicts.sql

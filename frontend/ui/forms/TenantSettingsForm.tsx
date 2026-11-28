@@ -12,14 +12,18 @@ import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 
 const Form = z.object({
-  settings: z.string().refine((value) => {
+  settings: z.string().transform((value, ctx) => {
     try {
-      const parsed = JSON.parse(value);
-      return parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed);
+      const parsed: unknown = JSON.parse(value);
+      if (parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        return parsed as Record<string, unknown>;
+      }
     } catch {
-      return false;
+      // Report invalid JSON and non-object values with the same message below.
     }
-  }, 'Nastavení musí být JSON objekt.'),
+    ctx.addIssue({ code: 'custom', message: 'Nastavení musí být JSON objekt.' });
+    return z.NEVER;
+  }),
 });
 
 export function TenantSettingsForm({ tenantId }: { tenantId: string }) {
@@ -42,7 +46,7 @@ export function TenantSettingsForm({ tenantId }: { tenantId: string }) {
     if (!settings || query.error) return;
     const saved = await replaceSettings({
       tenantId,
-      settings: JSON.parse(values.settings),
+      settings: values.settings,
     });
     if (!saved.error) onSuccess();
   };

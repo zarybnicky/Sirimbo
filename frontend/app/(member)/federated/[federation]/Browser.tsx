@@ -180,7 +180,7 @@ function Events(props: BrowserProps) {
     query: FederationEventFacetsDocument,
     variables: { federation, includeCancelled: filters.cancelled },
   });
-  const years = facets.data?.federation?.eventFacets?.years ?? [];
+  const years = facets.data?.federation?.eventFacets.years ?? [];
 
   const result = usePaginatedQuery({
     query: FederationEventsDocument,
@@ -211,7 +211,7 @@ function Events(props: BrowserProps) {
   return (
     <div className="min-w-0">
       <PeriodPicker
-        years={years.filter((y) => y !== null).toReversed()}
+        years={years.toReversed()}
         year={filters.year}
         month={filters.month}
         onChange={(period) => setFilters({ ...period, page: null }, { history: 'push' })}

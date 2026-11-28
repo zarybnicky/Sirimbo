@@ -7008,7 +7008,7 @@ type Federation {
     orderBy: [FederationCompetitorsOrderBy!] = [PRIMARY_KEY_ASC]
     orderByCategory: CompetitorCategoryOrder
   ): FederationCompetitorConnection!
-  eventFacets(includeCancelled: Boolean): FederationEventFacet
+  eventFacets(includeCancelled: Boolean): FederationEventFacet!
 
   """Reads and enables pagination through a set of `FederationEvent`."""
   events(
@@ -8330,7 +8330,7 @@ type FederationEventEdge {
 }
 
 type FederationEventFacet {
-  years: [FederationEventYear]!
+  years: [FederationEventYear!]!
 }
 
 type FederationEventOfficial {
@@ -14264,16 +14264,16 @@ type ScoreboardRecord {
   """Reads a single `Cohort` that is related to this `ScoreboardRecord`."""
   cohort: Cohort
   cohortId: BigInt
-  eventTotalScore: BigInt
-  groupTotalScore: BigInt
-  lessonTotalScore: BigInt
-  manualTotalScore: BigInt
+  eventTotalScore: BigInt!
+  groupTotalScore: BigInt!
+  lessonTotalScore: BigInt!
+  manualTotalScore: BigInt!
 
   """Reads a single `Person` that is related to this `ScoreboardRecord`."""
   person: Person
-  personId: BigInt
-  ranking: BigInt
-  totalScore: BigInt
+  personId: BigInt!
+  ranking: BigInt!
+  totalScore: BigInt!
 }
 
 enum ScoringMethod {
@@ -15969,19 +15969,19 @@ The exact time of day, does not include the date. May or may not have a timezone
 scalar Time
 
 type TrainerGroupAttendanceCompletion {
-  filledEvents: Int
-  filledRatio: Float
-  partiallyFilledEvents: Int
-  pendingAttendances: Int
+  filledEvents: Int!
+  filledRatio: Float!
+  partiallyFilledEvents: Int!
+  pendingAttendances: Int!
 
   """
   Reads a single `Person` that is related to this `TrainerGroupAttendanceCompletion`.
   """
   person: Person
-  personId: BigInt
-  totalAttendances: Int
-  totalEvents: Int
-  unfilledEvents: Int
+  personId: BigInt!
+  totalAttendances: Int!
+  totalEvents: Int!
+  unfilledEvents: Int!
 }
 
 type Transaction {

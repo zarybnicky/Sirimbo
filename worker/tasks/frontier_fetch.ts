@@ -23,7 +23,6 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
 
   const result = await withPgClient(async (client) => {
     await client.query('BEGIN');
-    let committed = false;
 
     try {
       const [frontier] = await getFrontierForUpdate.run({ id }, client);
@@ -31,7 +30,6 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
         if (!frontier) logger.info(`Frontier ${id} not found`);
         else logger.info(`Frontier ${id} scheduled before its next_fetch_at, assuming it was rescheduled`)
         await client.query('COMMIT');
-        committed = true;
         return;
       }
       const { federation, kind } = frontier;
@@ -41,7 +39,6 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
         await markFrontierFetchError.run({ id }, client);
         logger.error(`Handler for frontier ${id} not found (${federation}/${kind})`);
         await client.query('COMMIT');
-        committed = true;
         return;
       }
 
@@ -58,15 +55,13 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
           [id, allowed_at, `fetch:${host}:${id}`],
         );
         await client.query('COMMIT');
-        committed = true;
         return;
       }
       await client.query('COMMIT');
-      committed = true;
 
       return { frontier, handler: loader, url, init: init || {} };
     } catch (e) {
-      if (!committed) await client.query('ROLLBACK');
+      await client.query('ROLLBACK');
       throw e;
     }
   });

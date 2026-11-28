@@ -129,10 +129,10 @@ export function Scoreboard() {
             empty="Pro vybrané období nejsou žádné body."
           >
             {scoreboard.map((entry) => {
-              const rank = entry.ranking ? Number(entry.ranking) : undefined;
+              const rank = Number(entry.ranking);
               return (
                 <tr
-                  key={`${entry.personId ?? 'unknown'}-${entry.cohortId ?? 'all'}`}
+                  key={`${entry.personId}-${entry.cohortId ?? 'all'}`}
                   className={
                     rank === 1
                       ? 'bg-[rgb(254,240,138)] text-black'
@@ -144,7 +144,7 @@ export function Scoreboard() {
                   }
                 >
                   <td className="font-bold">
-                    {rank ? `${numberFormatter.format(rank)}.` : '–'}
+                    {numberFormatter.format(rank)}.
                   </td>
                   <td>
                     {entry.person ? (
@@ -158,16 +158,16 @@ export function Scoreboard() {
                     )}
                   </td>
                   <td className="text-center">
-                    {numberFormatter.format(BigInt(entry.lessonTotalScore ?? '0'))}
+                    {numberFormatter.format(BigInt(entry.lessonTotalScore))}
                   </td>
                   <td className="text-center">
-                    {numberFormatter.format(BigInt(entry.groupTotalScore ?? '0'))}
+                    {numberFormatter.format(BigInt(entry.groupTotalScore))}
                   </td>
                   <td className="text-center">
-                    {numberFormatter.format(BigInt(entry.eventTotalScore ?? '0'))}
+                    {numberFormatter.format(BigInt(entry.eventTotalScore))}
                   </td>
                   <td className="text-center font-bold">
-                    {numberFormatter.format(BigInt(entry.totalScore ?? '0'))}
+                    {numberFormatter.format(BigInt(entry.totalScore))}
                   </td>
                 </tr>
               );

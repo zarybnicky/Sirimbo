@@ -44,7 +44,10 @@ const preset: GraphileConfig.Preset = {
     ...paymentConditionPlugins,
     EventDetailsPlugin,
     EventFieldsPlugin,
-    changeNullability({ Event: { managerPersonIds: '[!]!' } }),
+    changeNullability({
+      Event: { managerPersonIds: '[!]!' },
+      FederationEventFacet: { years: '[!]!' },
+    }),
     ...federationConditionPlugins,
     ...competitionParticipantConditionPlugins,
     ...competitionSuggestionConditionPlugins,

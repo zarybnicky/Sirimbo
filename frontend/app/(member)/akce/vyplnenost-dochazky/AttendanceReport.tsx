@@ -4,7 +4,6 @@ import React from 'react';
 import { useQuery } from 'urql';
 import { PageHeader } from '@/ui/PageHeader';
 import { TrainerAttendanceReportDocument } from '@/graphql/TrainerAttendanceReport';
-import { isTruthy } from '@/lib/truthyFilter';
 import { compareText } from '@/lib/compare';
 import { fullDateFormatter } from '@/ui/format';
 import { getPeriodRange } from '@/ui/PeriodPicker';
@@ -30,19 +29,19 @@ export function AttendanceReport() {
 
   const { rows, summary } = React.useMemo(() => {
     const source = data?.trainerGroupAttendanceCompletionList ?? [];
-    const rows = source.filter(isTruthy).map((row) => ({
+    const rows = source.map((row) => ({
       name: row.person?.name ?? '-',
-      total: row.totalEvents ?? 0,
-      filled: row.filledEvents ?? 0,
-      partial: row.partiallyFilledEvents ?? 0,
-      unfilled: row.unfilledEvents ?? 0,
-      pending: row.pendingAttendances ?? 0,
+      total: row.totalEvents,
+      filled: row.filledEvents,
+      partial: row.partiallyFilledEvents,
+      unfilled: row.unfilledEvents,
+      pending: row.pendingAttendances,
       ratio: row.filledRatio,
     }));
 
     rows.sort((a, b) => {
       if (b.unfilled !== a.unfilled) return b.unfilled - a.unfilled;
-      const ratioDiff = (a.ratio ?? -1) - (b.ratio ?? -1);
+      const ratioDiff = a.ratio - b.ratio;
       if (ratioDiff !== 0) return ratioDiff;
       return compareText(a.name, b.name);
     });
@@ -135,7 +134,7 @@ export function AttendanceReport() {
             <td className="text-right">{numberFormatter.format(row.partial)}</td>
             <td className="text-right">{numberFormatter.format(row.unfilled)}</td>
             <td className="text-right">
-              {row.ratio !== null ? percentFormatter.format(row.ratio) : '–'}
+              {percentFormatter.format(row.ratio)}
             </td>
           </tr>
         ))}

@@ -267,7 +267,7 @@ export type FederationEventFacetsQueryVariables = Exact<{
 }>;
 
 
-export type FederationEventFacetsQuery = { federation: { code: string, eventFacets: { years: Array<{ year: number, eventCount: number } | null> } | null } | null };
+export type FederationEventFacetsQuery = { federation: { code: string, eventFacets: { years: Array<{ year: number, eventCount: number }> } } | null };
 
 export type FederationMapEventFragment = { country: string | null, streetAddress: string | null, postalCode: string | null, venueLat: number | null, venueLng: number | null, id: string, federation: string, externalId: string, name: string | null, startDate: string, endDate: string | null, location: string | null, city: string | null, competitions: { totalCount: number } };
 

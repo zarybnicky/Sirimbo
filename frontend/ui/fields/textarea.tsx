@@ -19,12 +19,12 @@ type Extras = {
   helperText?: string;
 };
 
-type TextAreaElementProps<T extends FieldValues> = Omit<
+type TextAreaElementProps<T extends FieldValues, TOutput> = Omit<
   React.HTMLProps<HTMLTextAreaElement>,
   'label' | 'name' | 'control'
 > & {
   name: Path<T>;
-  control?: Control<T>;
+  control?: Control<T, unknown, TOutput>;
 } & Extras;
 
 function TextArea({
@@ -47,12 +47,12 @@ function TextArea({
   );
 }
 
-export function TextAreaElement<T extends FieldValues>({
+export function TextAreaElement<T extends FieldValues, TOutput = T>({
   name,
   control,
   ...props
-}: TextAreaElementProps<T>) {
-  const { field, fieldState } = useController<T>({ name, control });
+}: TextAreaElementProps<T, TOutput>) {
+  const { field, fieldState } = useController({ name, control });
 
   return (
     <TextArea

@@ -13,6 +13,14 @@ create type trainer_group_attendance_completion as (
 );
 
 comment on type trainer_group_attendance_completion is '@foreignKey (person_id) references person (id)';
+comment on column trainer_group_attendance_completion.person_id is '@notNull';
+comment on column trainer_group_attendance_completion.total_events is '@notNull';
+comment on column trainer_group_attendance_completion.filled_events is '@notNull';
+comment on column trainer_group_attendance_completion.partially_filled_events is '@notNull';
+comment on column trainer_group_attendance_completion.unfilled_events is '@notNull';
+comment on column trainer_group_attendance_completion.filled_ratio is '@notNull';
+comment on column trainer_group_attendance_completion.total_attendances is '@notNull';
+comment on column trainer_group_attendance_completion.pending_attendances is '@notNull';
 
 create or replace function trainer_group_attendance_completion(
   since timestamp with time zone default null,
@@ -54,14 +62,11 @@ create or replace function trainer_group_attendance_completion(
     filled_events,
     partially_filled_events,
     unfilled_events,
-    case
-      when total_events > 0 then (filled_events + partially_filled_events)::double precision / total_events
-      else null
-    end as filled_ratio,
+    (filled_events + partially_filled_events)::double precision / total_events as filled_ratio,
     total_attendances,
     pending_attendances
   from per_trainer
-  order by filled_ratio asc nulls last, person_id;
+  order by filled_ratio asc, person_id;
 $_$;
 
 comment on function trainer_group_attendance_completion is '@behavior +list -connection';
