@@ -1,6 +1,7 @@
 'use client';
 
 import { MembershipApplicationsDocument } from '@/graphql/MembershipApplication';
+import { PersonMembershipsDocument } from '@/graphql/Person';
 import { useAuth, useTenantConfig } from '@/lib/auth';
 import {
   DropdownMenu,
@@ -41,8 +42,6 @@ export function Profile() {
     () => setSelectedApplication('new-application'),
     [setSelectedApplication],
   );
-  if (!auth.isLoggedIn) return null;
-
   const applications = data?.membershipApplicationsList ?? [];
   const options = [
     ...auth.persons.map((x) => ({ id: x.id, label: x.name })),
@@ -52,6 +51,13 @@ export function Profile() {
   ];
   const active = options.find((x) => x.id === variant) ?? options[0];
   const person = auth.persons.find((x) => x.id === active?.id);
+  const [{ data: personData }] = useQuery({
+    query: PersonMembershipsDocument,
+    variables: { id: person?.id ?? '' },
+    pause: !person,
+  });
+
+  if (!auth.isLoggedIn) return null;
 
   const renderTitle = (title: string) => {
     if (options.length < 2) return title;
@@ -82,7 +88,13 @@ export function Profile() {
   };
 
   if (person) {
-    return <PersonView key={person.id} id={person.id} renderTitle={renderTitle} />;
+    return personData?.person?.id === person.id ? (
+      <PersonView
+        key={person.id}
+        initialPerson={personData.person}
+        renderTitle={renderTitle}
+      />
+    ) : null;
   }
 
   return (

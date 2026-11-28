@@ -2,7 +2,11 @@
 
 import React from 'react';
 
-import { CoupleDocument, UpdateCoupleDocument } from '@/graphql/Memberships';
+import {
+  CoupleDocument,
+  type CoupleQuery,
+  UpdateCoupleDocument,
+} from '@/graphql/Memberships';
 import { PageHeader } from '@/ui/PageHeader';
 import { ImageEditorDialog } from '@/ui/ImageEditorDialog';
 import { formatOpenDateRange } from '@/ui/format';
@@ -20,18 +24,22 @@ import { parseAsString, useQueryState } from 'nuqs';
 import { DotSeparated } from '@/ui/DotSeparated';
 import { User } from 'lucide-react';
 
-export function Couple({ id }: { id: string }) {
+export function Couple({
+  initialCouple,
+}: {
+  initialCouple: NonNullable<CoupleQuery['couple']>;
+}) {
+  const { id } = initialCouple;
   const [editingImage, setEditingImage] = React.useState(false);
   const [, updateImage] = useMutation(UpdateCoupleDocument);
-  const [{ data }] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
-  const item = data?.couple;
+  const [{ data }] = useQuery({ query: CoupleDocument, variables: { id } });
+  const item = data?.couple ?? initialCouple;
   const actions = useActions(coupleActions, item);
   const [tab, setTab] = useQueryState(
     'tab',
     parseAsString.withOptions({ history: 'push' }),
   );
 
-  if (!item) return null;
   const personIds = [item.manId, item.womanId];
 
   return (

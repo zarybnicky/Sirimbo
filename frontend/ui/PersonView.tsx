@@ -2,7 +2,11 @@
 
 import { DotSeparated } from '@/ui/DotSeparated';
 
-import { PersonMembershipsDocument, UpdatePersonDocument } from '@/graphql/Person';
+import {
+  PersonMembershipsDocument,
+  type PersonMembershipsQuery,
+  UpdatePersonDocument,
+} from '@/graphql/Person';
 import { useActions } from '@/lib/actions';
 import { personActions } from '@/lib/actions/person';
 import { useAuth } from '@/lib/auth';
@@ -26,52 +30,50 @@ import React from 'react';
 import { useMutation, useQuery } from 'urql';
 
 export const PersonView = React.memo(function PersonView({
-  id,
+  initialPerson,
   parent,
   renderTitle,
 }: {
-  id: string;
+  initialPerson: NonNullable<PersonMembershipsQuery['person']>;
   parent?: { title: string; href: string };
   renderTitle?: (title: string) => React.ReactNode;
 }) {
+  const { id } = initialPerson;
   const auth = useAuth();
   const [editingImage, setEditingImage] = React.useState(false);
   const [, updateImage] = useMutation(UpdatePersonDocument);
   const [{ data }] = useQuery({
     query: PersonMembershipsDocument,
     variables: { id },
-    pause: !id,
   });
   const [tab, setTab] = useQueryState(
     'tab',
     parseAsString.withOptions({ history: 'push' }),
   );
 
-  const item = data?.person;
+  const item = data?.person ?? initialPerson;
   const isAdminOrCurrentPerson =
-    auth.isMyPerson(id) || (!!item && auth.canManagePerson(item));
+    auth.isMyPerson(id) || auth.canManagePerson(item);
 
   const actions = useActions(personActions, item);
   const sttProgress = getBestCstsProgress(
-    item?.federationCategoryProgresses.nodes,
+    item.federationCategoryProgresses.nodes,
     'Standard',
   );
   const latProgress = getBestCstsProgress(
-    item?.federationCategoryProgresses.nodes,
+    item.federationCategoryProgresses.nodes,
     'Latin',
   );
   const sttClass = formatClass(sttProgress?.category?.class);
   const latClass = formatClass(latProgress?.category?.class);
   const categoryProgress = [
-    formatAgeGroup(item?.ageGroup),
+    formatAgeGroup(item.ageGroup),
     sttClass || latClass ? `${sttClass ?? '-'}/${latClass ?? '-'}` : null,
   ]
     .filter(Boolean)
     .join(' ');
 
   const personIds = React.useMemo(() => [id], [id]);
-
-  if (!item) return null;
 
   const competitors = Object.values(
     Object.groupBy(item.federationCategoryProgresses.nodes, (x) => x.competitorId),
