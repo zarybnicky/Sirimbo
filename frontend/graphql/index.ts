@@ -3312,13 +3312,13 @@ export type CrawlerTargetFailureEdge = {
 
 export type CrawlerTargetFailureGroup = {
   __typename?: 'CrawlerTargetFailureGroup';
-  count: Maybe<Scalars['Int']['output']>;
-  errorFingerprint: Maybe<Scalars['String']['output']>;
-  failedAt: Maybe<Scalars['Datetime']['output']>;
-  failure: Maybe<Scalars['String']['output']>;
-  federation: Maybe<Scalars['String']['output']>;
+  count: Scalars['Int']['output'];
+  errorFingerprint: Scalars['String']['output'];
+  failedAt: Scalars['Datetime']['output'];
+  failure: Scalars['String']['output'];
+  federation: Scalars['String']['output'];
   httpStatus: Maybe<Scalars['Int']['output']>;
-  kind: Maybe<Scalars['String']['output']>;
+  kind: Scalars['String']['output'];
 };
 
 /**
@@ -3420,18 +3420,18 @@ export type CrawlerTargetSummariesOrderBy =
 
 export type CrawlerTargetSummary = {
   __typename?: 'CrawlerTargetSummary';
-  done: Maybe<Scalars['Int']['output']>;
-  federation: Maybe<Scalars['String']['output']>;
-  fetchDue: Maybe<Scalars['Int']['output']>;
-  fetchError: Maybe<Scalars['Int']['output']>;
-  fetchPending: Maybe<Scalars['Int']['output']>;
-  fetchTransient: Maybe<Scalars['Int']['output']>;
-  kind: Maybe<Scalars['String']['output']>;
+  done: Scalars['Int']['output'];
+  federation: Scalars['String']['output'];
+  fetchDue: Scalars['Int']['output'];
+  fetchError: Scalars['Int']['output'];
+  fetchPending: Scalars['Int']['output'];
+  fetchTransient: Scalars['Int']['output'];
+  kind: Scalars['String']['output'];
   latest: Maybe<Scalars['Datetime']['output']>;
-  processError: Maybe<Scalars['Int']['output']>;
-  processReady: Maybe<Scalars['Int']['output']>;
-  refetchDue: Maybe<Scalars['Int']['output']>;
-  total: Maybe<Scalars['Int']['output']>;
+  processError: Scalars['Int']['output'];
+  processReady: Scalars['Int']['output'];
+  refetchDue: Scalars['Int']['output'];
+  total: Scalars['Int']['output'];
 };
 
 /**
@@ -4892,7 +4892,7 @@ export type EventEdge = {
 export type EventFacetsRecord = {
   __typename?: 'EventFacetsRecord';
   count: Maybe<Scalars['Int']['output']>;
-  facet: Maybe<Scalars['String']['output']>;
+  facet: Scalars['String']['output'];
   value: Maybe<Scalars['String']['output']>;
 };
 
@@ -6258,7 +6258,7 @@ export type FederationCompetitorEdge = {
 export type FederationCompetitorFacetsRecord = {
   __typename?: 'FederationCompetitorFacetsRecord';
   count: Maybe<Scalars['Int']['output']>;
-  facet: Maybe<Scalars['String']['output']>;
+  facet: Scalars['String']['output'];
   value: Maybe<Scalars['String']['output']>;
 };
 
@@ -6660,7 +6660,7 @@ export type FederationEventsOrderBy =
 export type FederationPeopleFacetsRecord = {
   __typename?: 'FederationPeopleFacetsRecord';
   count: Maybe<Scalars['Int']['output']>;
-  facet: Maybe<Scalars['String']['output']>;
+  facet: Scalars['String']['output'];
   value: Maybe<Scalars['String']['output']>;
 };
 
@@ -8814,7 +8814,7 @@ export type PaymentEdge = {
 export type PaymentFacetsRecord = {
   __typename?: 'PaymentFacetsRecord';
   count: Maybe<Scalars['Int']['output']>;
-  facet: Maybe<Scalars['String']['output']>;
+  facet: Scalars['String']['output'];
   label: Maybe<Scalars['String']['output']>;
   value: Maybe<Scalars['String']['output']>;
 };
@@ -9384,7 +9384,7 @@ export type PersonEdge = {
 export type PersonFacetsRecord = {
   __typename?: 'PersonFacetsRecord';
   count: Maybe<Scalars['Int']['output']>;
-  facet: Maybe<Scalars['String']['output']>;
+  facet: Scalars['String']['output'];
   value: Maybe<Scalars['String']['output']>;
 };
 
@@ -12789,7 +12789,7 @@ export type TransactionEdge = {
 export type TransactionFacetsRecord = {
   __typename?: 'TransactionFacetsRecord';
   count: Maybe<Scalars['Int']['output']>;
-  facet: Maybe<Scalars['String']['output']>;
+  facet: Scalars['String']['output'];
   value: Maybe<Scalars['String']['output']>;
 };
 

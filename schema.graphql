@@ -4296,13 +4296,13 @@ type CrawlerTargetFailureEdge {
 }
 
 type CrawlerTargetFailureGroup {
-  count: Int
-  errorFingerprint: String
-  failedAt: Datetime
-  failure: String
-  federation: String
+  count: Int!
+  errorFingerprint: String!
+  failedAt: Datetime!
+  failure: String!
+  federation: String!
   httpStatus: Int
-  kind: String
+  kind: String!
 }
 
 """
@@ -4412,18 +4412,18 @@ enum CrawlerTargetSummariesOrderBy {
 }
 
 type CrawlerTargetSummary {
-  done: Int
-  federation: String
-  fetchDue: Int
-  fetchError: Int
-  fetchPending: Int
-  fetchTransient: Int
-  kind: String
+  done: Int!
+  federation: String!
+  fetchDue: Int!
+  fetchError: Int!
+  fetchPending: Int!
+  fetchTransient: Int!
+  kind: String!
   latest: Datetime
-  processError: Int
-  processReady: Int
-  refetchDue: Int
-  total: Int
+  processError: Int!
+  processReady: Int!
+  refetchDue: Int!
+  total: Int!
 }
 
 """
@@ -6073,7 +6073,7 @@ type EventEdge {
 
 type EventFacetsRecord {
   count: Int
-  facet: String
+  facet: String!
   value: String
 }
 
@@ -7961,7 +7961,7 @@ type FederationCompetitorEdge {
 
 type FederationCompetitorFacetsRecord {
   count: Int
-  facet: String
+  facet: String!
   value: String
 }
 
@@ -8489,7 +8489,7 @@ enum FederationEventsOrderBy {
 
 type FederationPeopleFacetsRecord {
   count: Int
-  facet: String
+  facet: String!
   value: String
 }
 
@@ -11086,7 +11086,7 @@ type PaymentEdge {
 
 type PaymentFacetsRecord {
   count: Int
-  facet: String
+  facet: String!
   label: String
   value: String
 }
@@ -11930,7 +11930,7 @@ type PersonEdge {
 
 type PersonFacetsRecord {
   count: Int
-  facet: String
+  facet: String!
   value: String
 }
 
@@ -16115,7 +16115,7 @@ type TransactionEdge {
 
 type TransactionFacetsRecord {
   count: Int
-  facet: String
+  facet: String!
   value: String
 }
 

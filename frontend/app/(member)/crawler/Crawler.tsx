@@ -89,10 +89,10 @@ export function Crawler({
   const [overview, reexecuteQuery] = useQuery({ query: CrawlerOverviewDocument });
   const rows = overview.data?.rows ?? [];
   const federations = [
-    ...new Set(rows.map((row) => row.federation).filter((value) => value != null)),
+    ...new Set(rows.map((row) => row.federation)),
   ].toSorted();
-  const matches = (row: { federation: string | null }) =>
-    filters.federation.length === 0 || filters.federation.includes(row.federation ?? '');
+  const matches = (row: { federation: string }) =>
+    filters.federation.length === 0 || filters.federation.includes(row.federation);
   const filteredRows = rows.filter(matches);
 
   return (
@@ -475,7 +475,7 @@ function Overview({
     .map((row) => {
       const target = `${row.federation}:${row.kind}`;
       const failures = failuresByTarget[target] ?? [];
-      const fetchDue = (row.fetchDue ?? 0) + (allowRefetch ? (row.refetchDue ?? 0) : 0);
+      const fetchDue = row.fetchDue + (allowRefetch ? row.refetchDue : 0);
       return {
         ...row,
         fetchDue,
@@ -492,18 +492,18 @@ function Overview({
     })
     .toSorted(
       (a, b) =>
-        (b.processError ?? 0) - (a.processError ?? 0) ||
-        (b.fetchError ?? 0) - (a.fetchError ?? 0) ||
-        (b.fetchTransient ?? 0) - (a.fetchTransient ?? 0) ||
-        (b.processReady ?? 0) - (a.processReady ?? 0) ||
+        b.processError - a.processError ||
+        b.fetchError - a.fetchError ||
+        b.fetchTransient - a.fetchTransient ||
+        b.processReady - a.processReady ||
         b.fetchDue - a.fetchDue ||
-        (b.fetchPending ?? 0) - (a.fetchPending ?? 0) ||
-        (a.federation ?? '').localeCompare(b.federation ?? '') ||
-        (a.kind ?? '').localeCompare(b.kind ?? ''),
+        b.fetchPending - a.fetchPending ||
+        a.federation.localeCompare(b.federation) ||
+        a.kind.localeCompare(b.kind),
     );
   const done = Object.groupBy(
     frontiers.filter((row) => row.stable),
-    (row) => row.federation ?? '',
+    (row) => row.federation,
   );
 
   return (
@@ -523,8 +523,8 @@ function Overview({
         footer={
           <tr>
             <th scope="row">{frontiers.length} total</th>
-            <td>{frontiers.reduce((sum, row) => sum + (row.done ?? 0), 0) || ''}</td>
-            <td>{frontiers.reduce((sum, row) => sum + (row.fetchDue ?? 0), 0) || ''}</td>
+            <td>{frontiers.reduce((sum, row) => sum + row.done, 0) || ''}</td>
+            <td>{frontiers.reduce((sum, row) => sum + row.fetchDue, 0) || ''}</td>
             <td colSpan={4} />
           </tr>
         }
@@ -591,17 +591,13 @@ function Overview({
                   <td colSpan={7}>
                     <Table
                       columns={[
-                        row.federation && row.kind ? (
-                          <CrawlerActions
-                            key="actions"
-                            federation={row.federation}
-                            kind={row.kind}
-                            primary
-                            onQueued={onQueued}
-                          />
-                        ) : (
-                          'count'
-                        ),
+                        <CrawlerActions
+                          key="actions"
+                          federation={row.federation}
+                          kind={row.kind}
+                          primary
+                          onQueued={onQueued}
+                        />,
                         'failure',
                         'http',
                         'details',
@@ -618,21 +614,16 @@ function Overview({
                         >
                           <td>
                             <div className="flex items-center gap-2">
-                              {failure.federation &&
-                                failure.kind &&
-                                failure.failure &&
-                                failure.errorFingerprint != null && (
-                                  <CrawlerActions
-                                    federation={failure.federation}
-                                    kind={failure.kind}
-                                    failureGroup={{
-                                      failure: failure.failure,
-                                      httpStatus: failure.httpStatus ?? null,
-                                      errorFingerprint: failure.errorFingerprint,
-                                    }}
-                                    onQueued={onQueued}
-                                  />
-                                )}
+                              <CrawlerActions
+                                federation={failure.federation}
+                                kind={failure.kind}
+                                failureGroup={{
+                                  failure: failure.failure,
+                                  httpStatus: failure.httpStatus,
+                                  errorFingerprint: failure.errorFingerprint,
+                                }}
+                                onQueued={onQueued}
+                              />
                               {failure.count}
                             </div>
                           </td>
@@ -659,8 +650,7 @@ function Overview({
                 {targets
                   ?.toSorted(
                     (a, b) =>
-                      (b.total ?? 0) - (a.total ?? 0) ||
-                      (a.kind ?? '').localeCompare(b.kind ?? ''),
+                      b.total - a.total || a.kind.localeCompare(b.kind),
                   )
                   .map((row, index) => (
                     <Fragment key={row.kind}>

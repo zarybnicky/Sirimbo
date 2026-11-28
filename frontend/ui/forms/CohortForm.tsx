@@ -11,7 +11,6 @@ import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
@@ -38,18 +37,21 @@ export function CohortForm({ id = '' }: { id?: string }) {
   const [createResult, create] = useMutation(CreateCohortDocument);
   const [updateResult, update] = useMutation(UpdateCohortDocument);
 
-  const { reset, control, handleSubmit } = useForm({
-    defaultValues: { colorRgb: '#ff0000' },
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      colorRgb: '#ff0000',
+      description: '',
+      isVisible: true,
+      isArchived: false,
+    },
     resolver: zodResolver(Form),
-  });
-
-  React.useEffect(() => {
-    reset(Form.partial().optional().parse(data), {
+    values: data ?? undefined,
+    resetOptions: {
       keepDirtyValues: true,
       keepTouched: true,
       keepErrors: true,
-    });
-  }, [reset, data]);
+    },
+  });
 
   const onSubmit = async (patch: z.infer<typeof Form>) => {
     if (id) {

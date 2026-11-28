@@ -293,7 +293,7 @@ export type PaymentListOptionsQueryVariables = Exact<{
 }>;
 
 
-export type PaymentListOptionsQuery = { paymentFacetsList: Array<{ facet: string | null, value: string | null, count: number | null, label: string | null }> | null };
+export type PaymentListOptionsQuery = { paymentFacetsList: Array<{ facet: string, value: string | null, count: number | null, label: string | null }> | null };
 
 export type TransactionFacetsQueryVariables = Exact<{
   since?: string | null | undefined;
@@ -304,7 +304,7 @@ export type TransactionFacetsQueryVariables = Exact<{
 }>;
 
 
-export type TransactionFacetsQuery = { transactionFacetsList: Array<{ facet: string | null, value: string | null, count: number | null }> | null };
+export type TransactionFacetsQuery = { transactionFacetsList: Array<{ facet: string, value: string | null, count: number | null }> | null };
 
 export type PaymentListQueryVariables = Exact<{
   first: number;

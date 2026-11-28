@@ -305,7 +305,7 @@ export type FederationPeopleFacetsQueryVariables = Exact<{
 }>;
 
 
-export type FederationPeopleFacetsQuery = { ageGroupsList: Array<{ code: string, personAge: { start: { value: number } | null, end: { value: number } | null } | null }> | null, federation: { code: string, peopleFacetsList: Array<{ facet: string | null, value: string | null, count: number | null }> | null } | null };
+export type FederationPeopleFacetsQuery = { ageGroupsList: Array<{ code: string, personAge: { start: { value: number } | null, end: { value: number } | null } | null }> | null, federation: { code: string, peopleFacetsList: Array<{ facet: string, value: string | null, count: number | null }> | null } | null };
 
 export type FederationCompetitorsQueryVariables = Exact<{
   federation: string;
@@ -334,7 +334,7 @@ export type FederationCompetitorFacetsQueryVariables = Exact<{
 }>;
 
 
-export type FederationCompetitorFacetsQuery = { ageGroupsList: Array<{ code: string, name: string, age: { start: { value: number } | null, end: { value: number } | null } | null, coupleRules: Array<{ ageGroupCode: string, olderAge: { start: { value: number } | null, end: { value: number } | null }, youngerAge: { start: { value: number } | null, end: { value: number } | null } }> }> | null, federation: { code: string, competitorFacetsList: Array<{ facet: string | null, value: string | null, count: number | null }> | null } | null };
+export type FederationCompetitorFacetsQuery = { ageGroupsList: Array<{ code: string, name: string, age: { start: { value: number } | null, end: { value: number } | null } | null, coupleRules: Array<{ ageGroupCode: string, olderAge: { start: { value: number } | null, end: { value: number } | null }, youngerAge: { start: { value: number } | null, end: { value: number } | null } }> }> | null, federation: { code: string, competitorFacetsList: Array<{ facet: string, value: string | null, count: number | null }> | null } | null };
 
 export type FederationEventCompetitorsQueryVariables = Exact<{
   federation: string;

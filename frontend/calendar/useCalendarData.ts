@@ -215,7 +215,7 @@ export function useCalendarData({
         );
     const counts: Record<string, Record<string, number>> = {};
     for (const { facet, value, count } of data?.eventFacetsList ?? []) {
-      if (facet && value) (counts[facet] ??= {})[value] = count ?? 0;
+      if (value) (counts[facet] ??= {})[value] = count ?? 0;
     }
     const option = <T extends string>(facet: string, value: T, label: string) => ({
       value,

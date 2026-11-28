@@ -12,4 +12,10 @@ group by federation, kind, failure, http_status, error_fingerprint;
 
 comment on view crawler.frontier_failure_group is '@name crawler_target_failure_group
 @behavior +list -connection -insert -update -delete';
+comment on column crawler.frontier_failure_group.federation is '@notNull';
+comment on column crawler.frontier_failure_group.kind is '@notNull';
+comment on column crawler.frontier_failure_group.failure is '@notNull';
+comment on column crawler.frontier_failure_group.error_fingerprint is '@notNull';
+comment on column crawler.frontier_failure_group.count is '@notNull';
+comment on column crawler.frontier_failure_group.failed_at is '@notNull';
 grant select on crawler.frontier_failure_group to system_admin;

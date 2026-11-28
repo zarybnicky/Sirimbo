@@ -93,7 +93,7 @@ export type CrawlerTargetsOrderBy =
 export type CrawlerOverviewQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CrawlerOverviewQuery = { rows: Array<{ federation: string | null, kind: string | null, total: number | null, done: number | null, fetchPending: number | null, fetchTransient: number | null, fetchError: number | null, processError: number | null, processReady: number | null, fetchDue: number | null, refetchDue: number | null, latest: string | null }> | null, failures: Array<{ federation: string | null, kind: string | null, failure: string | null, httpStatus: number | null, errorFingerprint: string | null, count: number | null }> | null };
+export type CrawlerOverviewQuery = { rows: Array<{ federation: string, kind: string, total: number, done: number, fetchPending: number, fetchTransient: number, fetchError: number, processError: number, processReady: number, fetchDue: number, refetchDue: number, latest: string | null }> | null, failures: Array<{ federation: string, kind: string, failure: string, httpStatus: number | null, errorFingerprint: string, count: number }> | null };
 
 export type CrawlerTargetQueryVariables = Exact<{
   federation: string;

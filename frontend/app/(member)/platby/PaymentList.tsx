@@ -56,7 +56,7 @@ export function PaymentList() {
   });
   const counts: Record<string, Record<string, number>> = {};
   for (const { facet, value, count } of options.data?.paymentFacetsList ?? []) {
-    if (facet && value != null) (counts[facet] ??= {})[value] = count ?? 0;
+    if (value != null) (counts[facet] ??= {})[value] = count ?? 0;
   }
   const { data, fetching, error, pagination } = usePaginatedQuery({
     query: PaymentListDocument,

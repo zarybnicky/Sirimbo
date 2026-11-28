@@ -11,7 +11,6 @@ import { formatEventName, fullDateFormatter } from '@/ui/format';
 import { ListItem } from '@/ui/ListItem';
 import { endOfWeek, startOfDay } from 'date-fns';
 import { CalendarDays } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
 
@@ -24,12 +23,7 @@ interface EventNode {
   imageUrl: string | null;
 }
 
-interface EventListPageProps {
-  search: string;
-  currentId?: string;
-}
-
-function EventListPage({ search, currentId }: EventListPageProps) {
+function EventListPage({ search }: { search: string }) {
   const [{ data }] = useQuery({
     query: EventListDocument,
     variables: {
@@ -69,7 +63,6 @@ function EventListPage({ search, currentId }: EventListPageProps) {
           href={item.href}
           title={item.title}
           subtitle={item.subtitle}
-          selected={currentId === item.id}
           imageUrl={item.imageUrl}
           icon={<CalendarDays className="size-5" />}
           wrap
@@ -81,7 +74,6 @@ function EventListPage({ search, currentId }: EventListPageProps) {
 
 export function EventList() {
   const [search, setSearch] = React.useState('');
-  const currentId = useSearchParams()?.get('instance') ?? undefined;
   const auth = useAuth();
 
   const [createDate] = React.useState(() =>
@@ -112,7 +104,7 @@ export function EventList() {
       </div>
 
       <div className="grow h-full overflow-y-auto scrollbar">
-        <EventListPage search={search} currentId={currentId} />
+        <EventListPage search={search} />
       </div>
     </div>
   );

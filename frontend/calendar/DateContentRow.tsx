@@ -44,7 +44,7 @@ function DateContentRow({
 
   const [segment, setSegment] = React.useState<Segment | null>(null);
   const [maxRows, setMaxRows] = React.useState(5);
-  const [previousDate, setPreviousDate] = React.useState(range[0]!);
+  const previousMonth = React.useRef(range[0]!.getMonth());
   const [renderForMeasure, setRenderForMeasure] = React.useState(true);
 
   React.useEffect(() => {
@@ -217,12 +217,13 @@ function DateContentRow({
   ]);
 
   React.useEffect(() => {
-    if (range[0]?.getMonth() !== previousDate.getMonth()) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- Intentional two-pass DOM measurement.
+    const month = range[0]!.getMonth();
+    if (month !== previousMonth.current) {
+      // Intentional two-pass DOM measurement.
       setRenderForMeasure(true);
     }
-    setPreviousDate(range[0]!);
-  }, [previousDate, range]);
+    previousMonth.current = month;
+  }, [range]);
 
   useLayoutEffect(() => {
     if (renderForMeasure) {

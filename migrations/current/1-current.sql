@@ -117,6 +117,8 @@ comment on column public.scoreboard_record.ranking is '@notNull';
 --!include functions/event_facets.sql
 --!include functions/event_registration_info.sql
 --!include functions/event_conflicts.sql
+--!include views/crawler_frontier_summary.sql
+--!include views/crawler_frontier_failure_group.sql
 --!include functions/visible_file_ids.sql
 --!include policies/file.sql
 --!include policies/tenant.sql

@@ -17,4 +17,15 @@ group by federation, kind;
 
 comment on view crawler.frontier_summary is '@name crawler_target_summary
 @behavior +list -connection -insert -update -delete';
+comment on column crawler.frontier_summary.federation is '@notNull';
+comment on column crawler.frontier_summary.kind is '@notNull';
+comment on column crawler.frontier_summary.total is '@notNull';
+comment on column crawler.frontier_summary.fetch_pending is '@notNull';
+comment on column crawler.frontier_summary.fetch_transient is '@notNull';
+comment on column crawler.frontier_summary.fetch_error is '@notNull';
+comment on column crawler.frontier_summary.done is '@notNull';
+comment on column crawler.frontier_summary.process_error is '@notNull';
+comment on column crawler.frontier_summary.process_ready is '@notNull';
+comment on column crawler.frontier_summary.fetch_due is '@notNull';
+comment on column crawler.frontier_summary.refetch_due is '@notNull';
 grant select on crawler.frontier_summary to system_admin;

@@ -91,7 +91,7 @@ export function usePersonData({
   );
   const counts: Record<string, Record<string, number>> = {};
   for (const { facet, value, count } of data?.personFacetsList ?? []) {
-    if (facet && value) (counts[facet] ??= {})[value] = count ?? 0;
+    if (value) (counts[facet] ??= {})[value] = count ?? 0;
   }
   return {
     people,

@@ -89,7 +89,7 @@ export function TransactionList() {
   });
   const counts: Record<string, Record<string, number>> = {};
   for (const { facet, value, count } of facets.data?.transactionFacetsList ?? []) {
-    if (facet && value) (counts[facet] ??= {})[value] = count ?? 0;
+    if (value) (counts[facet] ??= {})[value] = count ?? 0;
   }
   const { data, fetching, error, pagination } = usePaginatedQuery({
     query: TransactionsDocument,

@@ -8400,40 +8400,55 @@
           {
             "name": "count",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
           {
             "name": "errorFingerprint",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
           {
             "name": "failedAt",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
           {
             "name": "failure",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
           {
             "name": "federation",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -8448,8 +8463,11 @@
           {
             "name": "kind",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           }
@@ -8463,56 +8481,77 @@
           {
             "name": "done",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
           {
             "name": "federation",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
           {
             "name": "fetchDue",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
           {
             "name": "fetchError",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
           {
             "name": "fetchPending",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
           {
             "name": "fetchTransient",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
           {
             "name": "kind",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -8527,32 +8566,44 @@
           {
             "name": "processError",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
           {
             "name": "processReady",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
           {
             "name": "refetchDue",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
           {
             "name": "total",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           }
@@ -11346,8 +11397,11 @@
           {
             "name": "facet",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -15316,8 +15370,11 @@
           {
             "name": "facet",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -16309,8 +16366,11 @@
           {
             "name": "facet",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -21782,8 +21842,11 @@
           {
             "name": "facet",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -23789,8 +23852,11 @@
           {
             "name": "facet",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -34211,8 +34277,11 @@
           {
             "name": "facet",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
